@@ -1,11 +1,9 @@
-import configparser
 import json
-import re
 import subprocess
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
-from dateutil.parser import isoparse
 from pystarport import ports
 from pystarport.cluster import SUPERVISOR_CONFIG_FILE
 
@@ -13,11 +11,12 @@ from .network import Cronos, setup_custom_cronos
 from .utils import (
     ADDRS,
     CONTRACTS,
+    approve_proposal,
     deploy_contract,
-    parse_events,
+    edit_ini_sections,
     send_transaction,
     wait_for_block,
-    wait_for_block_time,
+    wait_for_new_blocks,
     wait_for_port,
 )
 
@@ -37,28 +36,20 @@ def post_init(path, base_port, config):
     prepare cosmovisor for each node
     """
     chain_id = "cronos_777-1"
-    cfg = json.loads((path / chain_id / "config.json").read_text())
+    data = path / chain_id
+    cfg = json.loads((data / "config.json").read_text())
     for i, _ in enumerate(cfg["validators"]):
-        home = path / chain_id / f"node{i}"
+        home = data / f"node{i}"
         init_cosmovisor(home)
 
-    # patch supervisord ini config
-    ini_path = path / chain_id / SUPERVISOR_CONFIG_FILE
-    ini = configparser.RawConfigParser()
-    ini.read(ini_path)
-    reg = re.compile(rf"^program:{chain_id}-node(\d+)")
-    for section in ini.sections():
-        m = reg.match(section)
-        if m:
-            i = m.group(1)
-            ini[section].update(
-                {
-                    "command": f"cosmovisor start --home %(here)s/node{i}",
-                    "environment": f"DAEMON_NAME=cronosd,DAEMON_HOME=%(here)s/node{i}",
-                }
-            )
-    with ini_path.open("w") as fp:
-        ini.write(fp)
+    edit_ini_sections(
+        chain_id,
+        data / SUPERVISOR_CONFIG_FILE,
+        lambda i, _: {
+            "command": f"cosmovisor start --home %(here)s/node{i}",
+            "environment": f"DAEMON_NAME=cronosd,DAEMON_HOME=%(here)s/node{i}",
+        },
+    )
 
 
 @pytest.fixture(scope="module")
@@ -99,6 +90,7 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
 
     custom_cronos.supervisorctl("start", "cronos_777-1-node0", "cronos_777-1-node1")
     wait_for_port(ports.evmrpc_port(custom_cronos.base_port(0)))
+    wait_for_new_blocks(cli, 1)
 
     height = cli.block_height()
     target_height = height + 15
@@ -114,13 +106,8 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
     )
     print("old values", old_height, old_balance, old_base_fee)
 
-    # estimateGas for an erc20 transfer tx
-    old_gas = contract.functions.transfer(ADDRS["community"], 100).build_transaction(
-        {"from": ADDRS["validator"]}
-    )["gas"]
-
-    plan_name = "v1.0.0"
-    rsp = cli.gov_propose_v0_7(
+    plan_name = "v2.0.0-testnet3"
+    rsp = cli.gov_propose_legacy(
         "community",
         "software-upgrade",
         {
@@ -132,21 +119,7 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
         },
     )
     assert rsp["code"] == 0, rsp["raw_log"]
-
-    # get proposal_id
-    ev = parse_events(rsp["logs"])["submit_proposal"]
-    assert ev["proposal_type"] == "SoftwareUpgrade", rsp
-    proposal_id = ev["proposal_id"]
-
-    rsp = cli.gov_vote("validator", proposal_id, "yes")
-    assert rsp["code"] == 0, rsp["raw_log"]
-    rsp = custom_cronos.cosmos_cli(1).gov_vote("validator", proposal_id, "yes")
-    assert rsp["code"] == 0, rsp["raw_log"]
-
-    proposal = cli.query_proposal(proposal_id)
-    wait_for_block_time(cli, isoparse(proposal["voting_end_time"]))
-    proposal = cli.query_proposal(proposal_id)
-    assert proposal["status"] == "PROPOSAL_STATUS_PASSED", proposal
+    approve_proposal(custom_cronos, rsp)
 
     # update cli chain binary
     custom_cronos.chain_binary = (
@@ -186,15 +159,30 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
         ADDRS["validator"]
     )
 
-    assert not cli.evm_params()["params"]["extra_eips"]
-
-    # check the gas cost is lower after upgrade
-    assert (
-        old_gas - 3700
-        == contract.functions.transfer(ADDRS["community"], 100).build_transaction(
-            {"from": ADDRS["validator"]}
-        )["gas"]
-    )
+    # check gravity params
+    assert cli.query_gravity_params() == {
+        "params": {
+            "gravity_id": "cronos_gravity_testnet",
+            "contract_source_hash": "",
+            "bridge_ethereum_address": "0x0000000000000000000000000000000000000000",
+            "bridge_chain_id": "0",
+            "signed_signer_set_txs_window": "10000",
+            "signed_batches_window": "10000",
+            "ethereum_signatures_window": "10000",
+            "target_eth_tx_timeout": "43200000",
+            "average_block_time": "5000",
+            "average_ethereum_block_time": "15000",
+            "slash_fraction_signer_set_tx": "0.001000000000000000",
+            "slash_fraction_batch": "0.001000000000000000",
+            "slash_fraction_ethereum_signature": "0.001000000000000000",
+            "slash_fraction_conflicting_ethereum_signature": "0.001000000000000000",
+            "unbond_slashing_signer_set_txs_window": "10000",
+            "bridge_active": False,
+            "batch_creation_period": "10",
+            "batch_max_element": "100",
+            "observe_ethereum_height_period": "50",
+        }
+    }
 
     # migrate to sdk v0.46
     custom_cronos.supervisorctl("stop", "all")
@@ -210,3 +198,17 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
         json.dump(cli.migrate_cronos_genesis(cronos_version, str(file_path1)), fp)
         fp.flush()
     print(cli.validate_genesis(str(file_path2)))
+
+    # update the genesis time = current time + 5 secs
+    newtime = datetime.utcnow() + timedelta(seconds=5)
+    newtime = newtime.replace(tzinfo=None).isoformat("T") + "Z"
+    config = custom_cronos.config
+    config["genesis-time"] = newtime
+    for i, _ in enumerate(config["validators"]):
+        genesis = json.load(open(file_path2))
+        genesis["genesis_time"] = config.get("genesis-time")
+        file = custom_cronos.cosmos_cli(i).data_dir / "config/genesis.json"
+        file.write_text(json.dumps(genesis))
+    custom_cronos.supervisorctl("start", "cronos_777-1-node0", "cronos_777-1-node1")
+    wait_for_new_blocks(custom_cronos.cosmos_cli(), 1)
+    custom_cronos.supervisorctl("stop", "all")
