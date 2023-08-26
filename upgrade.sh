@@ -55,11 +55,13 @@ EOF
 sleep 15s
 
 
-# SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.17 via snap
+# SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.20 via snap
 
 sudo apt-get update -y
 sudo apt-get install jq git wget make gcc build-essential snapd wget -y
-snap install --channel=1.17/stable go --classic
+snap install go --channel=1.20/stable --classic
+snap refresh go --channel=1.20/stable --classic
+
 export PATH=$PATH:$(go env GOPATH)/bin
 echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc
 
@@ -94,6 +96,7 @@ rm -r .genesisd
 
 # BUILDING genesisd BINARIES
 cd genesisL1
+go mod tidy
 make install
 
 # COPY .genesisd_backup FOLDER to .genesisd FOLDER, EXCLUDE data
@@ -118,12 +121,12 @@ genesisd unsafe-reset-all
 # ADD PEERS
 cd 
 cd .genesisd/config
-sed -i 's/seeds = ""/seeds = "36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656"/' config.toml
-sed -i 's/rpc_servers = ""/rpc_servers = "http:\/\/154.12.229.22:26657,http:\/\/154.12.229.22:26657"/' config.toml
-sed -i 's/persistent_peers = ""/persistent_peers = "551cb3d41d457f830d75c7a5b8d1e00e6e5cbb91@135.181.97.75:26656,5082248889f93095a2fd4edd00f56df1074547ba@146.59.81.204:26651,36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656,c23b3d58ccae0cf34fc12075c933659ff8cca200@95.217.207.154:26656,37d8aa8a31d66d663586ba7b803afd68c01126c4@65.21.134.70:26656,d7d4ea7a661c40305cab84ac227cdb3814df4e43@139.162.195.228:26656,be81a20b7134552e270774ec861c4998fabc2969@genesisl1.3ventures.io:26656"/' config.toml
-sed -i 's/minimum-gas-prices = "0aphoton"/minimum-gas-prices = "0el1"/g' app.toml
-sed -i 's/timeout_commit = "5s"/timeout_commit = "10s"/' config.toml
-sed -i '212s/.*/enable = false/' app.toml
+# sed -i 's/seeds = ""/seeds = "36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656"/' config.toml
+# sed -i 's/rpc_servers = ""/rpc_servers = "http:\/\/154.12.229.22:26657,http:\/\/154.12.229.22:26657"/' config.toml
+# sed -i 's/persistent_peers = ""/persistent_peers = "551cb3d41d457f830d75c7a5b8d1e00e6e5cbb91@135.181.97.75:26656,5082248889f93095a2fd4edd00f56df1074547ba@146.59.81.204:26651,36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656,c23b3d58ccae0cf34fc12075c933659ff8cca200@95.217.207.154:26656,37d8aa8a31d66d663586ba7b803afd68c01126c4@65.21.134.70:26656,d7d4ea7a661c40305cab84ac227cdb3814df4e43@139.162.195.228:26656,be81a20b7134552e270774ec861c4998fabc2969@genesisl1.3ventures.io:26656"/' config.toml
+# sed -i 's/minimum-gas-prices = "0aphoton"/minimum-gas-prices = "0el1"/g' app.toml
+# sed -i 's/timeout_commit = "5s"/timeout_commit = "10s"/' config.toml
+# sed -i '212s/.*/enable = false/' app.toml
 
 # STARTING genesisd AS A SERVICE
 #  cd
