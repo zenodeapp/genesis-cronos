@@ -1,4 +1,3 @@
-
 #!/bin/bash
 cat << "EOF"
 
@@ -55,13 +54,18 @@ EOF
 sleep 15s
 
 
-# SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.17 via snap
-
-sudo apt-get update -y
-sudo apt-get install jq git wget make gcc build-essential snapd wget -y
-snap install --channel=1.17/stable go --classic
-export PATH=$PATH:$(go env GOPATH)/bin
-echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc
+# SYSTEM UPDATE, SET ENV VARIABLES IF UNPRESENT, INSTALL PACKAGES: nano make build-essential gcc git jq chrony tar curl lz4 wget snapd ponysay go1.20
+apt update -y && apt upgrade -y
+apt install nano make build-essential gcc git jq chrony tar curl lz4 wget snapd -y
+if ! command -v go &> /dev/null; then
+    wget https://go.dev/dl/go1.20.linux-amd64.tar.gz
+    tar -C /usr/local -xzf go1.20.linux-amd64.tar.gz
+    rm go1.20.linux-amd64.tar.gz
+fi
+if  [ ${GOPATH} = "" ]; then
+    echo -e "export GOROOT=/usr/local/go\nexport GOPATH=\$HOME/go\nexport GO111MODULE=on\nexport PATH=\$PATH:/usr/local/go/bin:\$HOME/go/bin" >> ~/.bashrc
+fi
+source ~/.bashrc
 
 # GLOBAL CHANGE OF OPEN FILE LIMITS
 echo "* - nofile 50000" >> /etc/security/limits.conf
@@ -89,8 +93,8 @@ cd
 rsync -r --verbose --exclude 'data' ./.genesisd/ ./.genesisd_backup/
 
 # DELETING OF .genesisd FOLDER (PREVIOUS INSTALLATIONS)
-cd 
-rm -r .genesisd
+cd
+rm -rf .genesisd
 
 # BUILDING genesisd BINARIES
 cd genesisL1
@@ -104,20 +108,14 @@ rsync -r --verbose --exclude 'data' ./.genesisd_backup/ ./.genesisd/
 genesisd config chain-id genesis_29-2
 
 #IMPORTING GENESIS STATE
-cd 
-cd .genesisd/config
-rm -r genesis.json
-rm -r genesis.json_L1_v46
-wget http://135.181.135.29/genesis.json_L1_v46
-mv genesis.json_L1_v46 genesis.json
 cd
+wget http://135.181.135.29/genesis.json_L1_v46 -O ./.genesisd/config/genesis.json
 
 # RESET TO IMPORTED genesis.json
 genesisd unsafe-reset-all
 
 # ADD PEERS
-cd 
-cd .genesisd/config
+cd ~/.genesisd/config
 sed -i 's/seeds = ""/seeds = "36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656"/' config.toml
 sed -i 's/rpc_servers = ""/rpc_servers = "http:\/\/154.12.229.22:26657,http:\/\/154.12.229.22:26657"/' config.toml
 sed -i 's/persistent_peers = ""/persistent_peers = "551cb3d41d457f830d75c7a5b8d1e00e6e5cbb91@135.181.97.75:26656,5082248889f93095a2fd4edd00f56df1074547ba@146.59.81.204:26651,36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656,c23b3d58ccae0cf34fc12075c933659ff8cca200@95.217.207.154:26656,37d8aa8a31d66d663586ba7b803afd68c01126c4@65.21.134.70:26656,d7d4ea7a661c40305cab84ac227cdb3814df4e43@139.162.195.228:26656,be81a20b7134552e270774ec861c4998fabc2969@genesisl1.3ventures.io:26656"/' config.toml
@@ -125,15 +123,12 @@ sed -i 's/minimum-gas-prices = "0aphoton"/minimum-gas-prices = "0el1"/g' app.tom
 sed -i 's/timeout_commit = "5s"/timeout_commit = "10s"/' config.toml
 sed -i '212s/.*/enable = false/' app.toml
 
-# STARTING genesisd AS A SERVICE
-#  cd
-#  cd /etc/systemd/system
-#  rm -r genesis.service
-#  wget https://raw.githubusercontent.com/alpha-omega-labs/genesisd/noobdate/genesisd.service
-#  systemctl daemon-reload
-#  systemctl enable genesisd.service
-#  echo All set! 
-#  sleep 3s
+# SETTING genesisd AS A SYSTEMD SERVICE
+wget https://raw.githubusercontent.com/alpha-omega-labs/genesisd/noobdate/genesisd.service -O /etc/systemd/system/genesisd.service
+systemctl daemon-reload
+systemctl enable genesisd
+echo "All set!" 
+sleep 3s
 
 # STARTING NODE
 
@@ -146,6 +141,7 @@ cat << "EOF"
 EOF
  
 sleep 5s
-service genesisd start
+systemctl start genesisd
+
 # genesisd start
-ponysay "genesisd node service started, you may try *service genesisd status* command to see it! Welcome to GenesisL1 blockchain!"
+ponysay "genesisd node service started, you may try *journalctl -fu genesisd -ocat* command to see it! Welcome to GenesisL1 blockchain!"
