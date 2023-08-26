@@ -34,7 +34,7 @@ cat << "EOF"
                                                                                                                                                             
                                                                                                                                                                                                                              	 
 	Welcome to the decentralized blockchain Renaissance, above money & beyond cryptocurrency!
-	This script should update genesis_29-1 to genesis_29-2 while running under root user.
+	This script should update genesis_29-2 (evmos version) to genesis_29-2 (cronos version) while running under root user.
 	GENESIS L1 is a highly experimental decentralized project, provided AS IS, with NO WARRANTY.
 	GENESIS L1 IS A NON COMMERCIAL OPEN DECENRALIZED BLOCKCHAIN PROJECT RELATED TO SCIENCE AND ART
           
@@ -44,12 +44,13 @@ cat << "EOF"
   Min. coin unit: el1
   1 L1 = 1 000 000 000 000 000 000 el1 	
   Initial supply: 21 000 000 L1
-  genesis_29-2 circulation: ~22 000 000 L1
+  genesis_29-2 circulation: ~29 000 000 L1
   Mint rate: < 20% annual
-  Block target time: ~5s
+  Block target time: ~11s
   Binary name: genesisd
   genesis_29-1 start: Nov 30, 2021
-  genesis_29-2 start: Apr 16, 2022
+  genesis_29-2 (evmos) start: Apr 16, 2022
+  genesis_29-2 (cronos) start: Aug 26, 2023
 EOF
 sleep 15s
 
@@ -83,21 +84,21 @@ service genesisd stop
 service evmos stop
 service evmosd stop
 
-# BACKUP genesis_29-1 .evmosd
+# BACKUP genesis_29-2 (evmos version) .genesisd
 cd
-rsync -r --verbose --exclude 'data' ./.evmosd/ ./.evmosd_backup/
+rsync -r --verbose --exclude 'data' ./.genesisd/ ./.genesisd_backup/
 
 # DELETING OF .genesisd FOLDER (PREVIOUS INSTALLATIONS)
 cd 
 rm -r .genesisd
 
 # BUILDING genesisd BINARIES
-cd genesisd
+cd genesisL1
 make install
 
-# COPY .evmosd FOLDER to .genesisd FOLDER, EXCLUDE data
+# COPY .genesisd_backup FOLDER to .genesisd FOLDER, EXCLUDE data
 cd
-rsync -r --verbose --exclude 'data' ./.evmosd/ ./.genesisd/
+rsync -r --verbose --exclude 'data' ./.genesisd_backup/ ./.genesisd/
 
 # SETTING UP THE NEW chain-id in CONFIG
 genesisd config chain-id genesis_29-2
@@ -106,7 +107,9 @@ genesisd config chain-id genesis_29-2
 cd 
 cd .genesisd/config
 rm -r genesis.json
-wget https://github.com/alpha-omega-labs/genesisd/raw/neolithic/genesis_29-1-state/genesis.json
+rm -r genesis.json_L1_v46
+wget http://135.181.135.29/genesis.json_L1_v46
+mv genesis.json_L1_v46 genesis.json
 cd
 
 # RESET TO IMPORTED genesis.json
@@ -116,19 +119,21 @@ genesisd unsafe-reset-all
 cd 
 cd .genesisd/config
 sed -i 's/seeds = ""/seeds = "36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656"/' config.toml
-sed -i 's/persistent_peers = ""/persistent_peers = "36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656"/' config.toml
+sed -i 's/rpc_servers = ""/rpc_servers = "http:\/\/154.12.229.22:26657,http:\/\/154.12.229.22:26657"/' config.toml
+sed -i 's/persistent_peers = ""/persistent_peers = "551cb3d41d457f830d75c7a5b8d1e00e6e5cbb91@135.181.97.75:26656,5082248889f93095a2fd4edd00f56df1074547ba@146.59.81.204:26651,36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656,c23b3d58ccae0cf34fc12075c933659ff8cca200@95.217.207.154:26656,37d8aa8a31d66d663586ba7b803afd68c01126c4@65.21.134.70:26656,d7d4ea7a661c40305cab84ac227cdb3814df4e43@139.162.195.228:26656,be81a20b7134552e270774ec861c4998fabc2969@genesisl1.3ventures.io:26656"/' config.toml
 sed -i 's/minimum-gas-prices = "0aphoton"/minimum-gas-prices = "0el1"/g' app.toml
+sed -i 's/timeout_commit = "5s"/timeout_commit = "10s"/' config.toml
 sed -i '212s/.*/enable = false/' app.toml
 
 # STARTING genesisd AS A SERVICE
- cd
- cd /etc/systemd/system
- rm -r genesis.service
- wget https://raw.githubusercontent.com/alpha-omega-labs/genesisd/noobdate/genesisd.service
- systemctl daemon-reload
- systemctl enable genesisd.service
- echo All set! 
- sleep 3s
+#  cd
+#  cd /etc/systemd/system
+#  rm -r genesis.service
+#  wget https://raw.githubusercontent.com/alpha-omega-labs/genesisd/noobdate/genesisd.service
+#  systemctl daemon-reload
+#  systemctl enable genesisd.service
+#  echo All set! 
+#  sleep 3s
 
 # STARTING NODE
 
@@ -143,5 +148,4 @@ EOF
 sleep 5s
 service genesisd start
 # genesisd start
-ponysay "genesisd node service started, you may try *service genesisd status* command to see it! Welcome to GenesisL1 blockchain!" 
-
+ponysay "genesisd node service started, you may try *service genesisd status* command to see it! Welcome to GenesisL1 blockchain!"
