@@ -146,7 +146,7 @@ import (
 )
 
 const (
-	Name = "cronos"
+	Name = "genesisd"
 
 	// AddrLen is the allowed length (in bytes) for an address.
 	//
