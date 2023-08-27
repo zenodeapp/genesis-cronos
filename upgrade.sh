@@ -142,4 +142,4 @@ sleep 5s
 systemctl start genesisd
 
 # genesisd start
-ponysay "genesisd node service started, you may try *journalctl -fu genesisd -ocat* command to see it! Welcome to GenesisL1 blockchain!"
+ponysay "genesisd node service started, you may try *journalctl -fu genesisd -ocat* or *service genesisd status* command to see it! Welcome to GenesisL1 blockchain!"
