@@ -125,7 +125,7 @@ cd ~/.genesisd/config
 total_ram_kb=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 total_swap_kb=$(grep SwapTotal /proc/meminfo | awk '{print $2}')
 total_combined_gb=$((($total_ram_kb + $total_swap_kb) / 1024 / 1024))
-minimum_combined_gb=128
+minimum_combined_gb=150
 
 if ((total_combined_gb < minimum_combined_gb)); then
     # Calculate additional swap space needed in gigabytes
