@@ -146,7 +146,7 @@ import (
 )
 
 const (
-	Name = "genesisd"
+	Name = "genesis"
 
 	// AddrLen is the allowed length (in bytes) for an address.
 	//
@@ -211,7 +211,7 @@ func init() {
 		panic(err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name+"d")
 }
 
 // GenModuleBasics generate basic module manager according to experimental flag
