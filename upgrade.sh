@@ -70,6 +70,43 @@ echo "root - nofile 50000" >> /etc/security/limits.conf
 echo "fs.file-max = 50000" >> /etc/sysctl.conf 
 ulimit -n 50000
 
+# ADDITIONAL SWAP (IF NECESSARY)
+total_ram_kb=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+total_swap_kb=$(grep SwapTotal /proc/meminfo | awk '{print $2}')
+total_combined_gb=$((($total_ram_kb + $total_swap_kb) / 1024 / 1024))
+minimum_combined_gb=150
+
+if ((total_combined_gb < minimum_combined_gb)); then
+    # Calculate additional swap space needed in gigabytes
+    additional_swap_gb=$((minimum_combined_gb - total_combined_gb + 1)) 
+
+    echo "Adding ${additional_swap_gb}GB of swap space..."
+
+    # Find a suitable name for the new swap file
+    index=2
+    new_swapfile="/swapfile"
+    while [ -e $new_swapfile ]; do
+        new_swapfile="/swapfile_$index"
+        index=$((index + 1))
+    done
+
+    # Create new swap file
+    fallocate -l ${additional_swap_gb}G $new_swapfile
+
+    # Set permissions on the swap file
+    chmod 600 $new_swapfile
+
+    # Make the swap space
+    mkswap $new_swapfile
+
+    # Activate the new swap space
+    swapon $new_swapfile
+
+    echo "Additional ${additional_swap_gb}GB of swap space added in $new_swapfile."
+else
+    echo "No additional swap space needed."
+fi
+
 #PONYSAY 
 snap install ponysay
 ponysay "Installing genesisd from source code with updated genesis_29-2 mainnet!"
@@ -120,43 +157,6 @@ cd ~/.genesisd/config
 # sed -i 's/minimum-gas-prices = "0aphoton"/minimum-gas-prices = "0el1"/g' app.toml
 # sed -i 's/timeout_commit = "5s"/timeout_commit = "10s"/' config.toml
 # sed -i '212s/.*/enable = false/' app.toml
-
-# ADDITIONAL SWAP (IF NECESSARY)
-total_ram_kb=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-total_swap_kb=$(grep SwapTotal /proc/meminfo | awk '{print $2}')
-total_combined_gb=$((($total_ram_kb + $total_swap_kb) / 1024 / 1024))
-minimum_combined_gb=150
-
-if ((total_combined_gb < minimum_combined_gb)); then
-    # Calculate additional swap space needed in gigabytes
-    additional_swap_gb=$((minimum_combined_gb - total_combined_gb + 1)) 
-
-    echo "Adding ${additional_swap_gb}GB of swap space..."
-
-    # Find a suitable name for the new swap file
-    index=2
-    new_swapfile="/swapfile"
-    while [ -e $new_swapfile ]; do
-        new_swapfile="/swapfile_$index"
-        index=$((index + 1))
-    done
-
-    # Create new swap file
-    fallocate -l ${additional_swap_gb}G $new_swapfile
-
-    # Set permissions on the swap file
-    chmod 600 $new_swapfile
-
-    # Make the swap space
-    mkswap $new_swapfile
-
-    # Activate the new swap space
-    swapon $new_swapfile
-
-    echo "Additional ${additional_swap_gb}GB of swap space added in $new_swapfile."
-else
-    echo "No additional swap space needed."
-fi
 
 # SETTING genesisd AS A SYSTEMD SERVICE
 wget https://raw.githubusercontent.com/alpha-omega-labs/genesisd/noobdate/genesisd.service -O /etc/systemd/system/genesisd.service
