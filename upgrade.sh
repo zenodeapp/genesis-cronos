@@ -183,8 +183,8 @@ cp ~/genesisL1/genesisd_config/app.toml ./app.toml # already has json-rpc disabl
 cp ~/genesisL1/genesisd_config/config.toml ./config.toml # already has timeout_commit set to 10s
 
  # recover moniker from backup
-moniker=$(grep "moniker" ~/.genesisd_backup/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]')
-if [[ -z "$moniker" ]]; then
+moniker=$(grep "moniker" ~/.genesisd_backup/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
+if [ -z "$moniker" ]; then
     echo "Warning: The moniker is empty. Please fill out a moniker in the config.toml file."
 else
     # Replace the moniker value in the config.toml file
