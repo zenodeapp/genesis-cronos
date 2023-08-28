@@ -34,7 +34,7 @@ cat << "EOF"
 
 																										   
 	Welcome to the decentralized blockchain Renaissance, above money & beyond cryptocurrency!
-	This script should update genesis_29-2 (evmos version) to genesis_29-2 (cronos version) while running under root user.
+	This script upgrading genesis_29-2 (evmos) to genesis_29-2 (cronos) running under root user.
 	GENESIS L1 is a highly experimental decentralized project, provided AS IS, with NO WARRANTY.
 	GENESIS L1 IS A NON COMMERCIAL OPEN DECENRALIZED BLOCKCHAIN PROJECT RELATED TO SCIENCE AND ART
         THIS IS AN UPGRADE TO COSMOS SDK V0.46.15 BASED ON CRONOS RELEASE SOURCE CODE, THANK YOU!
@@ -45,7 +45,7 @@ cat << "EOF"
   Min. coin unit: el1
   1 L1 = 1 000 000 000 000 000 000 el1 	
   Initial supply: 21 000 000 L1
-  genesis_29-2 circulation: ~29 000 000 L1
+  genesis_29-2 at the time of upgrade circulation: ~29 000 000 L1
   Mint rate: < 20% annual
   Block target time: ~11s
   Binary name: genesisd
