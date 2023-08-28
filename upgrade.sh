@@ -103,9 +103,9 @@ if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
 
     # Find a suitable name for the new swap file
     index=2
-    new_swapfile="/swapfile"
+    new_swapfile="/genesisd_swapfile"
     while [ -e $new_swapfile ]; do
-        new_swapfile="/swapfile_$index"
+        new_swapfile="/genesisd_swapfile_$index"
         index=$((index + 1))
     done
 
