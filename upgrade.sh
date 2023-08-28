@@ -34,9 +34,9 @@ cat << "EOF"
 
 																										   
 	Welcome to the decentralized blockchain Renaissance, above money & beyond cryptocurrency!
-	This script upgrading genesis_29-2 (evmos) to genesis_29-2 (cronos) running under root user.
+	This script upgrades genesis_29-2 (evmos) to genesis_29-2 (cronos) running under root user.
 	GENESIS L1 is a highly experimental decentralized project, provided AS IS, with NO WARRANTY.
-	GENESIS L1 IS A NON COMMERCIAL OPEN DECENRALIZED BLOCKCHAIN PROJECT RELATED TO SCIENCE AND ART
+	GENESIS L1 IS A NON COMMERCIAL OPEN DECENTRALIZED BLOCKCHAIN PROJECT RELATED TO SCIENCE AND ART
         THIS IS AN UPGRADE TO COSMOS SDK V0.46.15 BASED ON CRONOS RELEASE SOURCE CODE, THANK YOU!
   
   Mainnet EVM chain ID: 29
