@@ -53,6 +53,25 @@ cat << "EOF"
 EOF
 sleep 15s
 
+# Function to add a line to a file if it doesn't already exist (to prevent duplicates)
+# Usage: add_line_to_file "line" file [use_sudo]
+add_line_to_file() {
+    local line="$1"
+    local file="$2"
+    local use_sudo="$3"
+
+    if ! grep -qF "$line" "$file"; then
+        if $use_sudo; then
+            echo "$line" | sudo tee -a "$file" > /dev/null
+        else
+            echo "$line" >> "$file"
+        fi
+
+        echo "Line '$line' added to $file."
+    else
+        echo "Line '$line' already exists in $file."
+    fi
+}
 
 # SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.20 via snap
 
@@ -65,9 +84,9 @@ export PATH=$PATH:$(go env GOPATH)/bin
 echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc
 
 # GLOBAL CHANGE OF OPEN FILE LIMITS
-echo "* - nofile 50000" >> /etc/security/limits.conf
-echo "root - nofile 50000" >> /etc/security/limits.conf
-echo "fs.file-max = 50000" >> /etc/sysctl.conf 
+add_line_to_file "* - nofile 50000" /etc/security/limits.conf false
+add_line_to_file "root - nofile 50000" /etc/security/limits.conf false
+add_line_to_file "fs.file-max = 50000" /etc/sysctl.conf false
 ulimit -n 50000
 
 # ADDITIONAL SWAP (IF NECESSARY)
@@ -104,13 +123,8 @@ if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
 
     echo "Additional ${additional_swap_gb}GB of swap space added in $new_swapfile."
 
-    # Add entry to /etc/fstab to make swapfile persistent (only if it hasn't already been added to the /etc/fstab file)
-    if ! grep -q "$new_swapfile none swap sw 0 0" /etc/fstab; then
-        echo "$new_swapfile none swap sw 0 0" | sudo tee -a /etc/fstab > /dev/null
-        echo "Swapfile entry added to /etc/fstab."
-    else
-        echo "Swapfile entry already exists in /etc/fstab."
-    fi
+    # Add entry to /etc/fstab to make swapfile persistent
+    add_line_to_file "$new_swapfile none swap sw 0 0" /etc/fstab true
 else
     echo "No additional swap space needed."
 fi
