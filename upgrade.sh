@@ -113,14 +113,8 @@ if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
 
     # Create new swap file
     fallocate -l ${additional_swap_gb}G $new_swapfile
-
-    # Set permissions on the swap file
     chmod 600 $new_swapfile
-
-    # Make the swap space
     mkswap $new_swapfile
-
-    # Activate the new swap space
     swapon $new_swapfile
 
     echo "Additional ${additional_swap_gb}GB of swap space added in $new_swapfile."
@@ -179,16 +173,17 @@ genesisd tendermint unsafe-reset-all
 # CONFIG FILES
 cd ~/.genesisd/config
 
-cp ~/genesisL1/genesisd_config/app.toml ./app.toml # already has json-rpc disabled and minimum gas prices set to 50000000000el1
-cp ~/genesisL1/genesisd_config/config.toml ./config.toml # already has timeout_commit set to 10s
+# these default toml files already have genesis specific configurations set (i.e. timeout_commit 10s, min gas price 50gel etc.).
+cp ~/genesisL1/genesisd_config/default_app.toml ./app.toml
+cp ~/genesisL1/genesisd_config/default_config.toml ./config.toml
 
- # recover moniker from backup
+# recover moniker from backup
 moniker=$(grep "moniker" ~/.genesisd_backup/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
 if [ -z "$moniker" ]; then
     echo "Warning: The moniker is empty. Please fill out a moniker in the config.toml file."
 else
     # Replace the moniker value in the config.toml file
-    sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml # set the known moniker
+    sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
     echo "Moniker value set to: $moniker"
 fi
 
