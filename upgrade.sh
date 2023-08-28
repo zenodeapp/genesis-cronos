@@ -104,8 +104,13 @@ if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
 
     echo "Additional ${additional_swap_gb}GB of swap space added in $new_swapfile."
 
-    # Add entry to /etc/fstab to make swapfile persistent
-    echo "$new_swapfile none swap sw 0 0" | sudo tee -a /etc/fstab > /dev/null
+    # Add entry to /etc/fstab to make swapfile persistent (only if it hasn't already been added to the /etc/fstab file)
+    if ! grep -q "$new_swapfile none swap sw 0 0" /etc/fstab; then
+        echo "$new_swapfile none swap sw 0 0" | sudo tee -a /etc/fstab > /dev/null
+        echo "Swapfile entry added to /etc/fstab."
+    else
+        echo "Swapfile entry already exists in /etc/fstab."
+    fi
 else
     echo "No additional swap space needed."
 fi
