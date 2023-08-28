@@ -167,8 +167,11 @@ rsync -r --verbose --exclude 'data' ./.genesisd_backup/ ./.genesisd/
 genesisd config chain-id genesis_29-2
 
 #IMPORTING GENESIS STATE
+cd 
+cd .genesisd/config
+rm -r genesis.json
+wget http://135.181.135.29/genesisd/genesis.json
 cd
-wget http://135.181.135.29/genesis.json_L1_v46 -O ./.genesisd/config/genesis.json
 
 # RESET TO IMPORTED genesis.json
 genesisd tendermint unsafe-reset-all
