@@ -103,6 +103,9 @@ if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
     swapon $new_swapfile
 
     echo "Additional ${additional_swap_gb}GB of swap space added in $new_swapfile."
+
+    # Add entry to /etc/fstab to make swapfile persistent
+    echo "$new_swapfile none swap sw 0 0" | sudo tee -a /etc/fstab > /dev/null
 else
     echo "No additional swap space needed."
 fi
