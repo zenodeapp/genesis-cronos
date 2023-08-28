@@ -184,7 +184,7 @@ genesisd tendermint unsafe-reset-all
 wget https://raw.githubusercontent.com/alpha-omega-labs/genesisd/noobdate/genesisd.service -O /etc/systemd/system/genesisd.service
 systemctl daemon-reload
 systemctl enable genesisd
-echo "All set!" 
+# echo "All set!" 
 sleep 3s
 
 # STARTING NODE
