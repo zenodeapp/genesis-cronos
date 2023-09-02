@@ -160,6 +160,19 @@ rsync -r --verbose --exclude 'data' ./.genesisd_backup/ ./.genesisd/
 # SETTING UP THE NEW chain-id in CONFIG
 genesisd config chain-id genesis_29-2
 
+# IF $2 == INIT THEN CREATE A NEW KEY
+if [ "$2" = "INIT" ]; then
+    genesisd config keyring-backend os
+
+    ponysay "IN A FEW MOMENTS GET READY TO WRITE YOUR SECRET SEED PHRASE FOR YOUR NEW KEY NAMED *mygenesiskey*, YOU WILL HAVE 2 MINUTES FOR THIS!!!"
+    sleep 20s
+    genesisd keys add mygenesiskey --keyring-backend os --algo eth_secp256k1
+    sleep 120s
+
+    genesisd init $1 --chain-id genesis_29-2 
+fi
+# FI
+
 #IMPORTING GENESIS STATE
 cd 
 cd .genesisd/config
@@ -177,8 +190,8 @@ cd ~/.genesisd/config
 cp ~/genesisL1/genesisd_config/default_app.toml ./app.toml
 cp ~/genesisL1/genesisd_config/default_config.toml ./config.toml
 
-# recover moniker from backup
-moniker=$(grep "moniker" ~/.genesisd_backup/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
+# use given moniker or recover from backup
+moniker="${1:-$(grep "moniker" ~/.genesisd_backup/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]\"')}"
 if [ -z "$moniker" ]; then
     echo "Warning: The moniker is empty. Please fill out a moniker in the config.toml file."
 else
@@ -186,10 +199,6 @@ else
     sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
     echo "Moniker value set to: $moniker"
 fi
-
-# TO DO: SEEDS AND PEERS
-# sed -i 's/seeds = ""/seeds = "36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656"/' config.toml
-# sed -i 's/persistent_peers = ""/persistent_peers = "551cb3d41d457f830d75c7a5b8d1e00e6e5cbb91@135.181.97.75:26656,5082248889f93095a2fd4edd00f56df1074547ba@146.59.81.204:26651,36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656,c23b3d58ccae0cf34fc12075c933659ff8cca200@95.217.207.154:26656,37d8aa8a31d66d663586ba7b803afd68c01126c4@65.21.134.70:26656,d7d4ea7a661c40305cab84ac227cdb3814df4e43@139.162.195.228:26656,be81a20b7134552e270774ec861c4998fabc2969@genesisl1.3ventures.io:26656"/' config.toml
 
 # SETTING genesisd AS A SYSTEMD SERVICE
 cp ~/genesisL1/genesisd.service /etc/systemd/system/genesisd.service
@@ -199,7 +208,6 @@ systemctl enable genesisd
 sleep 3s
 
 # STARTING NODE
-
 cat << "EOF"
      	    \\
              \\_
