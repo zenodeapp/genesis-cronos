@@ -212,7 +212,7 @@ if [ "$1" = "init" ]; then
     genesisd keys add mygenesiskey --keyring-backend os --algo eth_secp256k1
     sleep 120s
 
-    genesisd init $1 --chain-id genesis_29-2 
+    genesisd init $moniker --chain-id genesis_29-2 
 fi
 
 #IMPORTING GENESIS STATE
