@@ -96,7 +96,7 @@ build: check-network print-ledger go.sum
 
 install: check-network print-ledger go.sum
 	@go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/$(BINARY_NAME) ./cmd/cronosd
-	@mv $(BUILDDIR)/$(BINARY_NAME) $(BINDIR)
+	@mv $(BUILDDIR)/$(BINARY_NAME) $(BINDIR)/$(BINARY_NAME)
 
 test:
 	@go test -v -mod=readonly $(PACKAGES) -coverprofile=$(COVERAGE) -covermode=atomic
