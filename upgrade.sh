@@ -34,9 +34,9 @@ cat << "EOF"
 
 																										   
 	Welcome to the decentralized blockchain Renaissance, above money & beyond cryptocurrency!
-	This script upgrading genesis_29-2 (evmos) to genesis_29-2 (cronos) running under root user.
+	This script upgrades genesis_29-2 (evmos) to genesis_29-2 (cronos) running under root user.
 	GENESIS L1 is a highly experimental decentralized project, provided AS IS, with NO WARRANTY.
-	GENESIS L1 IS A NON COMMERCIAL OPEN DECENRALIZED BLOCKCHAIN PROJECT RELATED TO SCIENCE AND ART
+	GENESIS L1 IS A NON COMMERCIAL OPEN DECENTRALIZED BLOCKCHAIN PROJECT RELATED TO SCIENCE AND ART
         THIS IS AN UPGRADE TO COSMOS SDK V0.46.15 BASED ON CRONOS RELEASE SOURCE CODE, THANK YOU!
   
   Mainnet EVM chain ID: 29
@@ -113,14 +113,8 @@ if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
 
     # Create new swap file
     fallocate -l ${additional_swap_gb}G $new_swapfile
-
-    # Set permissions on the swap file
     chmod 600 $new_swapfile
-
-    # Make the swap space
     mkswap $new_swapfile
-
-    # Activate the new swap space
     swapon $new_swapfile
 
     echo "Additional ${additional_swap_gb}GB of swap space added in $new_swapfile."
@@ -176,17 +170,29 @@ cd
 # RESET TO IMPORTED genesis.json
 genesisd tendermint unsafe-reset-all
 
-# ADD PEERS
-# cd ~/.genesisd/config
+# CONFIG FILES
+cd ~/.genesisd/config
+
+# these default toml files already have genesis specific configurations set (i.e. timeout_commit 10s, min gas price 50gel etc.).
+cp ~/genesisL1/genesisd_config/default_app.toml ./app.toml
+cp ~/genesisL1/genesisd_config/default_config.toml ./config.toml
+
+# recover moniker from backup
+moniker=$(grep "moniker" ~/.genesisd_backup/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
+if [ -z "$moniker" ]; then
+    echo "Warning: The moniker is empty. Please fill out a moniker in the config.toml file."
+else
+    # Replace the moniker value in the config.toml file
+    sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
+    echo "Moniker value set to: $moniker"
+fi
+
+# TO DO: SEEDS AND PEERS
 # sed -i 's/seeds = ""/seeds = "36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656"/' config.toml
-# sed -i 's/rpc_servers = ""/rpc_servers = "http:\/\/154.12.229.22:26657,http:\/\/154.12.229.22:26657"/' config.toml
 # sed -i 's/persistent_peers = ""/persistent_peers = "551cb3d41d457f830d75c7a5b8d1e00e6e5cbb91@135.181.97.75:26656,5082248889f93095a2fd4edd00f56df1074547ba@146.59.81.204:26651,36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656,c23b3d58ccae0cf34fc12075c933659ff8cca200@95.217.207.154:26656,37d8aa8a31d66d663586ba7b803afd68c01126c4@65.21.134.70:26656,d7d4ea7a661c40305cab84ac227cdb3814df4e43@139.162.195.228:26656,be81a20b7134552e270774ec861c4998fabc2969@genesisl1.3ventures.io:26656"/' config.toml
-# sed -i 's/minimum-gas-prices = "0aphoton"/minimum-gas-prices = "0el1"/g' app.toml
-# sed -i 's/timeout_commit = "5s"/timeout_commit = "10s"/' config.toml
-# sed -i '212s/.*/enable = false/' app.toml
 
 # SETTING genesisd AS A SYSTEMD SERVICE
-wget https://raw.githubusercontent.com/alpha-omega-labs/genesisd/noobdate/genesisd.service -O /etc/systemd/system/genesisd.service
+cp ~/genesisL1/genesisd.service /etc/systemd/system/genesisd.service
 systemctl daemon-reload
 systemctl enable genesisd
 # echo "All set!" 
