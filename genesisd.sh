@@ -1,47 +1,6 @@
 #!/bin/bash
 
 moniker=""
-
-if [ "$#" -lt 1 ]; then
-    echo "Usage: $0 <command> [moniker]"
-    echo "   <command> should be either 'upgrade' or 'init'"
-    exit 1
-fi
-
-case "$1" in
-    "upgrade")
-        if [ "$#" -eq 1 ]; then
-            moniker=$(grep "moniker" ~/.genesisd/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
-            
-            if [ -z "$moniker" ]; then
-                echo "Error: No moniker found in the current configuration nor has one been provided as an argument."
-                exit 1
-            fi
-            
-            echo "Upgrade mode with moniker from previous configuration: $moniker"
-        elif [ "$#" -eq 2 ]; then
-            moniker="$2"
-            echo "Upgrade mode with moniker: $moniker"
-        else
-            echo "Invalid number of arguments for 'upgrade' mode. Usage: $0 upgrade [moniker]"
-            exit 1
-        fi
-        ;;
-    "init")
-        if [ "$#" -eq 2 ]; then
-            moniker="$2"
-            echo "Init mode with moniker: $moniker"
-        else
-            echo "Missing or invalid argument for 'init' mode. Usage: $0 init <moniker>"
-            exit 1
-        fi
-        ;;
-    *)
-        echo "Invalid command: $1. Please use 'upgrade' or 'init'."
-        exit 1
-        ;;
-esac
-
 cat << "EOF"
 
   /$$$$$$                                          /$$                 /$$         /$$       
@@ -95,7 +54,49 @@ cat << "EOF"
   genesis_29-1 start: Nov 30, 2021
   genesis_29-2 (evmos) start: Apr 16, 2022
   genesis_29-2 (cronos) start: Aug 26, 2023
+  
 EOF
+
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <command> [moniker]"
+    echo "   <command> should be either 'upgrade' or 'init'"
+    exit 1
+fi
+
+case "$1" in
+    "upgrade")
+        if [ "$#" -eq 1 ]; then
+            moniker=$(grep "moniker" ~/.genesisd/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
+            
+            if [ -z "$moniker" ]; then
+                echo "Error: No moniker found in the current configuration nor has one been provided as an argument."
+                exit 1
+            fi
+            
+            echo "Upgrade mode with moniker from previous configuration: $moniker"
+        elif [ "$#" -eq 2 ]; then
+            moniker="$2"
+            echo "Upgrade mode with moniker: $moniker"
+        else
+            echo "Invalid number of arguments for 'upgrade' mode. Usage: $0 upgrade [moniker]"
+            exit 1
+        fi
+        ;;
+    "init")
+        if [ "$#" -eq 2 ]; then
+            moniker="$2"
+            echo "Init mode with moniker: $moniker"
+        else
+            echo "Missing or invalid argument for 'init' mode. Usage: $0 init <moniker>"
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Invalid command: $1. Please use 'upgrade' or 'init'."
+        exit 1
+        ;;
+esac
+
 sleep 15s
 
 # Function to add a line to a file if it doesn't already exist (to prevent duplicates)
