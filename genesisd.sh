@@ -1,4 +1,47 @@
 #!/bin/bash
+
+moniker=""
+
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <command> [moniker]"
+    echo "   <command> should be either 'upgrade' or 'init'"
+    exit 1
+fi
+
+case "$1" in
+    "upgrade")
+        if [ "$#" -eq 1 ]; then
+            moniker=$(grep "moniker" ~/.genesisd/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
+            
+            if [ -z "$moniker" ]; then
+                echo "Error: No moniker found in the current configuration nor has one been provided as an argument."
+                exit 1
+            fi
+            
+            echo "Upgrade mode with moniker from previous configuration: $moniker"
+        elif [ "$#" -eq 2 ]; then
+            moniker="$2"
+            echo "Upgrade mode with moniker: $moniker"
+        else
+            echo "Invalid number of arguments for 'upgrade' mode. Usage: $0 upgrade [moniker]"
+            exit 1
+        fi
+        ;;
+    "init")
+        if [ "$#" -eq 2 ]; then
+            moniker="$2"
+            echo "Init mode with moniker: $moniker"
+        else
+            echo "Missing or invalid argument for 'init' mode. Usage: $0 init <moniker>"
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Invalid command: $1. Please use 'upgrade' or 'init'."
+        exit 1
+        ;;
+esac
+
 cat << "EOF"
 
   /$$$$$$                                          /$$                 /$$         /$$       
@@ -160,8 +203,8 @@ rsync -r --verbose --exclude 'data' ./.genesisd_backup/ ./.genesisd/
 # SETTING UP THE NEW chain-id in CONFIG
 genesisd config chain-id genesis_29-2
 
-# IF $2 == INIT THEN CREATE A NEW KEY
-if [ "$2" = "INIT" ]; then
+# INIT MODE WILL CREATE A NEW KEY
+if [ "$1" = "init" ]; then
     genesisd config keyring-backend os
 
     ponysay "IN A FEW MOMENTS GET READY TO WRITE YOUR SECRET SEED PHRASE FOR YOUR NEW KEY NAMED *mygenesiskey*, YOU WILL HAVE 2 MINUTES FOR THIS!!!"
@@ -171,7 +214,6 @@ if [ "$2" = "INIT" ]; then
 
     genesisd init $1 --chain-id genesis_29-2 
 fi
-# FI
 
 #IMPORTING GENESIS STATE
 cd 
@@ -190,15 +232,9 @@ cd ~/.genesisd/config
 cp ~/genesisL1/genesisd_config/default_app.toml ./app.toml
 cp ~/genesisL1/genesisd_config/default_config.toml ./config.toml
 
-# use given moniker or recover from backup
-moniker="${1:-$(grep "moniker" ~/.genesisd_backup/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]\"')}"
-if [ -z "$moniker" ]; then
-    echo "Warning: The moniker is empty. Please fill out a moniker in the config.toml file."
-else
-    # Replace the moniker value in the config.toml file
-    sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
-    echo "Moniker value set to: $moniker"
-fi
+# set moniker
+sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
+echo "Moniker value set to: $moniker"
 
 # SETTING genesisd AS A SYSTEMD SERVICE
 cp ~/genesisL1/genesisd.service /etc/systemd/system/genesisd.service
