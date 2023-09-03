@@ -135,7 +135,10 @@ if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
     additional_swap_gb=$((minimum_combined_gb - total_combined_gb + 1)) 
 
     if [ "$available_disk_gb" -lt "$((additional_swap_gb + disk_headroom_gb))" ]; then
-        echo "Sorry, your node is too tiny in disk for genesisL1 :)"
+        echo ""
+        echo "Sorry, your node is too tiny in disk for genesisL1 :)."
+        echo "    Available disk space: ${available_disk_gb}GB."
+        echo "    Required disk space (bare minimum): $((additional_swap_gb + disk_headroom_gb))GB"
         exit 1
     fi
 
