@@ -137,8 +137,8 @@ if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
     if [ "$available_disk_gb" -lt "$((additional_swap_gb + disk_headroom_gb))" ]; then
         echo ""
         echo "Sorry, your node is too tiny in disk for genesisL1 :)."
-        echo "    Available disk space: ${available_disk_gb}GB."
-        echo "    Required disk space (bare minimum): $((additional_swap_gb + disk_headroom_gb))GB"
+        echo "Available disk space: ${available_disk_gb}GB."
+        echo "Required disk space (bare minimum): $((additional_swap_gb + disk_headroom_gb))GB"
         exit 1
     fi
 
@@ -226,7 +226,11 @@ if [ "$1" = "init" ]; then
     ponysay "IN A FEW MOMENTS GET READY TO WRITE YOUR SECRET SEED PHRASE FOR YOUR NEW KEY NAMED *mygenesiskey*, YOU WILL HAVE 2 MINUTES FOR THIS!!!"
     sleep 20s
     genesisd keys add mygenesiskey --keyring-backend os --algo eth_secp256k1
-    sleep 120s
+
+    # Check if the exit status of the previous command is equal to zero (zero means it succeeded, anything else means it failed)
+    if [ $? -eq 0 ]; then
+      sleep 120s
+    fi
 
     genesisd init $moniker --chain-id genesis_29-2 
 fi
