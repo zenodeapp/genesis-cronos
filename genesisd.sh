@@ -32,8 +32,34 @@ THIS IS AN UPGRADE TO COSMOS SDK V0.46.15 BASED ON CRONOS RELEASE SOURCE CODE, T
   
 EOF
 
-REPO_DIR=$(cd "$(dirname "$0")" && pwd)
 moniker=""
+minimum_combined_gb=150
+repo_dir=$(cd "$(dirname "$0")" && pwd)
+total_ram_kb=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+total_swap_kb=$(grep SwapTotal /proc/meminfo | awk '{print $2}')
+total_combined_gb=$((($total_ram_kb + $total_swap_kb) / 1024 / 1024))
+available_disk_gb=$(df -BG --output=avail / | awk 'NR==2 {print $1}' | tr -d 'G')
+disk_headroom_gb=15
+
+# Function to add a line to a file if it doesn't already exist (to prevent duplicates)
+# Usage: add_line_to_file "line" file [use_sudo]
+add_line_to_file() {
+    local line="$1"
+    local file="$2"
+    local use_sudo="$3"
+
+    if ! grep -qF "$line" "$file"; then
+        if $use_sudo; then
+            echo "$line" | sudo tee -a "$file" > /dev/null
+        else
+            echo "$line" >> "$file"
+        fi
+
+        echo "Line '$line' added to $file."
+    else
+        echo "Line '$line' already exists in $file."
+    fi
+}
 
 if [ "$(id -u)" -ne 0 ]; then
     echo "This script must be run as the root user."
@@ -80,53 +106,18 @@ case "$1" in
         ;;
 esac
 
-sleep 15s
-
-# Function to add a line to a file if it doesn't already exist (to prevent duplicates)
-# Usage: add_line_to_file "line" file [use_sudo]
-add_line_to_file() {
-    local line="$1"
-    local file="$2"
-    local use_sudo="$3"
-
-    if ! grep -qF "$line" "$file"; then
-        if $use_sudo; then
-            echo "$line" | sudo tee -a "$file" > /dev/null
-        else
-            echo "$line" >> "$file"
-        fi
-
-        echo "Line '$line' added to $file."
-    else
-        echo "Line '$line' already exists in $file."
-    fi
-}
-
-# SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.20 via snap
-
-sudo apt-get update -y
-sudo apt-get install jq git wget make gcc build-essential snapd wget -y
-snap install go --channel=1.20/stable --classic
-snap refresh go --channel=1.20/stable --classic
-
-export PATH=$PATH:$(go env GOPATH)/bin
-add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' ~/.bashrc false
-
-# GLOBAL CHANGE OF OPEN FILE LIMITS
-add_line_to_file "* - nofile 50000" /etc/security/limits.conf false
-add_line_to_file "root - nofile 50000" /etc/security/limits.conf false
-add_line_to_file "fs.file-max = 50000" /etc/sysctl.conf false
-ulimit -n 50000
-
-# ADDITIONAL SWAP (IF NECESSARY)
-total_ram_kb=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-total_swap_kb=$(grep SwapTotal /proc/meminfo | awk '{print $2}')
-total_combined_gb=$((($total_ram_kb + $total_swap_kb) / 1024 / 1024))
-minimum_combined_gb=150
-
+# ADD ADDITIONAL SWAP (IF NECESSARY)
 if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
     # Calculate additional swap space needed in gigabytes
     additional_swap_gb=$((minimum_combined_gb - total_combined_gb + 1)) 
+
+    if [ "$available_disk_gb" -lt "$((additional_swap_gb + disk_headroom_gb))" ]; then
+        echo ""
+        echo "Sorry, your node is too tiny in disk for genesisL1 :)."
+        echo "Available disk space: ${available_disk_gb}GB."
+        echo "Required disk space (bare minimum): $((additional_swap_gb + disk_headroom_gb))GB"
+        exit 1
+    fi
 
     echo "Adding ${additional_swap_gb}GB of swap space..."
 
@@ -152,6 +143,24 @@ else
     echo "No additional swap space needed."
 fi
 
+sleep 15s
+
+# SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.20 via snap
+
+sudo apt-get update -y
+sudo apt-get install jq git wget make gcc build-essential snapd wget -y
+snap install go --channel=1.20/stable --classic
+snap refresh go --channel=1.20/stable --classic
+
+export PATH=$PATH:$(go env GOPATH)/bin
+add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' ~/.bashrc false
+
+# GLOBAL CHANGE OF OPEN FILE LIMITS
+add_line_to_file "* - nofile 50000" /etc/security/limits.conf false
+add_line_to_file "root - nofile 50000" /etc/security/limits.conf false
+add_line_to_file "fs.file-max = 50000" /etc/sysctl.conf false
+ulimit -n 50000
+
 #PONYSAY 
 snap install ponysay
 ponysay "Installing genesisd from source code with updated genesis_29-2 mainnet!"
@@ -176,7 +185,7 @@ cd
 rm -rf .genesisd
 
 # BUILDING genesisd BINARIES
-cd $REPO_DIR
+cd $repo_dir
 go mod tidy
 make install
 
@@ -194,7 +203,11 @@ if [ "$1" = "init" ]; then
     ponysay "IN A FEW MOMENTS GET READY TO WRITE YOUR SECRET SEED PHRASE FOR YOUR NEW KEY NAMED *mygenesiskey*, YOU WILL HAVE 2 MINUTES FOR THIS!!!"
     sleep 20s
     genesisd keys add mygenesiskey --keyring-backend os --algo eth_secp256k1
-    sleep 120s
+
+    # Check if the exit status of the previous command is equal to zero (zero means it succeeded, anything else means it failed)
+    if [ $? -eq 0 ]; then
+      sleep 120s
+    fi
 
     genesisd init $moniker --chain-id genesis_29-2 
 fi
@@ -213,15 +226,15 @@ genesisd tendermint unsafe-reset-all
 cd ~/.genesisd/config
 
 # these default toml files already have genesis specific configurations set (i.e. timeout_commit 10s, min gas price 50gel etc.).
-cp "$REPO_DIR/genesisd_config/default_app.toml" ./app.toml
-cp "$REPO_DIR/genesisd_config/default_config.toml" ./config.toml
+cp "$repo_dir/genesisd_config/default_app.toml" ./app.toml
+cp "$repo_dir/genesisd_config/default_config.toml" ./config.toml
 
 # set moniker
 sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
 echo "Moniker value set to: $moniker"
 
 # SETTING genesisd AS A SYSTEMD SERVICE
-sudo cp "$REPO_DIR/genesisd.service" /etc/systemd/system/genesisd.service
+sudo cp "$repo_dir/genesisd.service" /etc/systemd/system/genesisd.service
 systemctl daemon-reload
 systemctl enable genesisd
 # echo "All set!" 
