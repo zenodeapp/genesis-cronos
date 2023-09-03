@@ -58,6 +58,11 @@ EOF
 REPO_DIR=$(cd "$(dirname "$0")" && pwd)
 moniker=""
 
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as the root user."
+    exit 1
+fi
+
 if [ "$#" -lt 1 ]; then
     echo "Usage: $0 <command> [moniker]"
     echo "   <command> should be either 'upgrade' or 'init'"
@@ -128,7 +133,7 @@ snap install go --channel=1.20/stable --classic
 snap refresh go --channel=1.20/stable --classic
 
 export PATH=$PATH:$(go env GOPATH)/bin
-echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc
+add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' ~/.bashrc false
 
 # GLOBAL CHANGE OF OPEN FILE LIMITS
 add_line_to_file "* - nofile 50000" /etc/security/limits.conf false
