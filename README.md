@@ -5,7 +5,7 @@ Cosmos SDK sdk v0.46.15</br>
 <strong>Node requirements:</strong>
 
 <li>300GB+ good hard drive disk</li> 
-<li>8gb+ RAM (if necessary it will be swapped to 150GB from hard drive)</li>
+<li>8GB+ RAM (if necessary it will be swapped to 150GB from hard drive)</li>
 <li>4 CPU Threads</li>
 <li>Good Internet Connection</li>
 
