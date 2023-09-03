@@ -52,7 +52,57 @@ cat << "EOF"
   genesis_29-1 start: Nov 30, 2021
   genesis_29-2 (evmos) start: Apr 16, 2022
   genesis_29-2 (cronos) start: Aug 26, 2023
+  
 EOF
+
+REPO_DIR=$(cd "$(dirname "$0")" && pwd)
+moniker=""
+
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as the root user."
+    exit 1
+fi
+
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <command> [moniker]"
+    echo "   <command> should be either 'upgrade' or 'init'"
+    exit 1
+fi
+
+case "$1" in
+    "upgrade")
+        if [ "$#" -eq 1 ]; then
+            moniker=$(grep "moniker" ~/.genesisd/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
+            
+            if [ -z "$moniker" ]; then
+                echo "Error: No moniker found in the current configuration nor has one been provided as an argument."
+                exit 1
+            fi
+            
+            echo "Upgrade mode with moniker from previous configuration: $moniker"
+        elif [ "$#" -eq 2 ]; then
+            moniker="$2"
+            echo "Upgrade mode with moniker: $moniker"
+        else
+            echo "Invalid number of arguments for 'upgrade' mode. Usage: $0 upgrade [moniker]"
+            exit 1
+        fi
+        ;;
+    "init")
+        if [ "$#" -eq 2 ]; then
+            moniker="$2"
+            echo "Init mode with moniker: $moniker"
+        else
+            echo "Missing or invalid argument for 'init' mode. Usage: $0 init <moniker>"
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Invalid command: $1. Please use 'upgrade' or 'init'."
+        exit 1
+        ;;
+esac
+
 sleep 15s
 
 # Function to add a line to a file if it doesn't already exist (to prevent duplicates)
@@ -83,7 +133,7 @@ snap install go --channel=1.20/stable --classic
 snap refresh go --channel=1.20/stable --classic
 
 export PATH=$PATH:$(go env GOPATH)/bin
-echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc
+add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' ~/.bashrc false
 
 # GLOBAL CHANGE OF OPEN FILE LIMITS
 add_line_to_file "* - nofile 50000" /etc/security/limits.conf false
@@ -149,7 +199,7 @@ cd
 rm -rf .genesisd
 
 # BUILDING genesisd BINARIES
-cd genesisL1
+cd $REPO_DIR
 go mod tidy
 make install
 
@@ -159,6 +209,18 @@ rsync -r --verbose --exclude 'data' ./.genesisd_backup/ ./.genesisd/
 
 # SETTING UP THE NEW chain-id in CONFIG
 genesisd config chain-id genesis_29-2
+
+# INIT MODE WILL CREATE A NEW KEY
+if [ "$1" = "init" ]; then
+    genesisd config keyring-backend os
+
+    ponysay "IN A FEW MOMENTS GET READY TO WRITE YOUR SECRET SEED PHRASE FOR YOUR NEW KEY NAMED *mygenesiskey*, YOU WILL HAVE 2 MINUTES FOR THIS!!!"
+    sleep 20s
+    genesisd keys add mygenesiskey --keyring-backend os --algo eth_secp256k1
+    sleep 120s
+
+    genesisd init $moniker --chain-id genesis_29-2 
+fi
 
 #IMPORTING GENESIS STATE
 cd 
@@ -174,32 +236,21 @@ genesisd tendermint unsafe-reset-all
 cd ~/.genesisd/config
 
 # these default toml files already have genesis specific configurations set (i.e. timeout_commit 10s, min gas price 50gel etc.).
-cp ~/genesisL1/genesisd_config/default_app.toml ./app.toml
-cp ~/genesisL1/genesisd_config/default_config.toml ./config.toml
+cp "$REPO_DIR/genesisd_config/default_app.toml" ./app.toml
+cp "$REPO_DIR/genesisd_config/default_config.toml" ./config.toml
 
-# recover moniker from backup
-moniker=$(grep "moniker" ~/.genesisd_backup/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
-if [ -z "$moniker" ]; then
-    echo "Warning: The moniker is empty. Please fill out a moniker in the config.toml file."
-else
-    # Replace the moniker value in the config.toml file
-    sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
-    echo "Moniker value set to: $moniker"
-fi
-
-# TO DO: SEEDS AND PEERS
-# sed -i 's/seeds = ""/seeds = "36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656"/' config.toml
-# sed -i 's/persistent_peers = ""/persistent_peers = "551cb3d41d457f830d75c7a5b8d1e00e6e5cbb91@135.181.97.75:26656,5082248889f93095a2fd4edd00f56df1074547ba@146.59.81.204:26651,36111b4156ace8f1cfa5584c3ccf479de4d94936@65.21.34.226:26656,c23b3d58ccae0cf34fc12075c933659ff8cca200@95.217.207.154:26656,37d8aa8a31d66d663586ba7b803afd68c01126c4@65.21.134.70:26656,d7d4ea7a661c40305cab84ac227cdb3814df4e43@139.162.195.228:26656,be81a20b7134552e270774ec861c4998fabc2969@genesisl1.3ventures.io:26656"/' config.toml
+# set moniker
+sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
+echo "Moniker value set to: $moniker"
 
 # SETTING genesisd AS A SYSTEMD SERVICE
-cp ~/genesisL1/genesisd.service /etc/systemd/system/genesisd.service
+sudo cp "$REPO_DIR/genesisd.service" /etc/systemd/system/genesisd.service
 systemctl daemon-reload
 systemctl enable genesisd
 # echo "All set!" 
 sleep 3s
 
 # STARTING NODE
-
 cat << "EOF"
      	    \\
              \\_
