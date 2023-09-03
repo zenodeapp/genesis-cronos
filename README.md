@@ -2,6 +2,15 @@
 Cosmos SDK sdk v0.46.15</br>
 <i>Source code fork of cronos and ethermint</i>
 
+<strong>Node requirements:</strong>
+
+<li>300GB+ good hard drive disk</li> 
+<li>8GB+ RAM (if necessary it will be swapped to 150GB from hard drive)</li>
+<li>4 CPU Threads</li>
+<li>Good Internet Connection</li>
+
+<strong>Node init/upgrade time is 30-60min or a few tea cups</strong>
+
 <li><i>Initialization (which will generate a new key):</i></br>
 <code>sh genesisd.sh init $YOUR_NEW_NODE_NAME</code></li>
 
