@@ -145,11 +145,18 @@ ulimit -n 50000
 total_ram_kb=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 total_swap_kb=$(grep SwapTotal /proc/meminfo | awk '{print $2}')
 total_combined_gb=$((($total_ram_kb + $total_swap_kb) / 1024 / 1024))
+available_disk_gb=$(df -BG --output=avail / | awk 'NR==2 {print $1}' | tr -d 'G')
 minimum_combined_gb=150
 
 if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
     # Calculate additional swap space needed in gigabytes
     additional_swap_gb=$((minimum_combined_gb - total_combined_gb + 1)) 
+    disk_headroom_gb=15
+
+    if [ "$available_disk_gb" -lt "$((additional_swap_gb + disk_headroom_gb))" ]; then
+        echo "Sorry, your node is too tiny in disk for genesisL1 :)"
+        exit 1
+    fi
 
     echo "Adding ${additional_swap_gb}GB of swap space..."
 
