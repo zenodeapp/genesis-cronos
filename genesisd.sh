@@ -39,7 +39,7 @@ total_ram_kb=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 total_swap_kb=$(grep SwapTotal /proc/meminfo | awk '{print $2}')
 total_combined_gb=$((($total_ram_kb + $total_swap_kb) / 1024 / 1024))
 available_disk_gb=$(df -BG --output=avail / | awk 'NR==2 {print $1}' | tr -d 'G')
-disk_headroom_gb=15
+disk_headroom_gb=50
 
 # Function to add a line to a file if it doesn't already exist (to prevent duplicates)
 # Usage: add_line_to_file "line" file [use_sudo]
