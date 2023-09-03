@@ -1,7 +1,4 @@
 #!/bin/bash
-REPO_DIR=$(cd "$(dirname "$0")" && pwd)
-moniker=""
-
 cat << "EOF"
 
   /$$$$$$                                          /$$                 /$$         /$$       
@@ -57,6 +54,9 @@ cat << "EOF"
   genesis_29-2 (cronos) start: Aug 26, 2023
   
 EOF
+
+REPO_DIR=$(cd "$(dirname "$0")" && pwd)
+moniker=""
 
 if [ "$#" -lt 1 ]; then
     echo "Usage: $0 <command> [moniker]"
