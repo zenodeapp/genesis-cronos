@@ -1,6 +1,7 @@
 #!/bin/bash
-
+REPO_DIR=$(cd "$(dirname "$0")" && pwd)
 moniker=""
+
 cat << "EOF"
 
   /$$$$$$                                          /$$                 /$$         /$$       
@@ -193,7 +194,7 @@ cd
 rm -rf .genesisd
 
 # BUILDING genesisd BINARIES
-cd genesisL1
+cd $REPO_DIR
 go mod tidy
 make install
 
@@ -230,15 +231,15 @@ genesisd tendermint unsafe-reset-all
 cd ~/.genesisd/config
 
 # these default toml files already have genesis specific configurations set (i.e. timeout_commit 10s, min gas price 50gel etc.).
-cp ~/genesisL1/genesisd_config/default_app.toml ./app.toml
-cp ~/genesisL1/genesisd_config/default_config.toml ./config.toml
+cp "$REPO_DIR/genesisd_config/default_app.toml" ./app.toml
+cp "$REPO_DIR/genesisd_config/default_config.toml" ./config.toml
 
 # set moniker
 sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
 echo "Moniker value set to: $moniker"
 
 # SETTING genesisd AS A SYSTEMD SERVICE
-cp ~/genesisL1/genesisd.service /etc/systemd/system/genesisd.service
+sudo cp "$REPO_DIR/genesisd.service" /etc/systemd/system/genesisd.service
 systemctl daemon-reload
 systemctl enable genesisd
 # echo "All set!" 
