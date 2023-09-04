@@ -34,12 +34,8 @@ EOF
 
 moniker=""
 minimum_combined_gb=150
-repo_dir=$(cd "$(dirname "$0")" && pwd)
-total_ram_kb=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-total_swap_kb=$(grep SwapTotal /proc/meminfo | awk '{print $2}')
-total_combined_gb=$((($total_ram_kb + $total_swap_kb) / 1024 / 1024))
-available_disk_gb=$(df -BG --output=avail / | awk 'NR==2 {print $1}' | tr -d 'G')
 disk_headroom_gb=50
+repo_dir=$(cd "$(dirname "$0")" && pwd)
 
 # Function to add a line to a file if it doesn't already exist (to prevent duplicates)
 # Usage: add_line_to_file "line" file [use_sudo]
@@ -106,7 +102,29 @@ case "$1" in
         ;;
 esac
 
+sleep 15s
+
+#PONYSAY 
+snap install ponysay
+ponysay "Installing genesisd from source code with updated genesis_29-2 mainnet!"
+sleep 5s
+ponysay "WARNING: cosmosvisor, evmosd processes will be killed and genesis, genesisd, evmos, evmosd system services will be stopped with this script on the next step. If you have other blockchains running, you might want to delete those parts of the script!"
+sleep 20s
+
+#STOPPING EVMOSD DAEMON AND COSMOVISOR IF IT WAS NOT STOPPED
+pkill evmosd
+pkill cosmovisor
+service genesis stop
+service genesisd stop
+service evmos stop
+service evmosd stop
+
 # ADD ADDITIONAL SWAP (IF NECESSARY)
+total_ram_kb=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
+total_swap_kb=$(grep SwapFree /proc/meminfo | awk '{print $2}')
+total_combined_gb=$((($total_ram_kb + $total_swap_kb) / 1024 / 1024))
+available_disk_gb=$(df -BG --output=avail / | awk 'NR==2 {print $1}' | tr -d 'G')
+
 if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
     # Calculate additional swap space needed in gigabytes
     additional_swap_gb=$((minimum_combined_gb - total_combined_gb + 1)) 
@@ -143,8 +161,6 @@ else
     echo "No additional swap space needed."
 fi
 
-sleep 15s
-
 # SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.20 via snap
 
 sudo apt-get update -y
@@ -160,21 +176,6 @@ add_line_to_file "* - nofile 50000" /etc/security/limits.conf false
 add_line_to_file "root - nofile 50000" /etc/security/limits.conf false
 add_line_to_file "fs.file-max = 50000" /etc/sysctl.conf false
 ulimit -n 50000
-
-#PONYSAY 
-snap install ponysay
-ponysay "Installing genesisd from source code with updated genesis_29-2 mainnet!"
-sleep 5s
-ponysay "WARNING: cosmosvisor, evmosd processes will be killed and genesis, genesisd, evmos, evmosd system services will be stopped with this script on the next step. If you have other blockchains running, you might want to delete those parts of the script!"
-sleep 20s
-
-#STOPPING EVMOSD DAEMON AND COSMOVISOR IF IT WAS NOT STOPPED
-pkill evmosd
-pkill cosmovisor
-service genesis stop
-service genesisd stop
-service evmos stop
-service evmosd stop
 
 # BACKUP genesis_29-2 (evmos version) .genesisd
 cd
