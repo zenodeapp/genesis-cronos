@@ -108,6 +108,8 @@ sleep 10s
 service genesis stop
 service genesisd stop
 
+sleep 3s
+
 # ADD ADDITIONAL SWAP (IF NECESSARY)
 total_ram_kb=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
 total_swap_kb=$(grep SwapFree /proc/meminfo | awk '{print $2}')
