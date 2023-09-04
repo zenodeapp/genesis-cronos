@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 <swap_size_in_gb>"
     echo "   <swap_size_in_gb> should be the desired size of the swap file in gigabytes (GB)."
