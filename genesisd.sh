@@ -104,6 +104,16 @@ esac
 
 sleep 15s
 
+# SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.20 via snap
+
+sudo apt-get update -y
+sudo apt-get install jq git wget make gcc build-essential snapd wget -y
+snap install go --channel=1.20/stable --classic
+snap refresh go --channel=1.20/stable --classic
+
+export PATH=$PATH:$(go env GOPATH)/bin
+add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' ~/.bashrc false
+
 #PONYSAY 
 snap install ponysay
 ponysay "Installing genesisd from source code with updated genesis_29-2 mainnet!"
@@ -160,16 +170,6 @@ if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
 else
     echo "No additional swap space needed."
 fi
-
-# SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.20 via snap
-
-sudo apt-get update -y
-sudo apt-get install jq git wget make gcc build-essential snapd wget -y
-snap install go --channel=1.20/stable --classic
-snap refresh go --channel=1.20/stable --classic
-
-export PATH=$PATH:$(go env GOPATH)/bin
-add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' ~/.bashrc false
 
 # GLOBAL CHANGE OF OPEN FILE LIMITS
 add_line_to_file "* - nofile 50000" /etc/security/limits.conf false
