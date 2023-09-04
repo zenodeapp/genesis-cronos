@@ -102,38 +102,11 @@ case "$1" in
         ;;
 esac
 
-sleep 15s
+echo "Please note that the Genesis Daemon will be halted before proceeding. You will have a 10-second window to cancel this action."
+sleep 10s
 
-# SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.20 via snap
-
-sudo apt-get update -y
-sudo apt-get install jq git wget make gcc build-essential snapd wget -y
-snap install go --channel=1.20/stable --classic
-snap refresh go --channel=1.20/stable --classic
-
-export PATH=$PATH:$(go env GOPATH)/bin
-add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' ~/.bashrc false
-
-# GLOBAL CHANGE OF OPEN FILE LIMITS
-add_line_to_file "* - nofile 50000" /etc/security/limits.conf false
-add_line_to_file "root - nofile 50000" /etc/security/limits.conf false
-add_line_to_file "fs.file-max = 50000" /etc/sysctl.conf false
-ulimit -n 50000
-
-#PONYSAY 
-snap install ponysay
-ponysay "Installing genesisd from source code with updated genesis_29-2 mainnet!"
-sleep 5s
-ponysay "WARNING: cosmosvisor, evmosd processes will be killed and genesis, genesisd, evmos, evmosd system services will be stopped with this script on the next step. If you have other blockchains running, you might want to delete those parts of the script!"
-sleep 20s
-
-#STOPPING EVMOSD DAEMON AND COSMOVISOR IF IT WAS NOT STOPPED
-pkill evmosd
-pkill cosmovisor
 service genesis stop
 service genesisd stop
-service evmos stop
-service evmosd stop
 
 # ADD ADDITIONAL SWAP (IF NECESSARY)
 total_ram_kb=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
@@ -176,6 +149,37 @@ if [ "$total_combined_gb" -lt "$minimum_combined_gb" ]; then
 else
     echo "No additional swap space needed."
 fi
+
+sleep 3s
+
+# SYSTEM UPDATE, INSTALLATION OF THE FOLLOWING PACKAGES: jq git wget make gcc build-essential snapd wget ponysay, INSTALLATION OF GO 1.20 via snap
+
+sudo apt-get update -y
+sudo apt-get install jq git wget make gcc build-essential snapd wget -y
+snap install go --channel=1.20/stable --classic
+snap refresh go --channel=1.20/stable --classic
+
+export PATH=$PATH:$(go env GOPATH)/bin
+add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' ~/.bashrc false
+
+# GLOBAL CHANGE OF OPEN FILE LIMITS
+add_line_to_file "* - nofile 50000" /etc/security/limits.conf false
+add_line_to_file "root - nofile 50000" /etc/security/limits.conf false
+add_line_to_file "fs.file-max = 50000" /etc/sysctl.conf false
+ulimit -n 50000
+
+#PONYSAY 
+snap install ponysay
+ponysay "Installing genesisd from source code with updated genesis_29-2 mainnet!"
+sleep 5s
+ponysay "WARNING: cosmosvisor, evmosd processes will be killed and evmos, evmosd system services will be stopped with this script on the next step. If you have other blockchains running, you might want to delete those parts of the script!"
+sleep 20s
+
+#STOPPING EVMOSD DAEMON AND COSMOVISOR IF IT WAS NOT STOPPED
+pkill evmosd
+pkill cosmovisor
+service evmos stop
+service evmosd stop
 
 # BACKUP genesis_29-2 (evmos version) .genesisd
 cd
