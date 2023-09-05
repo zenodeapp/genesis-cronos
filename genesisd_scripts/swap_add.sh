@@ -6,18 +6,15 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
+swap_size_in_gb="$1"
+
 # Validate that the argument is a positive integer
-if ! expr "$1" : '^[0-9]\+$' > /dev/null; then
+if ! expr "$swap_size_in_gb" : '^[0-9]\+$' > /dev/null; then
     echo "Error: <swap_size_in_gb> must be a positive integer."
     exit 1
 fi
 
-# ADD ADDITIONAL SWAP (IF NECESSARY)
 available_disk_gb=$(df -BG --output=avail / | awk 'NR==2 {print $1}' | tr -d 'G')
-
-# Calculate additional swap space needed in gigabytes
-swap_size_in_gb="$1"
-
 if [ "$available_disk_gb" -lt "$((swap_size_in_gb))" ]; then
     echo "Sorry, you don't have enough space."
     exit 1
