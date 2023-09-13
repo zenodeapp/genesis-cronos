@@ -227,7 +227,9 @@ cd
 rsync -r --verbose --exclude 'data' ./.genesisd/ ./"$backup_dir"/
 if ! $reset_priv_val_state; then
     mkdir -p ./"$backup_dir"/data
-    cp ./.genesisd/data/priv_validator_state.json ./"$backup_dir"/data/priv_validator_state.json
+    if cp ./.genesisd/data/priv_validator_state.json ./"$backup_dir"/data/priv_validator_state.json; then
+        echo "Backed up priv_validator_state.json file"
+    fi
 fi
 
 # DELETING OF .genesisd FOLDER (PREVIOUS INSTALLATIONS)
@@ -275,7 +277,9 @@ cd
 genesisd tendermint unsafe-reset-all
 
 if ! $reset_priv_val_state; then
-    cp ./"$backup_dir"/data/priv_validator_state.json ./.genesisd/data/priv_validator_state.json
+    if cp ./"$backup_folder"/data/priv_validator_state.json ./.genesisd/data/priv_validator_state.json; then
+        echo "Restored backed up priv_validator_state.json file"
+    fi
 fi
 
 # CONFIG FILES
