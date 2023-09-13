@@ -97,7 +97,7 @@ fi
 
 case "$1" in
     "upgrade")
-        if [ "$#" -eq 1 ] || { [ "$#" -ge 2 ] && [ "${2:0:2}" == "--" ]; }; then
+        if [ "$#" -eq 1 ] || { [ "$#" -ge 2 ] && [ "$(echo "$2" | cut -c 1-2)" = "--" ]; }; then
             moniker=$(grep "moniker" ~/.genesisd/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
             
             if [ -z "$moniker" ]; then
