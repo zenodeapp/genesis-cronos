@@ -239,11 +239,9 @@ service evmosd stop
 # BACKUP genesis_29-2 (evmos version) .genesisd
 cd
 rsync -r --verbose --exclude 'data' ./.genesisd/ ./"$backup_dir"/
-if ! $reset_priv_val_state; then
-    mkdir -p ./"$backup_dir"/data
-    if cp ./.genesisd/data/priv_validator_state.json ./"$backup_dir"/data/priv_validator_state.json; then
-        echo "Backed up priv_validator_state.json file"
-    fi
+mkdir -p ./"$backup_dir"/data
+if cp ./.genesisd/data/priv_validator_state.json ./"$backup_dir"/data/priv_validator_state.json; then
+    echo "Backed up priv_validator_state.json file"
 fi
 
 # DELETING OF .genesisd FOLDER (PREVIOUS INSTALLATIONS)
