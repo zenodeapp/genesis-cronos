@@ -91,7 +91,7 @@ if [ "$#" -lt 1 ]; then
     echo "   Options:"
     echo "     --crisis-skip            Makes sure that genesisd starts with the --x-crisis-skip-assert-invariants flag (default: false)"
     echo "     --skip-state-download    Skips downloading the genesis.json file, only do this if you're certain to have the correct state file already (default: false)"
-    echo "     --reset-priv-val-state   Resets data/priv_val_state.json file [UNSAFE] (default: false)"
+    echo "     --reset-priv-val-state   Resets data/priv_validator_state.json file [UNSAFE] (default: false)"
     exit 1
 fi
 
@@ -136,8 +136,8 @@ esac
 
 $crisis_skip && echo "o Will add the '--x-crisis-skip-assert-invariants'-flag to the genesisd.service (--crisis-skip: $crisis_skip)"
 $skip_state_download && echo "o Will skip downloading the genesis.json file (--skip-state-download: $skip_state_download)"
-$reset_priv_val_state && echo "o Will reset the data/priv_val_state.json file [UNSAFE] (--reset-priv-val-state: $reset_priv_val_state)"
-! $reset_priv_val_state && echo "o Will preserve the data/priv_val_state.json (--reset-priv-val-state: $reset_priv_val_state)"
+$reset_priv_val_state && echo "o Will reset the data/priv_validator_state.json file [UNSAFE] (--reset-priv-val-state: $reset_priv_val_state)"
+! $reset_priv_val_state && echo "o Will preserve the data/priv_validator_state.json (--reset-priv-val-state: $reset_priv_val_state)"
 
 echo ""
 echo "Please note that the Genesis Daemon will be halted before proceeding. You will have a 10-second window to cancel this action."
@@ -226,7 +226,7 @@ cd
 rsync -r --verbose --exclude 'data' ./.genesisd/ ./.genesisd_backup/
 if ! $reset_priv_val_state; then
     mkdir -p ./.genesisd_backup/data
-    cp ./.genesisd/data/priv_val_state.json ./.genesisd_backup/data/priv_val_state.json
+    cp ./.genesisd/data/priv_validator_state.json ./.genesisd_backup/data/priv_validator_state.json
 fi
 
 # DELETING OF .genesisd FOLDER (PREVIOUS INSTALLATIONS)
@@ -274,7 +274,7 @@ cd
 genesisd tendermint unsafe-reset-all
 
 if ! $reset_priv_val_state; then
-    cp ./.genesisd_backup/data/priv_val_state.json ./.genesisd/data/priv_val_state.json
+    cp ./.genesisd_backup/data/priv_validator_state.json ./.genesisd/data/priv_validator_state.json
 fi
 
 # CONFIG FILES
