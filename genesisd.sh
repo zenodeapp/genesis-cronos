@@ -67,6 +67,8 @@ fi
 crisis_skip=false
 skip_state_download=false
 reset_priv_val_state=false
+no_service=false
+no_start=false
 
 for arg in "$@"; do
     case "$arg" in
@@ -78,6 +80,12 @@ for arg in "$@"; do
             ;;
         --reset-priv-val-state)
             reset_priv_val_state=true
+            ;;
+        --no-service)
+            no_service=true
+            ;;
+        --no-start)
+            no_start=true
             ;;
         *)
             # Handle other arguments or flags here
@@ -93,6 +101,8 @@ if [ "$#" -lt 1 ]; then
     echo "     --crisis-skip            Makes sure that genesisd starts with the --x-crisis-skip-assert-invariants flag (default: false)"
     echo "     --skip-state-download    Skips downloading the genesis.json file, only do this if you're certain to have the correct state file already (default: false)"
     echo "     --reset-priv-val-state   Resets data/priv_validator_state.json file [UNSAFE] (default: false)"
+    echo "     --no-service             This prevents the genesisd service from being made (default: false)"
+    echo "     --no-start               This prevents the genesisd service from starting at the end of the script (default: false)"
     exit 1
 fi
 
@@ -294,17 +304,19 @@ sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
 echo "Moniker value set to: $moniker"
 
 # SETTING genesisd AS A SYSTEMD SERVICE
-if $crisis_skip; then
-    sudo cp "$repo_dir/genesisd-crisis.service" /etc/systemd/system/genesisd.service
-else 
-    sudo cp "$repo_dir/genesisd.service" /etc/systemd/system/genesisd.service
-fi
+if ! $no_service; then
+    if $crisis_skip; then
+        sudo cp "$repo_dir/genesisd-crisis.service" /etc/systemd/system/genesisd.service
+    else 
+        sudo cp "$repo_dir/genesisd.service" /etc/systemd/system/genesisd.service
+    fi
 
-systemctl daemon-reload
-systemctl enable genesisd
-sleep 3s
+    systemctl daemon-reload
+    systemctl enable genesisd
+    sleep 3s
 
-# STARTING NODE
+    # STARTING NODE
+    if ! $no_start; then
 cat << "EOF"
      	    \\
              \\_
@@ -313,8 +325,10 @@ cat << "EOF"
        Node start                                                                                                                                                                                     
 EOF
  
-sleep 5s
-systemctl start genesisd
+        sleep 5s
+        systemctl start genesisd
+    fi
+fi
 
 # genesisd start
 ponysay "genesisd node service started, you may try *journalctl -fu genesisd -ocat* or *service genesisd status* command to see it! Welcome to GenesisL1 blockchain!"
