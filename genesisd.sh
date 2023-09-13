@@ -330,9 +330,9 @@ EOF
         sleep 5s
         systemctl start genesisd
         ponysay "genesisd node service started, you may try *journalctl -fu genesisd -ocat* or *service genesisd status* command to see it! Welcome to GenesisL1 blockchain!"
+    else
+        ponysay "genesisd node service installed, use *service genesisd start* to start it! Welcome to GenesisL1 blockchain!"
     fi
-
-    ponysay "genesisd node service installed, use *service genesisd start* to start it! Welcome to GenesisL1 blockchain!"
 else
     ponysay "genesisd node is ready, use *service genesisd start* to start it! Welcome to GenesisL1 blockchain!"
 fi
