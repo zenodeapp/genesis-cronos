@@ -149,6 +149,10 @@ $crisis_skip && echo "o Will add the '--x-crisis-skip-assert-invariants'-flag to
 $skip_state_download && echo "o Will skip downloading the genesis.json file (--skip-state-download: $skip_state_download)"
 $reset_priv_val_state && echo "o Will reset the data/priv_validator_state.json file [UNSAFE] (--reset-priv-val-state: $reset_priv_val_state)"
 ! $reset_priv_val_state && echo "o Will preserve the data/priv_validator_state.json (--reset-priv-val-state: $reset_priv_val_state)"
+$no_service && echo "o Will skip installing genesisd as a service (--no-service: $no_service)"
+if ! $no_service && $no_start; then
+    echo "o Will skip starting the genesisd service at the end of the script (--no-start: $no_start)"
+fi
 
 echo ""
 echo "Please note that the Genesis Daemon will be halted before proceeding. You will have a 10-second window to cancel this action."
