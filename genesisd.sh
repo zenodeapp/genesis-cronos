@@ -291,7 +291,7 @@ cd
 genesisd tendermint unsafe-reset-all
 
 if ! $reset_priv_val_state; then
-    if cp ./"$backup_folder"/data/priv_validator_state.json ./.genesisd/data/priv_validator_state.json; then
+    if cp ./"$backup_dir"/data/priv_validator_state.json ./.genesisd/data/priv_validator_state.json; then
         echo "Restored backed up priv_validator_state.json file"
     fi
 fi
@@ -331,8 +331,10 @@ EOF
  
         sleep 5s
         systemctl start genesisd
+        ponysay "genesisd node service started, you may try *journalctl -fu genesisd -ocat* or *service genesisd status* command to see it! Welcome to GenesisL1 blockchain!"
     fi
-fi
 
-# genesisd start
-ponysay "genesisd node service started, you may try *journalctl -fu genesisd -ocat* or *service genesisd status* command to see it! Welcome to GenesisL1 blockchain!"
+    ponysay "genesisd node service installed, use *service genesisd start* to start it! Welcome to GenesisL1 blockchain!"
+else
+    ponysay "genesisd node is ready, use *service genesisd start* to start it! Welcome to GenesisL1 blockchain!"
+fi
