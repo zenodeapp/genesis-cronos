@@ -36,6 +36,7 @@ moniker=""
 minimum_combined_gb=150
 disk_headroom_gb=50
 repo_dir=$(cd "$(dirname "$0")" && pwd)
+backup_dir=".genesisd_backup_$(date +"%Y%m%d%H%M%S")"
 
 # Function to add a line to a file if it doesn't already exist (to prevent duplicates)
 # Usage: add_line_to_file "line" file [use_sudo]
@@ -223,10 +224,10 @@ service evmosd stop
 
 # BACKUP genesis_29-2 (evmos version) .genesisd
 cd
-rsync -r --verbose --exclude 'data' ./.genesisd/ ./.genesisd_backup/
+rsync -r --verbose --exclude 'data' ./.genesisd/ ./"$backup_dir"/
 if ! $reset_priv_val_state; then
-    mkdir -p ./.genesisd_backup/data
-    cp ./.genesisd/data/priv_validator_state.json ./.genesisd_backup/data/priv_validator_state.json
+    mkdir -p ./"$backup_dir"/data
+    cp ./.genesisd/data/priv_validator_state.json ./"$backup_dir"/data/priv_validator_state.json
 fi
 
 # DELETING OF .genesisd FOLDER (PREVIOUS INSTALLATIONS)
@@ -240,7 +241,7 @@ make install
 
 # COPY .genesisd_backup FOLDER to .genesisd FOLDER, EXCLUDE data
 cd
-rsync -r --verbose --exclude 'data' ./.genesisd_backup/ ./.genesisd/
+rsync -r --verbose --exclude 'data' ./"$backup_dir"/ ./.genesisd/
 
 # SETTING UP THE NEW chain-id in CONFIG
 genesisd config chain-id genesis_29-2
@@ -274,7 +275,7 @@ cd
 genesisd tendermint unsafe-reset-all
 
 if ! $reset_priv_val_state; then
-    cp ./.genesisd_backup/data/priv_validator_state.json ./.genesisd/data/priv_validator_state.json
+    cp ./"$backup_dir"/data/priv_validator_state.json ./.genesisd/data/priv_validator_state.json
 fi
 
 # CONFIG FILES
