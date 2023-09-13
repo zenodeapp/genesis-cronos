@@ -116,7 +116,7 @@ case "$1" in
         ;;
     "init")
         if [ "$#" -ge 2 ]; then
-            if [[ "$2" == --* ]]; then
+            if [ "$(echo "$2" | cut -c 1-2)" = "--" ]; then
               echo "Missing or invalid argument for 'init' mode. Usage: $0 init <moniker>"
               exit 1
             fi
