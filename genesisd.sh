@@ -35,11 +35,11 @@ EOF
 # User-configurable variables
 minimum_combined_gb=150
 disk_headroom_gb=50
-repo_dir=$(cd "$(dirname "$0")" && pwd)
 backup_dir=".genesisd_backup_$(date +"%Y%m%d%H%M%S")"
 
 # Fixed/default variables (do not modify)
 moniker=""
+repo_dir=$(cd "$(dirname "$0")" && pwd)
 crisis_skip=false
 skip_state_download=false
 reset_priv_val_state=false
