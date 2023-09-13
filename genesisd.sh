@@ -137,7 +137,7 @@ if ! $no_service && $no_start; then
 fi
 
 echo ""
-echo "Please note that the Genesis Daemon will be halted before proceeding. You will have a 20-second window to cancel this action."
+echo "Please note that the Genesis daemon will be halted before proceeding. You will have a 20-second window to cancel this action."
 sleep 20s
 
 service genesis stop
@@ -145,8 +145,7 @@ service genesisd stop
 
 sleep 3s
 
-# Function to add a line to a file if it doesn't already exist (to prevent duplicates)
-# Usage: add_line_to_file "line" file [use_sudo]
+# Function: adds a line to a file if it doesn't already exist (to prevent duplicates)
 add_line_to_file() {
     local line="$1"
     local file="$2"
