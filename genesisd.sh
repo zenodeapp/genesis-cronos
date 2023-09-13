@@ -137,6 +137,8 @@ esac
 $crisis_skip && echo "o Will add the '--x-crisis-skip-assert-invariants'-flag to the genesisd.service (--crisis-skip: $crisis_skip)"
 $skip_state_download && echo "o Will skip downloading the genesis.json file (--skip-state-download: $skip_state_download)"
 $reset_priv_val_state && echo "o Will reset the data/priv_val_state.json file [UNSAFE] (--reset-priv-val-state: $reset_priv_val_state)"
+!$reset_priv_val_state && echo "o Will preserve the data/priv_val_state.json (--reset-priv-val-state: $reset_priv_val_state)"
+
 echo ""
 echo "Please note that the Genesis Daemon will be halted before proceeding. You will have a 10-second window to cancel this action."
 sleep 10s
