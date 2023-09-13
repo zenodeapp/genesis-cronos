@@ -62,15 +62,42 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
+# Initialize flags to false
+crisis_skip=false
+skip_state_download=false
+reset_priv_val_state=false
+
+for arg in "$@"; do
+    case "$arg" in
+        --crisis-skip)
+            crisis_skip=true
+            ;;
+        --skip-state-download)
+            skip_state_download=true
+            ;;
+        --reset-priv-val-state)
+            reset_priv_val_state=true
+            ;;
+        *)
+            # Handle other arguments or flags here
+            ;;
+    esac
+done
+
 if [ "$#" -lt 1 ]; then
     echo "Usage: $0 <command> [moniker]"
     echo "   <command> should be either 'upgrade' or 'init'"
+    echo ""
+    echo "   Options:"
+    echo "     --crisis-skip            Makes sure that genesisd starts with the --x-crisis-skip-assert-invariants flag (default: false)"
+    echo "     --skip-state-download    Skips downloading the genesis.json file, only do this if you're certain to have the correct state file already (default: false)"
+    echo "     --reset-priv-val-state   Resets data/priv_val_state.json file [UNSAFE] (default: false)"
     exit 1
 fi
 
 case "$1" in
     "upgrade")
-        if [ "$#" -eq 1 ]; then
+        if [ "$#" -eq 1 ] || ([ "$#" -ge 2 ] && [[ "$2" == --* ]]); then
             moniker=$(grep "moniker" ~/.genesisd/config/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
             
             if [ -z "$moniker" ]; then
@@ -79,7 +106,7 @@ case "$1" in
             fi
             
             echo "Upgrade mode with moniker from previous configuration: $moniker"
-        elif [ "$#" -eq 2 ]; then
+        elif [ "$#" -ge 2 ]; then
             moniker="$2"
             echo "Upgrade mode with moniker: $moniker"
         else
@@ -88,7 +115,12 @@ case "$1" in
         fi
         ;;
     "init")
-        if [ "$#" -eq 2 ]; then
+        if [ "$#" -ge 2 ]; then
+            if [[ "$2" == --* ]]; then
+              echo "Missing or invalid argument for 'init' mode. Usage: $0 init <moniker>"
+              exit 1
+            fi
+
             moniker="$2"
             echo "Init mode with moniker: $moniker"
         else
@@ -102,6 +134,10 @@ case "$1" in
         ;;
 esac
 
+$crisis_skip && echo "o Will add the '--x-crisis-skip-assert-invariants'-flag to the genesisd.service (--crisis-skip: $crisis_skip)"
+$skip_state_download && echo "o Will skip downloading the genesis.json file (--skip-state-download: $skip_state_download)"
+$reset_priv_val_state && echo "o Will reset the data/priv_val_state.json file [UNSAFE] (--reset-priv-val-state: $reset_priv_val_state)"
+echo ""
 echo "Please note that the Genesis Daemon will be halted before proceeding. You will have a 10-second window to cancel this action."
 sleep 10s
 
@@ -186,6 +222,10 @@ service evmosd stop
 # BACKUP genesis_29-2 (evmos version) .genesisd
 cd
 rsync -r --verbose --exclude 'data' ./.genesisd/ ./.genesisd_backup/
+if ! $reset_priv_val_state; then
+    mkdir -p ./.genesisd_backup/data
+    cp ./.genesisd/data/priv_val_state.json ./.genesisd_backup/data/priv_val_state.json
+fi
 
 # DELETING OF .genesisd FOLDER (PREVIOUS INSTALLATIONS)
 cd
@@ -220,14 +260,20 @@ if [ "$1" = "init" ]; then
 fi
 
 #IMPORTING GENESIS STATE
-cd 
-cd .genesisd/config
-rm -r genesis.json
-wget http://135.181.135.29/genesisd/genesis.json
+if ! $skip_state_download; then
+    cd 
+    cd .genesisd/config
+    rm -r genesis.json
+    wget http://135.181.135.29/genesisd/genesis.json
+fi
 cd
 
 # RESET TO IMPORTED genesis.json
 genesisd tendermint unsafe-reset-all
+
+if ! $reset_priv_val_state; then
+    cp ./.genesisd_backup/data/priv_val_state.json ./.genesisd/data/priv_val_state.json
+fi
 
 # CONFIG FILES
 cd ~/.genesisd/config
@@ -241,10 +287,14 @@ sed -i "s/moniker = \"\"/moniker = \"$moniker\"/" config.toml
 echo "Moniker value set to: $moniker"
 
 # SETTING genesisd AS A SYSTEMD SERVICE
-sudo cp "$repo_dir/genesisd.service" /etc/systemd/system/genesisd.service
+if $crisis_skip; then
+    sudo cp "$repo_dir/genesisd-crisis.service" /etc/systemd/system/genesisd.service
+else 
+    sudo cp "$repo_dir/genesisd.service" /etc/systemd/system/genesisd.service
+fi
+
 systemctl daemon-reload
 systemctl enable genesisd
-# echo "All set!" 
 sleep 3s
 
 # STARTING NODE
