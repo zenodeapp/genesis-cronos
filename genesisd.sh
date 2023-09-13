@@ -32,66 +32,24 @@ THIS IS AN UPGRADE TO COSMOS SDK V0.46.15 BASED ON CRONOS RELEASE SOURCE CODE, T
   
 EOF
 
-moniker=""
+# User-configurable variables
 minimum_combined_gb=150
 disk_headroom_gb=50
 repo_dir=$(cd "$(dirname "$0")" && pwd)
 backup_dir=".genesisd_backup_$(date +"%Y%m%d%H%M%S")"
 
-# Function to add a line to a file if it doesn't already exist (to prevent duplicates)
-# Usage: add_line_to_file "line" file [use_sudo]
-add_line_to_file() {
-    local line="$1"
-    local file="$2"
-    local use_sudo="$3"
-
-    if ! grep -qF "$line" "$file"; then
-        if $use_sudo; then
-            echo "$line" | sudo tee -a "$file" > /dev/null
-        else
-            echo "$line" >> "$file"
-        fi
-
-        echo "Line '$line' added to $file."
-    else
-        echo "Line '$line' already exists in $file."
-    fi
-}
-
-if [ "$(id -u)" -ne 0 ]; then
-    echo "This script must be run as the root user."
-    exit 1
-fi
-
-# Initialize flags to false
+# Fixed/default variables (do not modify)
+moniker=""
 crisis_skip=false
 skip_state_download=false
 reset_priv_val_state=false
 no_service=false
 no_start=false
 
-for arg in "$@"; do
-    case "$arg" in
-        --crisis-skip)
-            crisis_skip=true
-            ;;
-        --skip-state-download)
-            skip_state_download=true
-            ;;
-        --reset-priv-val-state)
-            reset_priv_val_state=true
-            ;;
-        --no-service)
-            no_service=true
-            ;;
-        --no-start)
-            no_start=true
-            ;;
-        *)
-            # Handle other arguments or flags here
-            ;;
-    esac
-done
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as the root user."
+    exit 1
+fi
 
 if [ "$#" -lt 1 ]; then
     echo "Usage: $0 <command> [moniker]"
@@ -145,6 +103,30 @@ case "$1" in
         ;;
 esac
 
+# Process command-line arguments and set corresponding flags
+for arg in "$@"; do
+    case "$arg" in
+        --crisis-skip)
+            crisis_skip=true
+            ;;
+        --skip-state-download)
+            skip_state_download=true
+            ;;
+        --reset-priv-val-state)
+            reset_priv_val_state=true
+            ;;
+        --no-service)
+            no_service=true
+            ;;
+        --no-start)
+            no_start=true
+            ;;
+        *)
+            # Handle other arguments or flags here
+            ;;
+    esac
+done
+
 $crisis_skip && echo "o Will add the '--x-crisis-skip-assert-invariants'-flag to the genesisd.service (--crisis-skip: $crisis_skip)"
 $skip_state_download && echo "o Will skip downloading the genesis.json file (--skip-state-download: $skip_state_download)"
 $reset_priv_val_state && echo "o Will reset the data/priv_validator_state.json file [UNSAFE] (--reset-priv-val-state: $reset_priv_val_state)"
@@ -155,13 +137,33 @@ if ! $no_service && $no_start; then
 fi
 
 echo ""
-echo "Please note that the Genesis Daemon will be halted before proceeding. You will have a 10-second window to cancel this action."
-sleep 10s
+echo "Please note that the Genesis Daemon will be halted before proceeding. You will have a 20-second window to cancel this action."
+sleep 20s
 
 service genesis stop
 service genesisd stop
 
 sleep 3s
+
+# Function to add a line to a file if it doesn't already exist (to prevent duplicates)
+# Usage: add_line_to_file "line" file [use_sudo]
+add_line_to_file() {
+    local line="$1"
+    local file="$2"
+    local use_sudo="$3"
+
+    if ! grep -qF "$line" "$file"; then
+        if $use_sudo; then
+            echo "$line" | sudo tee -a "$file" > /dev/null
+        else
+            echo "$line" >> "$file"
+        fi
+
+        echo "Line '$line' added to $file."
+    else
+        echo "Line '$line' already exists in $file."
+    fi
+}
 
 # ADD ADDITIONAL SWAP (IF NECESSARY)
 total_ram_kb=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
