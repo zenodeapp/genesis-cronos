@@ -43,7 +43,7 @@ cd ~ && git clone https://github.com/alpha-omega-labs/genesisL1.git && cd genesi
 
 #### Or, step-by-step:
 
-1. `cs ~`
+1. `cd ~`
 2. `git clone https://github.com/alpha-omega-labs/genesisL1.git`
 3. `cd genesisL1`
 4. `sh genesisd.sh upgrade --reset-priv-val-state`
