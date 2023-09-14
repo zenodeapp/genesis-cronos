@@ -74,7 +74,7 @@ Since our state file is large this would mean that it will be around ~14GB every
 
 There are some extra scripts in the `genesisd_scripts` folder, which could be useful later down the line.
 
-### - **Swap scripts**
+### Swap scripts
 
 Since the node requires quite some memory usage, swapfiles are created when you run the genesisd.sh script. To alter these swap files we've included scripts to quickly add or remove genesisd_swapfiles.
 
