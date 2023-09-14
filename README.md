@@ -37,8 +37,6 @@ Usage: genesisd.sh <command> [moniker]
      --no-start               This prevents the genesisd service from starting at the end of the script (default: false)
 ```
 
----
-
 ### Usage
 
 - **Initialization (new validators; generates a new key)**
