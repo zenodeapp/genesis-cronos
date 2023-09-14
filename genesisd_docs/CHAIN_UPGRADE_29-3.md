@@ -1,93 +1,73 @@
-# GenesisL1 blockchain
+# Chain upgrade: genesis_29-3
 
-<p align="center">
-  IMPORTANT: Make sure you backup your keys before running this script.
-  It will make a backup of everything, but manually doing one yourself would be wise, in case anything goes wrong.
+This readme is a guide on how to upgrade your node from genesis_29-2 to genesis_29-3 and what you should be paying attention to.
+  
+**IMPORTANT:** Make sure you backup your keys before running the `genesisd.sh` script. Even if it is configured to make a backup of everything, manually doing one yourself is always wise in case anything goes wrong.
 
-ALSO IMPORTANT: Do note that this is a different repository than we used before.
-Thus you shouldn't skip the first step if you haven't already git clone'd the new repository (git pull in the old repo won't work).
+Also, for those who come from genesis_29-2 (evmos), do note that this is a different repository than we used before. The old one was named `genesisd`, this one `genesisL1`. Thus don't skip the first steps if you haven't already git cloned the new repository.
 
-</p>
+Finally, the state file has changed again. Even if you already have the 14Gb state file, because we had to change the chain-id as well in this file (therefore you should not use the `--skip-state-download` flag). 
 
-<p align="center">
-   Cosmos SDK v0.46.15
-</p>
+___
 
-<p align="center">
-   <i>Source code fork of cronos and ethermint.</i>
-</p>
+### <p align="center">1. I am new, I am not a validator yet, but would like to join 🎉</p>
 
-## Node requirements
-
-- 300GB+ good hard drive disk
-- 8GB+ RAM (if necessary it will use at max 150GB from hard drive as swap, see below)
-- 4 CPU Threads
-- Good Internet Connection
-
-## **Script**
-
-### Overview
-
-`genesisd.sh` is available in the root folder of the repository. Running `sh genesisd.sh` gives an overview of what the script is capable of.
-
+#### Oneliner:
+Make sure to replace <NODE_NAME> in the oneliner below with a name of your choice.
 ```
-Usage: genesisd.sh <command> [moniker]
-   <command> should be either 'upgrade' or 'init'
-
-   Options:
-     --crisis-skip            Makes sure that genesisd starts with the --x-crisis-skip-assert-invariants flag (default: false)
-     --skip-state-download    Skips downloading the genesis.json file, only do this if you're certain to have the correct state file already (default: false)
-     --reset-priv-val-state   Resets data/priv_validator_state.json file [UNSAFE] (default: false)
-     --no-service             This prevents the genesisd service from being made (default: false)
-     --no-start               This prevents the genesisd service from starting at the end of the script (default: false)
+cd ~ && git clone https://github.com/alpha-omega-labs/genesisL1.git && cd genesisL1 && sh genesisd.sh init <NODE_NAME> --reset-priv-val-state
 ```
 
-### Usage
+#### Or, step-by-step:
 
-- Initialization (new validators; generates a new key)
+1. `cd ~`
+2. `git clone https://github.com/alpha-omega-labs/genesisL1.git`
+3. `cd genesisL1`
+4. `sh genesisd.sh init <NODE_NAME> --reset-priv-val-state`
 
-  `sh genesisd.sh init $YOUR_NEW_NODE_NAME`
+    _replace <NODE_NAME> with a name of your choice_
 
-- Upgrading (existing validators; you already have an existing .genesisd folder and configuration)
+   _the --reset-priv-val-state flag is an extra pre-caution to prevent old values to be used in your new node (if you already had a .genesisd folder)._
 
-  `sh genesisd.sh upgrade`
+___
 
-  _--if you want a different node name you could use `sh genesisd.sh upgrade $YOUR_NEW_NODE_NAME`_
+### <p align="center">2. I am a validator and I NEVER upgraded to the 'cronos' version of GenesisL1 🥱</p>
 
-<br>
+This means that you still use the `genesisd` repository and not the `genesisL1` repository. If this is the case, then:
 
-<p align="center">
-  ☕ <i>node init/upgrade time is 30-60min or a few tea cups...</i>
-</p>
+#### Oneliner:
 
-### Information
+```
+cd ~ && git clone https://github.com/alpha-omega-labs/genesisL1.git && cd genesisL1 && sh genesisd.sh upgrade --reset-priv-val-state
+```
 
-#### Swap
+#### Or, step-by-step:
 
-Initializing a node uses quite a bit of memory. The script therefore automatically creates virtual memory (swap) to compensate for the amount it requires to start the node. Currently the script is set to automatically calculate how much RAM + Swap is available. Then, whether the user has enough disk space, creates additional swap to have a total of 150GB available RAM + Swap (Example: if 32GB RAM is unused and 30GB of swap is free, an additional swap of 88GB will be created). These swapfiles are formatted as `genesisd_swapfile_{number}` and are made persistent across reboots by adding a line to the `etc/fstab` file. See the bonus scripts for more info on how to properly remove them.
+1. `cs ~`
+2. `git clone https://github.com/alpha-omega-labs/genesisL1.git`
+3. `cd genesisL1`
+4. `sh genesisd.sh upgrade --reset-priv-val-state`
 
-#### Backups
+    _in case you want to change your node's name, you could also run sh genesisd.sh upgrade <NODE_NAME> --reset-priv-val-state and replace <NODE_NAME> with a name of your choice._
 
-If a `.genesisd` folder already exists, the script will back this up to a folder formatted as `.genesisd_backup_{date_time}`. This is a unique name based on the system's current time. Therefore running the script multiple times will continue to create new backup folders.
+___
 
-Since our state file is large this would mean that it will be around ~14GB every time a backup is made. Make sure to remove older backup folders if you plan on running the script more often (testing purposes for instance). They're hidden folders in the root folder; use `cd ~` then `ls -a` to see them.
+### <p align="center">3. I am a validator and I HAVE upgraded to the 'cronos' version of GenesisL1 😎</p>
 
-## **Other (bonus) scripts**
+#### Oneliner:
 
-There are some extra scripts in the `genesisd_scripts` folder, which could be useful later down the line.
+```
+cd ~ && rm -r genesisL1 && git clone https://github.com/alpha-omega-labs/genesisL1.git && cd genesisL1 && sh genesisd.sh upgrade --reset-priv-val-state
+```
 
-### - **Swap scripts**
+#### Or, step-by-step:
 
-Since the node requires quite some memory usage, swapfiles are created when you run the genesisd.sh script. To alter these swap files we've included scripts to quickly add or remove genesisd_swapfiles.
+1. `cd ~`
+2. `rm -r genesisL1`
+3. `git clone https://github.com/alpha-omega-labs/genesisL1.git`
+4. `cd genesisL1`
+5. `sh genesisd.sh upgrade --reset-priv-val-state`
 
-- **Adding swap** `sh swap_add.sh <amount_of_swap_in_gb>`
+    _in case you want to change your node's name, you could also run sh genesisd.sh upgrade <NODE_NAME> --reset-priv-val-state and replace <NODE_NAME> with a name of your choice._
 
-  Example: sh swap_add.sh 50 will create a new genesisd_swapfile that is 50GB in size in '/'.
-
-- **Removing swap** `sh swap_remove.sh <filename>`
-
-  Example: sh swap_remove.sh /genesisd_swapfile_2 turns off swapfile genesisd_swapfile_2, removes the related line in '/etc/fstab' and deletes /genesisd_swapfile_2.
-
-- **Removing all swaps** `sh swap_remove_all.sh`
-
-  This will turn off all genesis swapfiles, removes all related lines in '/etc/fstab' and deletes all /genesisd_swapfiles
+   _do not use the --skip-state-download flag, for reasons stated above._
