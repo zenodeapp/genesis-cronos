@@ -18,6 +18,7 @@
 - Good Internet Connection
 
 ## **Script**
+
 ### Overview
 `genesisd.sh` is available in the root folder of the repository. Running `sh genesisd.sh` gives an overview of what the script is capable of.
 
@@ -45,8 +46,12 @@ Usage: genesisd.sh <command> [moniker]
   
    _--if you want a different node name you could use `sh genesisd.sh upgrade $YOUR_NEW_NODE_NAME`_
 
-### Duration
-Node init/upgrade time is 30-60min or a few tea cups.
+<br>
+<br>
+
+<p align="center">
+  ☕ <i>node init/upgrade time is 30-60min or a few tea cups...</i>
+</p>
 
 ### Information
 
