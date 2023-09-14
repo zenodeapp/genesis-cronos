@@ -71,3 +71,31 @@ cd ~ && rm -r genesisL1 && git clone https://github.com/alpha-omega-labs/genesis
     _in case you want to change your node's name, you could also run sh genesisd.sh upgrade <NODE_NAME> --reset-priv-val-state and replace <NODE_NAME> with a name of your choice._
 
    _do not use the --skip-state-download flag, for reasons stated above._
+
+___
+
+### <p align="center">4. I am a validator and I HAVE upgraded to the 'cronos' version of GenesisL1, but prefer to upgrade manually 🤓</p>
+
+For advanced users only. You know who you are. Take note of what exactly happens in the oneliner or step-by-step. Important to know is that the state file changed again, so downloading this again. Also the chain-id changed from genesis_29-2 to genesis_29-3 and the priv_validator_state.json file needs to be reset ({"height": "0", "round": 0, "step": 0}). 
+
+#### Oneliner:
+
+```
+cd ~ && rm -r genesisL1 && git clone https://github.com/alpha-omega-labs/genesisL1.git && service genesisd stop && cd genesisL1 && go mod tidy && make install && genesisd config chain-id genesis_29-3 && cd ~/.genesisd/config && rm -r genesis.json && wget http://135.181.135.29/genesisd/genesis.json && genesisd tendermint unsafe-reset-all && service genesisd start
+```
+
+#### Or, step-by-step:
+
+1. `cd ~`
+2. `rm -r genesisL1`
+3. `git clone https://github.com/alpha-omega-labs/genesisL1.git`
+4. `service genesisd stop`
+5. `cd genesisL1`
+6. `go mod tidy`
+7. `make install`
+8. `genesisd config chain-id genesis_29-3`
+9. `cd ~/.genesisd/config`
+10. `rm -r genesis.json`
+11. `wget http://135.181.135.29/genesisd/genesis.json`
+12. `genesisd tendermint unsafe-reset-all`
+13. `service genesisd start`
