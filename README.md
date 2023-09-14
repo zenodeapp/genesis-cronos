@@ -60,7 +60,7 @@ Usage: genesisd.sh <command> [moniker]
 
 #### Swap
 
-Initializing a node uses quite a bit of memory. The script therefore automatically creates virtual memory (swap) to compensate for the amount it requires to start the node. Currently the script is set to automatically calculate how much RAM + Swap is available. Then, whether the user has enough disk space, creates additional swap to have a total of 150GB available RAM + Swap (Example: if 32GB RAM is unused and 30GB of swap is free, an additional swap of 88GB will be created). These swapfiles are formatted as `genesisd_swapfile_{number}` and are made persistent across reboots by adding a line to the `etc/fstab` file. See the bonus scripts for more info on how to properly remove them.
+Initializing a node uses quite a bit of memory. The script therefore automatically creates virtual memory (swap) to compensate for the amount it requires to start the node. Currently the script is set to automatically calculate how much RAM + Swap is available. Then, whether the user has enough disk space, creates additional swap to have a total of 150GB available RAM + Swap (Example: if 32GB RAM is unused and 30GB of swap is free, an additional swap of 88GB will be created). These swapfiles are formatted as `genesisd_swapfile_{number}` and are made persistent across reboots by adding a line to the `etc/fstab` file. See the bonus scripts for more info on how to properly add or remove them.
 
 #### Backups
 
