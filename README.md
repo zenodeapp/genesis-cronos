@@ -19,3 +19,15 @@ Cosmos SDK sdk v0.46.15</br>
 
 <li><i>Upgrading (for if you already have an existing .genesisd folder and configuration, but want a different node name):</i></br>
 <code>sh genesisd.sh upgrade $YOUR_NEW_NODE_NAME</code></li>
+Other options:
+<code>
+Usage: genesisd.sh <command> [moniker]
+   <command> should be either 'upgrade' or 'init'
+
+   Options:
+     --crisis-skip            Makes sure that genesisd starts with the --x-crisis-skip-assert-invariants flag (default: false)
+     --skip-state-download    Skips downloading the genesis.json file, only do this if you're certain to have the correct state file already (default: false)
+     --reset-priv-val-state   Resets data/priv_validator_state.json file [UNSAFE] (default: false)
+     --no-service             This prevents the genesisd service from being made (default: false)
+     --no-start               This prevents the genesisd service from starting at the end of the script (default: false)
+</code>
