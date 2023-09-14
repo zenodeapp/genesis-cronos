@@ -39,16 +39,17 @@ Usage: genesisd.sh <command> [moniker]
 
 ### Usage
 
-- Initialization (new validators; generates a new key)
+- **Initialization (new validators; generates a new key)**
 
   `sh genesisd.sh init $YOUR_NEW_NODE_NAME`
 
-- Upgrading (existing validators; you already have an existing .genesisd folder and configuration)
+- **Upgrading (existing validators; you already have an existing .genesisd folder and configuration)**
 
   `sh genesisd.sh upgrade`
 
   _--if you want a different node name you could use `sh genesisd.sh upgrade $YOUR_NEW_NODE_NAME`_
-
+  
+  _--more detailed guides for specific upgrades could be found in the [\/genesisd_docs](genesisd_docs/)-folder_
 <br>
 
 <p align="center">
