@@ -78,7 +78,7 @@ cd ~ && rm -r genesisL1 && git clone https://github.com/alpha-omega-labs/genesis
 
 For advanced users only. You know who you are. Take note of what exactly happens in the oneliner or step-by-step guide. Important to know is that the `priv_validator_state.json` shouldn't date back to when we were at 29-2 (evmos), else you will not be able to participate properly in the consensus. Your `priv_validator_state.json`-file would then point to a block height that's, at the time of writing, in the future (probably to 6751398 or 6751399). If you're one of these people then you should skip the backup and restore of the `priv_validator_state.json`-file in the commands below.
 
-_I do need to address that you should make sure that your config.toml and app.toml are up-to-date. The commands below don't take care of this for it's too user-specific. Though if you participated in the cronos upgrade and already copied the config files in the `/genesisd_config/` folder over or used the script back then, then you're good, else you should check the folder to see what the config files are supposed to look like. Do not forget to restore your moniker and any other settings you had if you end up using these pre-configured files._
+_The commands below don't take care of this for it's too user-specific, but make sure that your config.toml and app.toml are up-to-date. If you participated in the cronos upgrade and already copied over the config files in the `/genesisd_config/` folder or used the `genesisd.sh` script back then, then you're good, else you should check the folder to see what the config files are supposed to look like. Do not forget to restore your moniker and any other settings you had if you end up using these pre-configured files._
 
 #### Oneliner:
 
