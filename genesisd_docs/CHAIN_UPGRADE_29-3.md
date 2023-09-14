@@ -78,7 +78,7 @@ ___
 
 For advanced users only. You know who you are. Take note of what exactly happens in the oneliner or step-by-step. Important to know is that the state file changed again, so downloading this again. Also the chain-id changed from genesis_29-2 to genesis_29-3 and the priv_validator_state.json file needs to be reset ({"height": "0", "round": 0, "step": 0}).
 
-I do need to address that you should make sure that your config.toml and app.toml are up-to-date (if you participated in the cronos upgrade and already copied these config files over or used the script back then, then you're good), else you should check the `/genesisd_config/` folder to see what the config files look like (do not forget to restore your moniker in the config.toml file if you end up using these pre-configured files).
+I do need to address that you should make sure that your config.toml and app.toml are up-to-date (if you participated in the cronos upgrade and already copied these config files over or used the script back then, then you're good), else you should check the `/genesisd_config/` folder to see what the config files look like. Do not forget to restore your moniker and any other settings you had if you end up using these pre-configured files.
 
 #### Oneliner:
 
