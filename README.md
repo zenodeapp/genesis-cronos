@@ -31,11 +31,11 @@ Usage: genesisd.sh <command> [moniker]
 
 ### Usage
 
-- Initialization (generates a new key)
+- Initialization (new validators; generates a new key)
 
    `sh genesisd.sh init $YOUR_NEW_NODE_NAME`
 
-- Upgrading (for if you already have an existing .genesisd folder and configuration)
+- Upgrading (existing validators; you already have an existing .genesisd folder and configuration)
 
    `sh genesisd.sh upgrade`
   
