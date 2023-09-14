@@ -1,7 +1,12 @@
 # GenesisL1 blockchain
 
 <p align="center">
-  <img src="https://github.com/zenodeapp/genesisL1/assets/108588903/be368fa2-a154-48a6-b04b-8eb452b02033" alt="GenesisL1" width="150" height="150"/>
+  IMPORTANT: Make sure you backup your keys before running this script.
+  It will make a backup of everything, but manually doing one yourself would be wise, in case anything goes wrong.
+
+ALSO IMPORTANT: Do note that this is a different repository than we used before.
+Thus you shouldn't skip the first step if you haven't already git clone'd the new repository (git pull in the old repo won't work).
+
 </p>
 
 <p align="center">
