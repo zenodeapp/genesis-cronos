@@ -47,7 +47,6 @@ Usage: genesisd.sh <command> [moniker]
    _--if you want a different node name you could use `sh genesisd.sh upgrade $YOUR_NEW_NODE_NAME`_
 
 <br>
-<br>
 
 <p align="center">
   ☕ <i>node init/upgrade time is 30-60min or a few tea cups...</i>
