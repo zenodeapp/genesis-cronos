@@ -78,9 +78,9 @@ cd ~ && rm -r genesisL1 && git clone https://github.com/alpha-omega-labs/genesis
 
 ### <p align="center">4. I am a validator and I HAVE upgraded to the 'cronos' version of GenesisL1, but prefer to upgrade manually 🤓</p>
 
-For advanced users only. You know who you are. Take note of what exactly happens in the oneliner or step-by-step. Important to know is that the state file changed again, so downloading this again. Also the chain-id changed from genesis_29-2 to genesis_29-3 and the priv_validator_state.json file needs to be reset ({"height": "0", "round": 0, "step": 0}).
+For advanced users only. You know who you are. Take note of what exactly happens in the oneliner or step-by-step guide. Important to know is that the state file changed again, so downloading this again. Also the chain-id changed from genesis_29-2 to genesis_29-3 and the priv_validator_state.json file needs to be reset ({"height": "0", "round": 0, "step": 0}).
 
-_I do need to address that you should make sure that your config.toml and app.toml are up-to-date. If you participated in the cronos upgrade and already copied these config files over or used the script back then, then you're good, else you should check the `/genesisd_config/` folder to see what the config files look like. Do not forget to restore your moniker and any other settings you had if you end up using these pre-configured files._
+_I do need to address that you should make sure that your config.toml and app.toml are up-to-date. The commands below don't take care of this for it's too user-specific. Though if you participated in the cronos upgrade and already copied the config files in the `/genesisd_config/` folder over or used the script back then, then you're good, else you should check the folder to see what the config files are supposed to look like. Do not forget to restore your moniker and any other settings you had if you end up using these pre-configured files._
 
 #### Oneliner:
 
