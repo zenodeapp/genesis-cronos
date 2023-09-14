@@ -11,24 +11,24 @@ cat << "EOF"
  \______/  \_______/|__/  |__/ \_______/|_______/ |__/|_______/       |________/|______/     
                                                                                              
 Welcome to the decentralized blockchain Renaissance, above money & beyond cryptocurrency!
-This script upgrades genesis_29-2 (evmos) to genesis_29-3 (cronos) running under root user.
+This script upgrades genesis_29-2 (evmos) to genesis_29-2 (cronos) running under root user.
 GENESIS L1 is a highly experimental decentralized project, provided AS IS, with NO WARRANTY.
 GENESIS L1 IS A NON COMMERCIAL OPEN DECENTRALIZED BLOCKCHAIN PROJECT RELATED TO SCIENCE AND ART
 THIS IS AN UPGRADE TO COSMOS SDK V0.46.15 BASED ON CRONOS RELEASE SOURCE CODE, THANK YOU!
   
   Mainnet EVM chain ID: 29
-  Cosmos chain ID: genesis_29-3
+  Cosmos chain ID: genesis_29-2
   Blockchain utilitarian coin: L1
   Min. coin unit: el1
   1 L1 = 1 000 000 000 000 000 000 el1 	
   Initial supply: 21 000 000 L1
-  genesis_29-3 at the time of upgrade circulation: ~29 000 000 L1
+  genesis_29-2 at the time of upgrade circulation: ~29 000 000 L1
   Mint rate: < 20% annual
   Block target time: ~11s
   Binary name: genesisd
   genesis_29-1 start: Nov 30, 2021
   genesis_29-2 (evmos) start: Apr 16, 2022
-  genesis_29-3 (cronos) start: Aug 26, 2023
+  genesis_29-2 (cronos) start: Aug 26, 2023
   
 EOF
 
@@ -226,7 +226,7 @@ ulimit -n 50000
 
 #PONYSAY 
 snap install ponysay
-ponysay "Installing genesisd from source code with updated genesis_29-3 mainnet!"
+ponysay "Installing genesisd from source code with updated genesis_29-2 mainnet!"
 sleep 5s
 ponysay "WARNING: cosmosvisor, evmosd processes will be killed and evmos, evmosd system services will be stopped with this script on the next step. If you have other blockchains running, you might want to delete those parts of the script!"
 sleep 20s
@@ -259,7 +259,7 @@ cd
 rsync -r --verbose --exclude 'data' ./"$backup_dir"/ ./.genesisd/
 
 # SETTING UP THE NEW chain-id in CONFIG
-genesisd config chain-id genesis_29-3
+genesisd config chain-id genesis_29-2
 
 # INIT MODE WILL CREATE A NEW KEY
 if [ "$1" = "init" ]; then
@@ -274,7 +274,7 @@ if [ "$1" = "init" ]; then
       sleep 120s
     fi
 
-    genesisd init $moniker --chain-id genesis_29-3
+    genesisd init $moniker --chain-id genesis_29-2
 fi
 
 #IMPORTING GENESIS STATE
