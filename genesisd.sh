@@ -274,7 +274,7 @@ if [ "$1" = "init" ]; then
       sleep 120s
     fi
 
-    genesisd init $moniker --chain-id genesis_29-2 
+    genesisd init $moniker --chain-id genesis_29-2
 fi
 
 #IMPORTING GENESIS STATE
