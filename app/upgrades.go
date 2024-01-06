@@ -20,6 +20,15 @@ func (app *App) RegisterUpgradeHandlers(experimental bool) {
 		if err != nil {
 			return m, err
 		}
+
+		// Override feemarket parameters
+		params := app.FeeMarketKeeper.GetParams(ctx)
+		params.BaseFeeChangeDenominator = 300
+		params.ElasticityMultiplier = 4
+		params.BaseFee = sdk.NewInt(10000000000000)
+		params.MinGasPrice = sdk.NewDec(10000000000000)
+		app.FeeMarketKeeper.SetParams(ctx, params)
+
 		// clear extra_eips from evm parameters
 		// Ref: https://github.com/crypto-org-chain/cronos/issues/755
 		evmParams := app.EvmKeeper.GetParams(ctx)
