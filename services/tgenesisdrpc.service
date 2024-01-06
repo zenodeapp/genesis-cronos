@@ -1,5 +1,5 @@
 [Unit]
-Description=genesis rpc
+Description=tgenesis rpc
 After=network.target
 
 [Service]

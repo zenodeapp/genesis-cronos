@@ -4,8 +4,8 @@ COVERAGE ?= coverage.txt
 
 GOPATH ?= $(shell $(GO) env GOPATH)
 BINDIR ?= ~/go/bin
-BINARY_NAME = genesisd
-NETWORK ?= mainnet
+BINARY_NAME = tgenesisd
+NETWORK ?= testnet
 LEDGER_ENABLED ?= true
 PROJECT_NAME = $(shell git remote get-url origin | xargs basename -s .git)
 
@@ -78,7 +78,7 @@ comma := ,
 build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
-ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=genesis \
+ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=tgenesis \
 	-X github.com/cosmos/cosmos-sdk/version.AppName=$(BINARY_NAME) \
 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \

@@ -146,7 +146,7 @@ import (
 )
 
 const (
-	Name = "genesis"
+	Name = "tgenesis"
 
 	// AddrLen is the allowed length (in bytes) for an address.
 	//
