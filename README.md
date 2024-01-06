@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  Release <b>v1.0.0</b> ~ Cronos <b>v1.0.15</b>
+  <ins>Release <b>v1.0.0</b> ~ Cronos <b>v1.0.15</b></ins>
 </p>
 
 <p align="center">
