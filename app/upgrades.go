@@ -28,7 +28,7 @@ func (app *App) RegisterUpgradeHandlers(experimental bool) {
 		params.BaseFee = sdk.NewInt(10000000000000)
 		params.MinGasPrice = sdk.NewDec(10000000000000)
 		app.FeeMarketKeeper.SetParams(ctx, params)
-		
+
 		// clear extra_eips from evm parameters
 		// Ref: https://github.com/crypto-org-chain/cronos/issues/755
 		evmParams := app.EvmKeeper.GetParams(ctx)
@@ -51,7 +51,7 @@ func (app *App) RegisterUpgradeHandlers(experimental bool) {
 	if !app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
 		if upgradeInfo.Name == planName {
 			storeUpgrades := storetypes.StoreUpgrades{
-				Added: []string{ibcfeetypes.StoreKey},
+				Added: []string{ibcfeetypes.StoreKey, cronostypes.StoreKey},
 			}
 
 			// configure store loader that checks if version == upgradeHeight and applies store upgrades
