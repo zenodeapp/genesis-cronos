@@ -216,7 +216,7 @@ replace (
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 	// the version used by cockroach v22.2.7 release
 	github.com/cockroachdb/pebble => github.com/cockroachdb/pebble v0.0.0-20230206180212-744ea7cc8f90
-	github.com/cometbft/cometbft-db => github.com/alpha-omega-labs/cometbft-db v0.1-genesis
+	github.com/cometbft/cometbft-db => github.com/alpha-omega-labs/cometbft-db v0.0.0-20230722202700-39607195539a
 	// dgrijalva/jwt-go is deprecated and doesn't receive security updates.
 	// TODO: remove it: https://github.com/cosmos/cosmos-sdk/issues/13134
 	github.com/dgrijalva/jwt-go => github.com/golang-jwt/jwt/v4 v4.4.2

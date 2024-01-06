@@ -1,91 +1,35 @@
-# GenesisL1 blockchain
+<h1 align="center">
+  GenesisL1 Mainnet (Cronos fork)
+</h1>
 
 <p align="center">
   <img src="https://github.com/zenodeapp/genesisL1/assets/108588903/be368fa2-a154-48a6-b04b-8eb452b02033" alt="GenesisL1" width="150" height="150"/>
 </p>
 
 <p align="center">
-   Cosmos SDK v0.46.15
+  Chain ID <b>genesis_29-2</b>
 </p>
 
 <p align="center">
-   <i>Source code fork of cronos and ethermint.</i>
+   A source code fork of <b>Cronos</b> and <b>Ethermint</b>
 </p>
 
-## Node requirements
-
-- 300GB+ good hard drive disk
-- 8GB+ RAM (if necessary it will use at max 150GB from hard drive as swap, see below)
-- 4 CPU Threads
-- Good Internet Connection
-
-## **Script**
-
-### Overview
-
-`genesisd.sh` is available in the root folder of the repository. Running `sh genesisd.sh` gives an overview of what the script is capable of.
-
-```
-Usage: genesisd.sh <command> [moniker]
-   <command> should be either 'upgrade' or 'init'
-
-   Options:
-     --crisis-skip            Makes sure that genesisd starts with the --x-crisis-skip-assert-invariants flag (default: false)
-     --skip-state-download    Skips downloading the genesis.json file, only do this if you're certain to have the correct state file already (default: false)
-     --reset-priv-val-state   Resets data/priv_validator_state.json file [UNSAFE] (default: false)
-     --no-service             This prevents the genesisd service from being made (default: false)
-     --no-start               This prevents the genesisd service from starting at the end of the script (default: false)
-```
-
-### Usage
-
-- **Initialization (new validators; generates a new key)**
-
-  `sh genesisd.sh init $YOUR_NEW_NODE_NAME`
-
-- **Upgrading (existing validators; you already have an existing .genesisd folder and configuration)**
-
-  `sh genesisd.sh upgrade`
-
-  _--if you want a different node name you could use `sh genesisd.sh upgrade $YOUR_NEW_NODE_NAME`_
-  
-  _--more detailed guides for specific upgrades could be found in the [\/genesisd_docs](genesisd_docs/)-folder_
-<br>
-
 <p align="center">
-  ☕ <i>node init/upgrade time is 30-60min or a few tea cups...</i>
+  Cosmos SDK <b>v0.46.15</b>
 </p>
 
 ---
 
-### Information
+> [!IMPORTANT]
+> **For Full-Node Syncing**
+> 
+> If you wish to sync a full node, then you'll have to follow the instructions in the `genesis-evmos` repository first before continuing. This for we were an Evmos-fork before we made the decision to hard fork to Cronos.
 
-#### Swap
+## Node requirements
 
-Initializing a node uses quite a bit of memory. The script therefore automatically creates virtual memory (swap) to compensate for the amount it requires to start the node. Currently the script is set to automatically calculate how much RAM + Swap is available. Then, whether the user has enough disk space, creates additional swap to have a total of 150GB available RAM + Swap (Example: if 32GB RAM is unused and 30GB of swap is free, an additional swap of 88GB will be created). These swapfiles are formatted as `genesisd_swapfile_{number}` and are made persistent across reboots by adding a line to the `etc/fstab` file. See the bonus scripts for more info on how to properly add or remove them.
+- 300GB+ good hard drive disk
+- 8GB+ RAM
+- 4 CPU Threads
+- Good Internet Connection
 
-#### Backups
-
-If a `.genesisd` folder already exists, the script will back this up to a folder formatted as `.genesisd_backup_{date_time}`. This is a unique name based on the system's current time. Therefore running the script multiple times will continue to create new backup folders.
-
-Since our state file is large this would mean that it will be around ~14GB every time a backup is made. Make sure to remove older backup folders if you plan on running the script more often (testing purposes for instance). They're hidden folders in the root folder; use `cd ~` then `ls -a` to see them.
-
-## **Other (bonus) scripts**
-
-There are some extra scripts in the `genesisd_scripts` folder, which could be useful later down the line.
-
-### Swap scripts
-
-Since the node requires quite some memory usage, swapfiles are created when you run the genesisd.sh script. To alter these swap files we've included scripts to quickly add or remove genesisd_swapfiles.
-
-- **Adding swap** `sh swap_add.sh <amount_of_swap_in_gb>`
-
-  Example: sh swap_add.sh 50 will create a new genesisd_swapfile that is 50GB in size in '/'.
-
-- **Removing swap** `sh swap_remove.sh <filename>`
-
-  Example: sh swap_remove.sh /genesisd_swapfile_2 turns off swapfile genesisd_swapfile_2, removes the related line in '/etc/fstab' and deletes /genesisd_swapfile_2.
-
-- **Removing all swaps** `sh swap_remove_all.sh`
-
-  This will turn off all genesis swapfiles, removes all related lines in '/etc/fstab' and deletes all /genesisd_swapfiles
+## Instructions
