@@ -3,6 +3,10 @@
 </h1>
 
 <p align="center">
+  Release <b>v1.0.0</b> ~ Cronos <b>v1.0.15</b>
+</p>
+
+<p align="center">
   <img src="https://github.com/zenodeapp/genesisL1/assets/108588903/be368fa2-a154-48a6-b04b-8eb452b02033" alt="GenesisL1" width="150" height="150"/>
 </p>
 
