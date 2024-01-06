@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ibcfeetypes "github.com/cosmos/ibc-go/v5/modules/apps/29-fee/types"
-	cronostypes "github.com/crypto-org-chain/cronos/x/cronos/types"
 )
 
 func (app *App) RegisterUpgradeHandlers(experimental bool) {
@@ -42,7 +41,7 @@ func (app *App) RegisterUpgradeHandlers(experimental bool) {
 	if !app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
 		if upgradeInfo.Name == planName {
 			storeUpgrades := storetypes.StoreUpgrades{
-				Added: []string{ibcfeetypes.StoreKey, cronostypes.StoreKey},
+				Added: []string{ibcfeetypes.StoreKey},
 			}
 
 			// configure store loader that checks if version == upgradeHeight and applies store upgrades
