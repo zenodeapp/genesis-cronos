@@ -1,5 +1,5 @@
 <h1 align="center">
-  GenesisL1 Mainnet (Cronos fork)
+  GenesisL1 Testnet (Cronos fork)
 </h1>
 
 <p align="center">
