@@ -146,7 +146,7 @@ import (
 )
 
 const (
-	Name = "cronos"
+	Name = "genesis"
 
 	// AddrLen is the allowed length (in bytes) for an address.
 	//
@@ -212,6 +212,7 @@ func init() {
 	}
 
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+	sdk.DefaultPowerReduction = sdk.NewIntFromUint64(1000000000000000000)
 }
 
 // GenModuleBasics generate basic module manager according to experimental flag
