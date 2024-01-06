@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  Cosmos SDK <b>v0.44.5-patch</b>
+  Cosmos SDK <b>v0.46.15</b>
 </p>
 
 ---
