@@ -11,14 +11,17 @@ from .network import Cronos, setup_custom_cronos
 from .utils import (
     ADDRS,
     CONTRACTS,
-    approve_proposal,
     deploy_contract,
     edit_ini_sections,
+    parse_events,
     send_transaction,
     wait_for_block,
+    wait_for_block_time,
     wait_for_new_blocks,
     wait_for_port,
 )
+
+pytestmark = pytest.mark.upgrade
 
 
 def init_cosmovisor(home):
@@ -91,7 +94,6 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
     custom_cronos.supervisorctl("start", "cronos_777-1-node0", "cronos_777-1-node1")
     wait_for_port(ports.evmrpc_port(custom_cronos.base_port(0)))
     wait_for_new_blocks(cli, 1)
-
     height = cli.block_height()
     target_height = height + 15
     print("upgrade height", target_height)
