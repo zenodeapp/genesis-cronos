@@ -10,7 +10,7 @@ if [ -z "$1" ]; then
 fi
 
 NODE_DIR=.tgenesis
-CONFIG_PATH=$NODE_DIR/config
+CONFIG_PATH=~/$NODE_DIR/config
 
 # Stop processes
 systemctl stop tgenesisd
