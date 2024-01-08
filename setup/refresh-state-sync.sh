@@ -1,9 +1,11 @@
 RPC_SERVER_1=$1
 RPC_SERVER_2=${2:-$RPC_SERVER_1}
+HEIGHT_INTERVAL=${3:-2000}
 
 if [ -z "$1" ]; then
-    echo "Usage: sh $0 <RPC_SERVER_1> [RPC_SERVER_2]"
-    echo "  If [RPC_SERVER_2] is not provided, then RPC_SERVER_1 will be used as the second."
+    echo "Usage: sh $0 <RPC_SERVER_1> [RPC_SERVER_2] [HEIGHT_INTERVAL]"
+    echo "  [RPC_SERVER_2] is optional (default: [RPC_SERVER_1])."
+    echo "  [HEIGHT_INTERVAL] is optional (default: 2000)."
     exit 1
 fi
 
@@ -18,7 +20,7 @@ pkill cosmovisor
 cp ~/$NODE_DIR/data/priv_validator_state.json ~/$NODE_DIR/priv_validator_state.json.bak
 
 LATEST_HEIGHT=$(curl -s $RPC_SERVER_1/block | jq -r .result.block.header.height); \
-TRUST_HEIGHT=$((LATEST_HEIGHT - 2000)); \
+TRUST_HEIGHT=$((LATEST_HEIGHT - $HEIGHT_INTERVAL)); \
 TRUST_HASH=$(curl -s "$RPC_SERVER_1/block?height=$BLOCK_HEIGHT" | jq -r .result.block_id.hash)
 
 sed -i '/^\[statesync\]/,/^enable = / s/enable = .*/enable = true/' $CONFIG_PATH/config.toml
