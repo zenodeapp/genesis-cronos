@@ -77,9 +77,6 @@ fi
 sed -i "s/moniker = .*/moniker = \"$MONIKER\"/" ~/$NODE_DIR/config/config.toml
 sh $SETUP_DIR/refresh-state-sync.sh "127.0.0.1:26657"
 
-# Reset to imported genesis.json
-tgenesisd tendermint unsafe-reset-all
-
 # Install service
 sh $SETUP_DIR/install-service.sh
 
