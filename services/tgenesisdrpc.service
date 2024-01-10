@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/root
-ExecStart=/root/go/bin/genesisd start --pruning=nothing --trace --log_level=info --minimum-gas-prices=1000000000el1 --json-rpc.api eth,debug,txpool,personal,net,web3
+ExecStart=/root/go/bin/tgenesisd start --pruning=nothing --trace --log_level=info --minimum-gas-prices=1000000000el1 --json-rpc.api eth,debug,txpool,personal,net,web3
 Restart=on-failure
 RestartSec=60 
 LimitNOFILE=50000 

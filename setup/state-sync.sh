@@ -49,7 +49,7 @@ sh $SETUP_DIR/dependencies.sh
 # cd to root of the repository
 cd $REPO_DIR
 
-# Building genesisd binaries
+# Building binaries
 make install
 
 # Set chain-id
