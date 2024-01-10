@@ -219,4 +219,3 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
     custom_cronos.supervisorctl("start", "cronos_777-1-node0", "cronos_777-1-node1")
     wait_for_new_blocks(custom_cronos.cosmos_cli(), 1)
     custom_cronos.supervisorctl("stop", "all")
-    
