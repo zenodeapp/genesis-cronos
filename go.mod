@@ -30,7 +30,6 @@ require (
 	google.golang.org/grpc v1.57.0
 	google.golang.org/protobuf v1.30.0
 	gopkg.in/yaml.v2 v2.4.0
-  github.com/zenodeapp/genesis-cronos v0.0.0-20240107083448-6b1dd5fedc2d432e0ea58834e000a06170310238
 )
 
 require (
