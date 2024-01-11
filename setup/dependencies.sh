@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Helper-function: adds a line to a file if it doesn't already exist (to prevent duplicates)
 add_line_to_file() {
     local line="$1"
@@ -19,12 +21,12 @@ add_line_to_file() {
 
 # System update and installation of dependencies
 sudo apt-get update -y
-sudo apt-get install jq git wget make gcc build-essential snapd wget -y
+sudo apt-get install jq git wget make gcc build-essential snapd -y
 snap install go --channel=1.20/stable --classic
 snap refresh go --channel=1.20/stable --classic
 
 export PATH=$PATH:$(go env GOPATH)/bin
-add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' ~/.bashrc false
+add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' $HOME/.bashrc false
 
 # Global change of open file limits
 add_line_to_file "* - nofile 50000" /etc/security/limits.conf false

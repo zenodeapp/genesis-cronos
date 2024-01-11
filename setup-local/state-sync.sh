@@ -35,8 +35,8 @@ echo "WARNING: Any config files will get overwritten and the data folder shall b
 echo "will be a backup and restore of the priv_validator_state.json file. Use utils/create-backup.sh"
 echo "to create a backup."
 echo ""
-echo "WARNING: this script should NOT be used for local testnet purposes."
-echo "Use setup-local/state-sync.sh for this instead."
+echo "WARNING: this script is intended for LOCAL testing and should NOT be used for public testnet purposes."
+echo "Use setup/state-sync.sh for this instead."
 echo ""
 read -p "Do you want to continue? (y/N): " ANSWER
 
@@ -76,22 +76,32 @@ $BINARY_NAME config chain-id $CHAIN_ID
 $BINARY_NAME init $MONIKER --chain-id $CHAIN_ID -o
 
 # Chain specific configurations (i.e. timeout_commit 10s, min gas price 50gel)
+# - [p2p] addr_book_strict = false
+# - [p2p] allow_duplicate_ip = true
+# - [api] enabled = true
+# - [api] enabled-unsafe-cors = true
 cp "./configs/default_app.toml" $CONFIG_DIR/app.toml
 cp "./configs/default_config.toml" $CONFIG_DIR/config.toml
 # Set moniker again since the configs got overwritten
 sed -i "s/moniker = .*/moniker = \"$MONIKER\"/" $CONFIG_DIR/config.toml
 
-# Fetch latest seeds and peers list from genesis-parameters repo
-sh ./utils/fetch-peers.sh
+# We don't fetch any peers when we setup a local chain
 
-# Fetch state file from genesis-parameters repo
-sh ./utils/fetch-state.sh
+# We don't fetch any state when we setup a local chain
 
-# Fetch latest rpc_servers from genesis-parameters repo
-sh ./utils/fetch-rpcs.sh
+# We don't fetch any rpc_servers when we setup a local chain
 
 # Install service
 sh $REPO_ROOT/utils/install-service.sh
 
-# Refresh state sync
+# Refresh state-sync
 sh $REPO_ROOT/utils/refresh-state-sync.sh
+
+echo ""
+echo "A couple extra steps are necessary in order for the local testchain to work:"
+echo "- Make sure to add the correct genesis.json file used by the other node(s) running the local testchain."
+echo "- Make sure to add the other nodes in the persistent_peers field."
+echo "- Make sure to create a key if you decide to do transactions or create a validator (utils/create-key.sh"
+echo "  or utils/import-key.sh)."
+echo ""
+echo "Follow this with a '$BINARY_NAME tendermint unsafe-reset-all' and then start the node by running 'systemctl start $BINARY_NAME'!"
