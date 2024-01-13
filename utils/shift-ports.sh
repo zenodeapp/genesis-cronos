@@ -11,7 +11,7 @@ REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 . "$REPO_ROOT/utils/_variables.sh"
 
 # Repository where the port shifter resides
-VERSION=v1.0.0 # Added versioning for non-breaking changes and security measures
+VERSION=v1.0.1 # Added versioning for non-breaking changes and security measures
 EXTERNAL_REPO=https://raw.githubusercontent.com/zenodeapp/port-shifter/$VERSION
 
 # quick-shift.sh (simple variant, $1 is <port_increment_value>, e.g.: 1000)
