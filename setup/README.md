@@ -1,10 +1,5 @@
 # Setup
 
-> [!NOTE]
-> The scripts in this folder are not specifically written for **local** testnet purposes.
->
-> If you plan on testing **locally**, head over to [/setup-local](/setup-local) instead.
-
 ## dependencies.sh
 
 This script installs all the dependencies (and system configurations) that are necessary for the binary to run. Since this file already gets called from within the other scripts, it is not required to call this yourself.
