@@ -65,7 +65,7 @@ sh setup/state-sync.sh <moniker>
 >
 > If you haven't already created or imported one, use: [utils/create-key.sh](/utils/create-key.sh) _or_ [utils/import-key.sh](/utils/import-key.sh).
 
-This script should only be run once you're **fully synced**. It's a wizard; prompting the user the minimum required fields for creating a validator.
+This script should only be run once you're **fully synced**. It's a wizard; prompting the user only the required fields for creating a validator.
 
 ### Usage
 
