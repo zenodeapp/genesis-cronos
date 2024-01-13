@@ -70,5 +70,5 @@ This script should only be run once you're **fully synced**. It's a wizard; prom
 ### Usage
 
 ```
-sh setup/create-validator.sh
+sh setup/create-validator.sh <moniker> <key_alias>
 ```
