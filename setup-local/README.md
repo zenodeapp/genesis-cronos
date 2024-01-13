@@ -18,8 +18,8 @@ This script takes care of the needed steps to upgrade the node to the new fork:
 - It stops the node (the service)
 - Creates a backup of existing _config.toml_ or _app.toml_ files (as _.toml.bak_)
 - Introduces new config files
-- This _local_ variant of the script doesn't fetch any seeds or peers _(so any configured persistent_peers and seeds get reset!)_
 - Builds the binaries
+> This _local_ variant of the script doesn't fetch any seeds or peers _(so any configured persistent_peers and seeds get reset!)_
 
 ### Usage
 
