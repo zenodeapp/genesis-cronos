@@ -25,9 +25,9 @@
 ---
 
 > [!IMPORTANT]
-> **For Full-Node Syncing**
+> **For full-node syncing**
 > 
-> If you wish to sync a full node, then you'll have to follow the instructions in the [`genesis-evmos`](https://github.com/zenodeapp/genesis-evmos) repository first before continuing. This for we were an Evmos-fork before we made the decision to hard fork to Cronos.
+> We were an Evmos-fork before we made the decision to hard fork to Cronos. Therefore if you do not want to **state sync**, but wish to sync a **full node**, follow the instructions in the [`genesis-evmos`](https://github.com/zenodeapp/genesis-evmos) repository first before continuing.
 
 ## Node requirements
 
