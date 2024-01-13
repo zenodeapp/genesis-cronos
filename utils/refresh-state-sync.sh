@@ -15,7 +15,7 @@ REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 . "$REPO_ROOT/utils/_variables.sh"
 
 # Repository where the port shifter resides
-VERSION=main # Added versioning for non-breaking changes and security measures, TODO: add version instead of main
+VERSION=v1.0.0 # Added versioning for non-breaking changes and security measures, TODO: add version instead of main
 EXTERNAL_REPO=https://raw.githubusercontent.com/zenodeapp/restate-sync/$VERSION
 
 # restate-sync.sh
