@@ -14,8 +14,8 @@ REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 
 # Arguments
 KEY_ALIAS=$1
-PK=$2
+PRIVATE_ETH_KEY=$2
 
 # Import key
 $BINARY_NAME config keyring-backend os
-$BINARY_NAME keys unsafe-import-eth-key $KEY_ALIAS $PK --keyring-backend os
+$BINARY_NAME keys unsafe-import-eth-key $KEY_ALIAS $PRIVATE_ETH_KEY --keyring-backend os

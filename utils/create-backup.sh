@@ -13,7 +13,7 @@ if [ ! -e "$NODE_DIR" ]; then
 fi
 
 # Arguments
-BACKUP_DIR=${1:-$HOME/".genesis_backup_$(date +"%Y%m%d%H%M%S")"}
+BACKUP_DIR=${1:-$HOME/""$NODE_DIR_NAME"_backup_$(date +"%Y%m%d%H%M%S")"}
 
 # Information prompt
 echo "This script will halt $BINARY_NAME and backup the $NODE_DIR folder."

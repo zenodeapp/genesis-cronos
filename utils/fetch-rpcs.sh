@@ -6,11 +6,8 @@ REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 # Source the variables file
 . "$REPO_ROOT/utils/_variables.sh"
 
-# Repository where the latest seeds/peers are stored for the current chain-id
-REPO_URL=https://raw.githubusercontent.com/zenodeapp/genesis-parameters/main/$CHAIN_ID
-
 # Fetch latest rpc_servers
-RPC_SERVERS=$(wget -qO - $REPO_URL/rpc_servers.txt | head -n 1)
+RPC_SERVERS=$(wget -qO - $NETWORK_PARAMETERS_URL/rpc_servers.txt | head -n 1)
 
 if [ -z "$RPC_SERVERS" ] || [ "$RPC_SERVERS" = '""' ]; then
     # Echo result
@@ -22,5 +19,3 @@ else
     # Echo result
     echo "Added rpc_servers = $RPC_SERVERS"
 fi
-
-
