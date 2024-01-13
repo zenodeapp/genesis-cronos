@@ -63,6 +63,14 @@ sh refresh-state-sync.sh [height_interval] [rpc_server_1] [rpc_server_2]
 > [!NOTE]
 > Leaving the _<rpc_server>_-arguments empty will leave the rpc_servers field in your config.toml untouched.
 
+## my-peer-id.sh
+
+This script will print out your peer-id: _node-id@ip-address:port_. This is useful for sharing your node with others so that they can add you as a persistent peer.
+
+Bear in mind that the _port_ being echo'd is extracted from the _config.toml_-file. So if you start the node on a different port without explicitly stating this in the _config.toml_-file, then the outputted port may not represent the actual port this node uses.
+
+> Add a --local flag to echo a local IP address, instead of your (public) external address.
+
 ## shift-ports.sh
 
 This script is useful if you quickly want to replace the ports in the `config.toml` and `app.toml` files. It uses the script(s) from the [`port-shifter`](https://github.com/zenodeapp/port-shifter/tree/v1.0.0) repository (`v1.0.0`). If in doubt whether this is safe, you could always check the repository to see how it works.
