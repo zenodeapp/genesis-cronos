@@ -25,9 +25,9 @@
 ---
 
 > [!IMPORTANT]
-> **For Full-Node Syncing**
+> **For full-node syncing**
 > 
-> If you wish to sync a full node, then you'll have to follow the instructions in the [`genesis-evmos`](https://github.com/zenodeapp/genesis-evmos) repository first before continuing. This for we were an Evmos-fork before we made the decision to hard fork to Cronos.
+> We were an Evmos-fork before we made the decision to hard fork to Cronos. Therefore if you do not want to **state sync**, but wish to sync a **full node**, follow the instructions in the [`genesis-evmos`](https://github.com/zenodeapp/genesis-evmos) repository first before continuing.
 
 ## Node requirements
 
@@ -37,3 +37,89 @@
 - Good Internet Connection
 
 ## Instructions
+
+> [!NOTE]
+> The instructions provided here will only be suitable for those who would like to **join** the **public** testnet: `tgenesis_54-1` or **upgrade** an existing (full) node. If you instead want to _test_ **locally**, see [/setup-local](/setup-local).
+
+### 1. Cloning the repository
+
+```
+git clone https://github.com/zenodeapp/genesis-cronos.git
+```
+
+### 2. Checkout the right tag/branch
+
+```
+git checkout tgenesis-v1.0.0
+```
+
+### 3. Node setup
+
+Depending on your circumstances, you'll either have to **Setup a node _(using state sync)_** or **Upgrade a node**:
+
+#### 3.1 Setup a node _(using state sync)_
+
+This script takes care of the needed steps to join the network via _state sync_:
+
+> [!WARNING]
+> Running this will **wipe the entire database** (the _/data_-folder **excluding** the priv_validator_state.json file). Therefore if you already have a node set up and you prefer not to have your GenesisL1 database lost, create a backup.
+>
+> You could use [utils/create-backup.sh](/utils/create-backup.sh) for this.
+
+```
+sh setup/state-sync.sh <moniker>
+```
+
+#### 3.2 Upgrade a node
+
+This script assumes that you are currently operating on the Evmos fork of GenesisL1 (repo: [`genesis-evmos`](https://github.com/zenodeapp/genesis-evmos)) and the node synced till height: `insert_height_here` which caused it to panic.
+
+It should only be used if you run a **full-node** and have to perform the **"plan_cronos"**-upgrade:
+
+```
+sh setup/upgrade.sh
+```
+
+### 4. Create or import a key (optional)
+
+A key is necessary to interact with the network/node. If you haven't already created one, either import one or generate a new one, using:
+
+```
+sh utils/create-key.sh <key_alias>
+```
+
+OR
+
+```
+sh utils/import-key.sh <key_alias> <private_eth_key>
+```
+
+> _<private_eth_key>_ is the private key for a (wallet) address you already own.
+
+### 5. Sync your node
+
+If everything went well, you should now be able to run your node using:
+
+```
+systemctl start tgenesisd
+```
+
+and see its status with:
+
+```
+journalctl -fu tgenesisd -ocat
+```
+
+### 6. Become a validator (optional)
+
+Once your node is _up-and-running_, _fully synced_ and you have a _key_ created or imported, you could become a validator using:
+
+```
+sh setup/create-validator.sh
+```
+> This is a wizard and shall prompt the user only the required fields to create an on-chain validator.
+
+### 7. Explore utilities (optional)
+
+> [!TIP]
+> The [/utils](/utils)-folder contains useful utilities one could use to manage their node (e.g. for fetching latest seeds and peers, fetching the genesis state, quickly shifting your config's ports, recalibrating your state sync etc.). To learn more about these, see the [README](utils/README.md) in the folder.
