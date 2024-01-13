@@ -50,7 +50,7 @@ cp $CONFIG_DIR/app.toml $CONFIG_DIR/app.toml.bak
 cp $CONFIG_DIR/config.toml $CONFIG_DIR/config.toml.bak
 MONIKER=$(grep "moniker" $CONFIG_DIR/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
 
-# Choose the appropriate config files based on the --local flag
+# Introduce new config files
 cp ./configs/default_app_local.toml $CONFIG_DIR/app.toml
 cp ./configs/default_config_local.toml $CONFIG_DIR/config.toml
 

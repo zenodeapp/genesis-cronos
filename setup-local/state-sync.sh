@@ -105,7 +105,7 @@ sed -i "s/moniker = .*/moniker = \"$MONIKER\"/" $CONFIG_DIR/config.toml
 
 # We don't fetch any state when we setup a local chain
 
-# Fetch local rpc_servers when we setup a local chain
+# Set rpc_servers to $LOCAL_RPC_SERVERS found in utils/_local-variables.sh
 sed -i "s/rpc_servers = .*/rpc_servers = \"$LOCAL_RPC_SERVERS\"/" $CONFIG_DIR/config.toml
 
 # Install service
