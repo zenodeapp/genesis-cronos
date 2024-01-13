@@ -35,14 +35,23 @@ REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 # Source the variables file
 . "$REPO_ROOT/utils/_variables.sh"
 
-read -p "What's the alias of the key you'll use to sign? " KEY_ALIAS
-read -p "What will be your validator name? " MONIKER
-read -p "What's the amount you'll self-delegate? (denom: L1) " AMOUNT
-read -p "What will be your commission rate percentage? (0.0 - 1.0) " COMMISSION_RATE
-read -p "What will be your max commission rate percentage? (0.0 - 1.0) " COMMISSION_MAX_RATE
-read -p "What will be your max commission change rate percentage (per day)? (0.0 - 1.0) " COMMISSION_MAX_CHANGE_RATE
-read -p "What's the amount you'll self-delegate? (denom: L1) - " AMOUNT
-DECIMALS="000000000000000000" 
+# Set default values
+DEFAULT_AMOUNT=1
+DEFAULT_COMMISSION_RATE=0.05
+DEFAULT_COMMISSION_MAX_RATE=0.99
+DEFAULT_COMMISSION_MAX_CHANGE_RATE=0.01
+
+# Read user inputs
+read -p "What will be your validator name?: " MONIKER
+read -p "What's the alias of the key you'll use to sign?: " KEY_ALIAS
+read -p "What's the amount you'll self-delegate? (denom: L1) [default: $DEFAULT_AMOUNT]: " AMOUNT
+AMOUNT=${AMOUNT:-$DEFAULT_AMOUNT}
+read -p "What will be your commission rate percentage? (default: $DEFAULT_COMMISSION_RATE): " COMMISSION_RATE
+COMMISSION_RATE=${COMMISSION_RATE:-$DEFAULT_COMMISSION_RATE}
+read -p "What will be your max commission rate percentage? (default: $DEFAULT_COMMISSION_MAX_RATE): " COMMISSION_MAX_RATE
+COMMISSION_MAX_RATE=${COMMISSION_MAX_RATE:-$DEFAULT_COMMISSION_MAX_RATE}
+read -p "What will be your max commission change rate percentage per day? (default: $DEFAULT_COMMISSION_MAX_CHANGE_RATE): " COMMISSION_MAX_CHANGE_RATE
+COMMISSION_MAX_CHANGE_RATE=${COMMISSION_MAX_CHANGE_RATE:-$DEFAULT_COMMISSION_MAX_CHANGE_RATE}
 
 $BINARY_NAME tx staking create-validator \
   --amount="$AMOUNT""$DECIMALS"el1 \

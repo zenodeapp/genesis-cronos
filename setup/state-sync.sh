@@ -91,7 +91,7 @@ sh ./utils/fetch-state.sh
 sh ./utils/fetch-rpcs.sh
 
 # Install service
-sh $REPO_ROOT/utils/install-service.sh
+sh ./utils/install-service.sh
 
 # Refresh state sync
-sh $REPO_ROOT/utils/refresh-state-sync.sh
+sh ./utils/refresh-state-sync.sh

@@ -53,6 +53,22 @@ REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 # Source the variables file
 . "$REPO_ROOT/utils/_variables.sh"
 
+# Source local variables file
+. "$REPO_ROOT/utils/_local-variables.sh"
+
+# Warn about which local servers will be set as rpc_servers
+echo "\"$LOCAL_RPC_SERVERS\" will be set as rpc_servers for state-syncing."
+echo "If this is incorrect, then change this in the utils/_local-variables.sh file before continuing!"
+echo ""
+read -p "Proceed? (y/N): " ANSWER
+
+ANSWER=$(echo "$ANSWER" | tr 'A-Z' 'a-z')  # Convert to lowercase
+
+if [ "$ANSWER" != "y" ]; then
+    echo "Aborted."
+    exit 1
+fi
+
 # Arguments
 MONIKER=$1
 
@@ -89,13 +105,14 @@ sed -i "s/moniker = .*/moniker = \"$MONIKER\"/" $CONFIG_DIR/config.toml
 
 # We don't fetch any state when we setup a local chain
 
-# We don't fetch any rpc_servers when we setup a local chain
+# Fetch local rpc_servers when we setup a local chain
+sed -i "s/rpc_servers = .*/rpc_servers = \"$LOCAL_RPC_SERVERS\"/" $CONFIG_DIR/config.toml
 
 # Install service
-sh $REPO_ROOT/utils/install-service.sh
+sh ./utils/install-service.sh
 
 # Refresh state-sync
-sh $REPO_ROOT/utils/refresh-state-sync.sh
+sh ./utils/refresh-state-sync.sh
 
 echo ""
 echo "A couple extra steps are necessary in order for the local testchain to work:"
