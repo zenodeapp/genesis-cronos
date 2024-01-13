@@ -46,7 +46,7 @@ This script takes care of the needed steps to join the network via State Sync:
 - This _local_ variant of the script doesn't fetch any _genesis.json_-file _(add this yourself from the node that's already connected to the network)_
 - This _local_ variant sets the _rpc_servers_-field to the variable [`$LOCAL_RPC_SERVERS`](/utils/_local-variables.sh)
 - Installs the service
-- Recalibrates **[statesync]** settings to a recent height (**default:** `$LATEST_BLOCK` - [`$LOCAL_HEIGHT_INTERVAL`](/utils/_local-variables.sh))
+- Recalibrates **[statesync]** settings to a recent height (**default:** `<latest_height>` - [`$LOCAL_HEIGHT_INTERVAL`](/utils/_local-variables.sh))
 
 ### Usage
 
