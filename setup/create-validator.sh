@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Arguments check
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo ""
+    echo "Usage: sh $0 <moniker> <key_alias>"
+    echo ""
+    exit 1
+fi
+
 cat <<"EOF"
 
   /$$$$$$                                          /$$                 /$$         /$$       
@@ -35,16 +43,18 @@ REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 # Source the variables file
 . "$REPO_ROOT/utils/_variables.sh"
 
+# Arguments
+MONIKER=$1
+KEY_ALIAS=$2
+
 # Set default values
 DEFAULT_AMOUNT=1
 DEFAULT_COMMISSION_RATE=0.05
 DEFAULT_COMMISSION_MAX_RATE=0.99
 DEFAULT_COMMISSION_MAX_CHANGE_RATE=0.01
-MINIMUM_SELF_DELEGATION=1000000
-
-# Read user inputs
-read -p "What will be your validator name?: " MONIKER
-read -p "What's the alias of the key you'll use to sign?: " KEY_ALIAS
+DEFAULT_MINIMUM_SELF_DELEGATION=1000000
+DECIMALS="000000000000000000"
+DEFAULT_FEES="210000000000000000000"
 
 # Read optional user inputs
 read -p "What's the amount you'll self-delegate? (denom: L1) [default: $DEFAULT_AMOUNT]: " AMOUNT
@@ -57,18 +67,22 @@ read -p "What will be your max commission change rate percentage per day? (defau
 COMMISSION_MAX_CHANGE_RATE=${COMMISSION_MAX_CHANGE_RATE:-$DEFAULT_COMMISSION_MAX_CHANGE_RATE}
 read -p "What will be your minimum self delegation? (denom: el1) [default: $DEFAULT_MINIMUM_SELF_DELEGATION]: " MINIMUM_SELF_DELEGATION
 MINIMUM_SELF_DELEGATION=${MINIMUM_SELF_DELEGATION:-$DEFAULT_MINIMUM_SELF_DELEGATION}
+read -p "What will you set for gas fees? (denom: el1) [default: $DEFAULT_FEES]: " FEES
+FEES=${FEES:-$DEFAULT_FEES}
 
-$BINARY_NAME tx staking create-validator \
-  --amount="$AMOUNT""$DECIMALS"el1 \
-  --pubkey=$($BINARY_NAME tendermint show-validator) \
-  --moniker="$MONIKER" \
-  --chain-id=$CHAIN_ID \
-  --commission-rate="$COMMISSION_RATE" \
-  --commission-max-rate="$COMMISSION_MAX_RATE" \
-  --commission-max-change-rate="$COMMISSION_MAX_CHANGE_RATE" \
-  --min-self-delegation="$MINIMUM_SELF_DELEGATION" \
-  --gas="2100000" \
-  --from=$KEY_ALIAS \
-  --fees=4200000000000000el1 \
-  --broadcast-mode async \
-  -y
+COMMAND_TO_EXECUTE="$BINARY_NAME tx staking create-validator \
+--amount "$AMOUNT$DECIMALS"el1 \
+--pubkey '$($BINARY_NAME tendermint show-validator)' \
+--moniker "$MONIKER" \
+--chain-id "$CHAIN_ID" \
+--commission-rate "$COMMISSION_RATE" \
+--commission-max-rate "$COMMISSION_MAX_RATE" \
+--commission-max-change-rate "$COMMISSION_MAX_CHANGE_RATE" \
+--min-self-delegation "$MINIMUM_SELF_DELEGATION" \
+--gas "2200000" \
+--from "$KEY_ALIAS" \
+--fees "$FEES"el1 \
+-y"
+
+echo "$COMMAND_TO_EXECUTE"
+eval "$COMMAND_TO_EXECUTE"
