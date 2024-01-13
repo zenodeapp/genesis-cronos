@@ -1,10 +1,7 @@
 # Setup (Local)
 
 > [!IMPORTANT]
-> The scripts in this folder are specifically written for **local** testnet purposes only.
->
-> If you want to **join** a public testnet, then head over to [/setup](/setup) instead.
-> 
+> The scripts in this folder are specifically written for **local** testnet purposes and require you to have already setup a testnet in your local network using a `tgenesis` branch in the [`genesis-evmos`](https://github.com/zenodeapp/genesis-evmos) repository.
 
 ## upgrade.sh
 
