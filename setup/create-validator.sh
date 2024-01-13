@@ -84,5 +84,6 @@ COMMAND_TO_EXECUTE="$BINARY_NAME tx staking create-validator \
 --fees "$FEES"el1 \
 -y"
 
-echo "$COMMAND_TO_EXECUTE"
+echo ""
+echo "will execute: $COMMAND_TO_EXECUTE"
 eval "$COMMAND_TO_EXECUTE"
