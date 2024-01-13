@@ -99,7 +99,7 @@ sh utils/import-key.sh <key_alias> <private_eth_key>
 
 > _<private_eth_key>_ is the private key for a (wallet) address you already own.
 
-### 5. Sync your node
+### 5. Node syncing
 
 If everything went well, you should now be able to run your node using:
 
