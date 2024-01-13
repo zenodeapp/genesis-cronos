@@ -118,7 +118,7 @@ journalctl -fu tgenesisd -ocat
 Once your node is _up-and-running_, _fully synced_ and you have a _key_ created or imported, you could become a validator using:
 
 ```
-sh setup/create-validator.sh
+sh setup/create-validator.sh <moniker> <key_alias>
 ```
 > This is a wizard and shall prompt the user only the required fields to create an on-chain validator.
 
