@@ -55,11 +55,11 @@ git checkout tgenesis-v1.0.0
 
 ### 3. Node setup
 
-Depending on your circumstances, you'll either have to **Setup a node _(using state sync)_** or **Upgrade a node**:
+Depending on your circumstances, you'll either have to **Setup a node _(using state sync)_** or **Upgrade a node**.
 
 #### 3.1 Setup a node _(using state sync)_
 
-This script takes care of the needed steps to join the network via _state sync_:
+This script takes care of the needed steps to join the network via _state sync_.
 
 > [!WARNING]
 > Running this will **wipe the entire database** (the _/data_-folder **excluding** the priv_validator_state.json file). Therefore if you already have a node set up and you prefer not to have your GenesisL1 database lost, create a backup.
@@ -74,7 +74,8 @@ sh setup/state-sync.sh <moniker>
 
 This script assumes that you are currently operating on the Evmos fork of GenesisL1 (repo: [`genesis-evmos`](https://github.com/zenodeapp/genesis-evmos)) and the node synced till height: `insert_height_here` which caused it to panic.
 
-It should only be used if you run a **full-node** and have to perform the **"plan_cronos"**-upgrade:
+> [!IMPORTANT]
+> This should only be used if you run a **full-node** and have to perform the **"plan_cronos"**-upgrade.
 
 ```
 sh setup/upgrade.sh
