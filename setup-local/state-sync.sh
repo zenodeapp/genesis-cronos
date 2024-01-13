@@ -111,8 +111,8 @@ sed -i "s/rpc_servers = .*/rpc_servers = \"$LOCAL_RPC_SERVERS\"/" $CONFIG_DIR/co
 # Install service
 sh ./utils/install-service.sh
 
-# Refresh state-sync
-sh ./utils/refresh-state-sync.sh $LOCAL_HEIGHT_INTERVAL
+# Recalibrate state-sync
+sh ./utils/recalibrate-state-sync.sh $LOCAL_HEIGHT_INTERVAL
 
 echo ""
 echo "A couple extra steps are necessary in order for the local testchain to work:"

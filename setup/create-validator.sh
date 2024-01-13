@@ -40,10 +40,13 @@ DEFAULT_AMOUNT=1
 DEFAULT_COMMISSION_RATE=0.05
 DEFAULT_COMMISSION_MAX_RATE=0.99
 DEFAULT_COMMISSION_MAX_CHANGE_RATE=0.01
+MINIMUM_SELF_DELEGATION=1000000
 
 # Read user inputs
 read -p "What will be your validator name?: " MONIKER
 read -p "What's the alias of the key you'll use to sign?: " KEY_ALIAS
+
+# Read optional user inputs
 read -p "What's the amount you'll self-delegate? (denom: L1) [default: $DEFAULT_AMOUNT]: " AMOUNT
 AMOUNT=${AMOUNT:-$DEFAULT_AMOUNT}
 read -p "What will be your commission rate percentage? (default: $DEFAULT_COMMISSION_RATE): " COMMISSION_RATE
@@ -52,6 +55,8 @@ read -p "What will be your max commission rate percentage? (default: $DEFAULT_CO
 COMMISSION_MAX_RATE=${COMMISSION_MAX_RATE:-$DEFAULT_COMMISSION_MAX_RATE}
 read -p "What will be your max commission change rate percentage per day? (default: $DEFAULT_COMMISSION_MAX_CHANGE_RATE): " COMMISSION_MAX_CHANGE_RATE
 COMMISSION_MAX_CHANGE_RATE=${COMMISSION_MAX_CHANGE_RATE:-$DEFAULT_COMMISSION_MAX_CHANGE_RATE}
+read -p "What will be your minimum self delegation? (denom: el1) [default: $DEFAULT_MINIMUM_SELF_DELEGATION]: " MINIMUM_SELF_DELEGATION
+MINIMUM_SELF_DELEGATION=${MINIMUM_SELF_DELEGATION:-$DEFAULT_MINIMUM_SELF_DELEGATION}
 
 $BINARY_NAME tx staking create-validator \
   --amount="$AMOUNT""$DECIMALS"el1 \
@@ -61,7 +66,7 @@ $BINARY_NAME tx staking create-validator \
   --commission-rate="$COMMISSION_RATE" \
   --commission-max-rate="$COMMISSION_MAX_RATE" \
   --commission-max-change-rate="$COMMISSION_MAX_CHANGE_RATE" \
-  --min-self-delegation="1000000" \
+  --min-self-delegation="$MINIMUM_SELF_DELEGATION" \
   --gas="2100000" \
   --from=$KEY_ALIAS \
   --fees=4200000000000000el1 \

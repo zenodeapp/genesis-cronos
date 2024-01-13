@@ -93,5 +93,5 @@ sh ./utils/fetch-rpcs.sh
 # Install service
 sh ./utils/install-service.sh
 
-# Refresh state sync
-sh ./utils/refresh-state-sync.sh
+# Recalibrate state sync
+sh ./utils/recalibrate-state-sync.sh
