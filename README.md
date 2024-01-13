@@ -38,8 +38,10 @@
 
 ## Instructions
 
+The instructions provided here will only be suitable for those who would like to join the **public** testnet: `tgenesis_54-1` by **setting up a new node** _or_ **upgrading an existing (full) node**. If you instead want to _test_ **locally**, see the [README](/setup-local/README.md) in the [/setup-local](/setup-local)-folder.
+
 > [!NOTE]
-> The instructions provided here will only be suitable for those who would like to **join** the **public** testnet: `tgenesis_54-1` or **upgrade** an existing (full) node. If you instead want to _test_ **locally**, see [/setup-local](/setup-local).
+> More details for every script mentioned in this README can be found in the folders where they are respectively stored: [/setup](/setup), [/setup-local](/setup-local) or [/utils](/utils).
 
 ### 1. Cloning the repository
 
