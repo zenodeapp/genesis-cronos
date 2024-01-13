@@ -56,7 +56,7 @@ This script takes care of the needed steps to join the network via State Sync:
 ```
 sh setup/state-sync.sh <moniker>
 ```
-> If you wish to change the default _<height_interval>_ of `2000`, run [utils/recalibrate-state-sync.sh](/utils/recalibrate-state-sync.sh) _<height_interval>_ yourself _after_ running this; see [utils/README.md](/utils) for more information.
+> If you wish to change the default _[height_interval]_ of `2000`, run [utils/recalibrate-state-sync.sh](/utils/recalibrate-state-sync.sh) _[height_interval]_ yourself _after_ having run _setup/state-sync.sh_; see [utils/README.md](/utils) for more information.
 
 ## create-validator.sh
 
