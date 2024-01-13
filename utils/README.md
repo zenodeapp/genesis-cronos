@@ -6,7 +6,7 @@ This script holds all the repository-specific variables shared with most of the 
 
 ## \_local-variables.sh
 
-This script holds repository-specific variables for LOCAL testnet purposes.
+This script holds repository-specific variables for **local** testnet purposes.
 
 ## create-backup.sh
 
