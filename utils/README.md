@@ -2,11 +2,7 @@
 
 ## \_variables.sh
 
-This script holds all the repository-specific variables shared with most of the scripts in the [utils](/utils)-, [setup](/setup)- and [setup-local](/setup-local)-folder. This makes it easier to adjust the chain-id, binary name or node directory without having to change it in a lot of different scripts.
-
-## \_local-variables.sh
-
-This script holds repository-specific variables for **local** testnet purposes.
+This script holds all the repository-specific variables shared with most of the scripts in the [utils](/utils) and [setup](/setup)-folder. This makes it easier to adjust the chain-id, binary name or node directory without having to change it in a lot of different scripts.
 
 ## create-backup.sh
 
