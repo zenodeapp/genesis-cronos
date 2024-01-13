@@ -31,9 +31,9 @@ echo "While this is favorable for the individual validator, it isn't necessarly 
 echo "network perspective since you do not have the entire history of the blockchain recorded."
 echo "So take this into consideration when deciding to state sync or not."
 echo ""
-echo "WARNING: Any config files will get overwritten and the data folder shall be removed, there"
-echo "will be a backup and restore of the priv_validator_state.json file. Use utils/create-backup.sh"
-echo "to create a backup."
+echo "WARNING: Any config files will get overwritten and the data folder shall be removed, but there"
+echo "will be a backup and restore of the priv_validator_state.json file. If needed, use"
+echo "utils/create-backup.sh to create a backup."
 echo ""
 echo "WARNING: this script is intended for LOCAL testing and should NOT be used for public testnet purposes."
 echo "Use setup/state-sync.sh for this instead."
@@ -112,7 +112,7 @@ sed -i "s/rpc_servers = .*/rpc_servers = \"$LOCAL_RPC_SERVERS\"/" $CONFIG_DIR/co
 sh ./utils/install-service.sh
 
 # Refresh state-sync
-sh ./utils/refresh-state-sync.sh
+sh ./utils/refresh-state-sync.sh $LOCAL_HEIGHT_INTERVAL
 
 echo ""
 echo "A couple extra steps are necessary in order for the local testchain to work:"
