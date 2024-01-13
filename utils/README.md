@@ -46,12 +46,12 @@ sh utils/import-key.sh <key_alias> <private_eth_key>
 
 This script installs the daemon as a service, which will automatically start the node whenever the device reboots (see [tgenesisd.service](/services/tgenesisd.service)). The setup scripts usually already call this, therefore it is not required to run this yourself.
 
-## refresh-state-sync.sh
+## recalibrate-state-sync.sh
 
 This script is useful if you want to recalibrate your state-sync configurations to a more recent height. **WARNING: this wipes your entire data folder, but will backup and restore the priv_validator_state.json file**. It uses the script(s) from the [`restate-sync`](https://github.com/zenodeapp/restate-sync/tree/v1.0.0) repository (`v1.0.0`). If in doubt whether this is safe, you could always check the repository to see how it works.
 
 ```
-sh refresh-state-sync.sh [height_interval] [rpc_server_1] [rpc_server_2]
+sh recalibrate-state-sync.sh [height_interval] [rpc_server_1] [rpc_server_2]
 ```
 
 > [height_interval] is optional (default: 2000). This means it will set the trust_height to: latest_height - height_interval (rounded to nearest multiple of height_interval).
