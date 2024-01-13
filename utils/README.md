@@ -73,7 +73,7 @@ Bear in mind that the _port_ being echo'd is extracted from the _config.toml_-fi
 
 ## shift-ports.sh
 
-This script is useful if you quickly want to replace the ports in the `config.toml` and `app.toml` files. It uses the script(s) from the [`port-shifter`](https://github.com/zenodeapp/port-shifter/tree/v1.0.0) repository (`v1.0.0`). If in doubt whether this is safe, you could always check the repository to see how it works.
+This script is useful if you quickly want to replace the ports in the `client.toml`, `config.toml` and `app.toml` files. It uses the script(s) from the [`port-shifter`](https://github.com/zenodeapp/port-shifter/tree/v1.0.1) repository (`v1.0.1`). If in doubt whether this is safe, you could always check the repository to see how it works.
 
 ```
 sh utils/shift-ports.sh <port_increment_value>
