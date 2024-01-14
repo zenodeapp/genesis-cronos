@@ -26,6 +26,10 @@ sh utils/create-key.sh <key_alias>
 
 This script fetches the (most recent) seeds and peers list for the chain-id configured in the [\_variables.sh](/utils/_variables.sh) file and adds it to the config.toml file residing in the node's directory. This script leverages the [`genesis-parameters`](https://github.com/zenodeapp/genesis-parameters) repo.
 
+## fetch-rpcs.sh
+
+This script fetches the (most recent) rpc_servers (state sync) for the chain-id configured in the [\_variables.sh](/utils/_variables.sh) file. This script leverages the [`genesis-parameters`](https://github.com/zenodeapp/genesis-parameters) repo.
+
 ## fetch-state.sh
 
 This script fetches the (most recent) `genesis.json` file for the chain-id configured in the [\_variables.sh](/utils/_variables.sh) file. This script leverages the [`genesis-parameters`](https://github.com/zenodeapp/genesis-parameters) repo.
@@ -41,6 +45,14 @@ sh utils/import-key.sh <key_alias> <private_eth_key>
 ## install-service.sh
 
 This script installs the daemon as a service, which will automatically start the node whenever the device reboots (see [tgenesisd.service](/services/tgenesisd.service)). The setup scripts usually already call this, therefore it is not required to run this yourself.
+
+## my-peer-id.sh
+
+This script will print out your peer-id: _node-id@ip-address:port_. This is useful for sharing your node with others so that they can add you as a persistent peer.
+
+Bear in mind that the _port_ being echo'd is extracted from the _config.toml_-file. So if you start the node on a different port without explicitly stating this in the _config.toml_-file, then the outputted port may not represent the actual port this node uses.
+
+> Add a --local flag to echo a local IP address, instead of your (public) external address.
 
 ## recalibrate-state-sync.sh
 
@@ -58,14 +70,6 @@ sh utils/recalibrate-state-sync.sh [height_interval] [rpc_server_1] [rpc_server_
 
 > [!NOTE]
 > Leaving the _<rpc_server>_-arguments empty will leave the rpc_servers field in your config.toml untouched.
-
-## my-peer-id.sh
-
-This script will print out your peer-id: _node-id@ip-address:port_. This is useful for sharing your node with others so that they can add you as a persistent peer.
-
-Bear in mind that the _port_ being echo'd is extracted from the _config.toml_-file. So if you start the node on a different port without explicitly stating this in the _config.toml_-file, then the outputted port may not represent the actual port this node uses.
-
-> Add a --local flag to echo a local IP address, instead of your (public) external address.
 
 ## shift-ports.sh
 
