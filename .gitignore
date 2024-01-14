@@ -21,3 +21,8 @@ go.work.sum
 
 # yaml for test
 integration_tests/configs/*.yaml
+
+# Utils
+utils/quick-shift.sh
+utils/shift-wizard.sh
+utils/restate-sync.sh
