@@ -30,6 +30,10 @@ sh utils/create-key.sh <key_alias>
 
 This script fetches the (most recent) seeds and peers list for the chain-id configured in the [\_variables.sh](/utils/_variables.sh) file and adds it to the config.toml file residing in the node's directory. This script leverages the [`genesis-parameters`](https://github.com/zenodeapp/genesis-parameters) repo.
 
+## fetch-rpcs.sh
+
+This script fetches the (most recent) rpc_servers (state sync) for the chain-id configured in the [\_variables.sh](/utils/_variables.sh) file. This script leverages the [`genesis-parameters`](https://github.com/zenodeapp/genesis-parameters) repo.
+
 ## fetch-state.sh
 
 This script fetches the (most recent) `genesis.json` file for the chain-id configured in the [\_variables.sh](/utils/_variables.sh) file. This script leverages the [`genesis-parameters`](https://github.com/zenodeapp/genesis-parameters) repo.
