@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# Root of the current repository
-REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
-
-# Source the variables file
-. "$REPO_ROOT/utils/_variables.sh"
+# Source the _variables.sh file
+. "$(cd "$(dirname "$0")"/.. && pwd)/_variables.sh"
 
 # IP addresss
-IP_INFO_PROVIDER=ipinfo.io/ip
 if [ "$1" = "--local" ]; then
     IP_ADDRESS="127.0.0.1"
 else

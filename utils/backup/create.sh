@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# Root of the current repository
-REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
-
-# Source the variables file
-. "$REPO_ROOT/utils/_variables.sh"
+# Source the _variables.sh file
+. "$(cd "$(dirname "$0")"/.. && pwd)/_variables.sh"
 
 # Node directory check
 if [ ! -e "$NODE_DIR" ]; then
