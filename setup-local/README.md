@@ -3,6 +3,10 @@
 > [!IMPORTANT]
 > The scripts in this folder are specifically written for **local** testnet purposes and require you to have already setup a testnet in your local network using a `tgenesis` branch in the [`genesis-ethermint`](https://github.com/zenodeapp/genesis-ethermint) repository.
 
+## \_local-variables.sh
+
+This script holds repository-specific variables for **local** testnet purposes.
+
 ## upgrade.sh
 
 > [!WARNING]
