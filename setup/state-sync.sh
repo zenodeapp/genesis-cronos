@@ -33,7 +33,7 @@ echo "So take this into consideration when deciding to state sync or not."
 echo ""
 echo "WARNING: Any config files will get overwritten and the data folder shall be removed, but there"
 echo "will be a backup and restore of the priv_validator_state.json file. If needed, use"
-echo "utils/create-backup.sh to create a backup."
+echo "utils/backup/create.sh to create a backup."
 echo ""
 echo "WARNING: this script should NOT be used for local testnet purposes."
 echo "Use setup-local/state-sync.sh for this instead."
@@ -82,16 +82,16 @@ cp "./configs/default_config.toml" $CONFIG_DIR/config.toml
 sed -i "s/moniker = .*/moniker = \"$MONIKER\"/" $CONFIG_DIR/config.toml
 
 # Fetch latest seeds and peers list from genesis-parameters repo
-sh ./utils/fetch-peers.sh
+sh ./utils/fetch/peers.sh
 
 # Fetch state file from genesis-parameters repo
-sh ./utils/fetch-state.sh
+sh ./utils/fetch/state.sh
 
 # Fetch latest rpc_servers from genesis-parameters repo
-sh ./utils/fetch-rpcs.sh
+sh ./utils/fetch/rpcs.sh
 
 # Install service
-sh ./utils/install-service.sh
+sh ./utils/service/install.sh
 
 # Recalibrate state sync
-sh ./utils/recalibrate-state-sync.sh
+sh ./utils/tools/restate-sync.sh
