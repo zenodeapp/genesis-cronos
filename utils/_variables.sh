@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# This is an example.
-# Create a _variables.sh file in the root and add these variables to allow the scripts to work their magic.
+# Root of the current repository
+REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 
 # Variables for all modules
 CHAIN_ID=genesis_29-2
@@ -12,8 +12,6 @@ CONFIG_DIR=$NODE_DIR/config
 DATA_DIR=$NODE_DIR/data
 
 # /fetch module variables.
-# Adviced is to create a repo containing a genesis.json, seeds.txt, peers.txt and rpc_servers.txt file.
-# See: https://github.com/zenodeapp/genesis-parameters/tree/main/genesis_29-2 for an example.
 FETCH_URL=https://raw.githubusercontent.com/zenodeapp/genesis-parameters/main/$CHAIN_ID
 SEEDS_URL=$FETCH_URL/seeds.txt
 PEERS_URL=$FETCH_URL/peers.txt
@@ -24,5 +22,5 @@ RPC_SERVERS_URL=$FETCH_URL/rpc_servers.txt
 IP_INFO_PROVIDER=ipinfo.io/ip
 
 # /service module variables.
-SERVICE_DIR=$REPO_ROOT/services # Where the service file is located, $REPO_ROOT is not defined in this example.
+SERVICE_DIR=$REPO_ROOT/services
 SERVICE_FILE=$BINARY_NAME.service
