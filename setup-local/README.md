@@ -30,7 +30,7 @@ sh setup-local/upgrade.sh
 > [!CAUTION]
 > Running this will **wipe the entire database** (the _/data_-folder **excluding** the priv_validator_state.json file).
 > 
-> Make a backup if needed: [utils/create-backup.sh](/utils/create-backup.sh).
+> Make a backup if needed: [utils/backup/create.sh](/utils/backup/create.sh).
 
 This script takes care of the needed steps to join the network via State Sync:
 
@@ -41,9 +41,9 @@ This script takes care of the needed steps to join the network via State Sync:
 - Resets config files
 - This _local_ variant of the script doesn't fetch any seeds or peers _(so any configured persistent_peers and seeds get reset!)_
 - This _local_ variant of the script doesn't fetch any _genesis.json_-file _(add this yourself from the node that's already connected to the network)_
-- This _local_ variant sets the _rpc_servers_-field to the variable [`$LOCAL_RPC_SERVERS`](/utils/_local-variables.sh)
+- This _local_ variant sets the _rpc_servers_-field to the variable [`$LOCAL_RPC_SERVERS`](/setup-local/_local-variables.sh)
 - Installs the service
-- Recalibrates **[statesync]** settings to a recent height (**default:** `<latest_height>` - [`$LOCAL_HEIGHT_INTERVAL`](/utils/_local-variables.sh))
+- Recalibrates **[statesync]** settings to a recent height (**default:** `<latest_height>` - [`$LOCAL_HEIGHT_INTERVAL`](/setup-local/_local-variables.sh))
 
 ### Usage
 
