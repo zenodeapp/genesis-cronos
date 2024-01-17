@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Root of the current repository
-REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
-
 # Variables for all modules
 CHAIN_ID=genesis_29-2
 BINARY_NAME=genesisd
@@ -22,5 +19,5 @@ RPC_SERVERS_URL=$FETCH_URL/rpc_servers.txt
 IP_INFO_PROVIDER=ipinfo.io/ip
 
 # /service module variables.
-SERVICE_DIR=$REPO_ROOT/services
+SERVICE_DIR=$(cd "$(dirname "$0")"/../.. && pwd)/services
 SERVICE_FILE=$BINARY_NAME.service
