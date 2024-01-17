@@ -14,6 +14,7 @@ This script installs all the dependencies (and system configurations) that are n
 This script takes care of the needed steps to upgrade the node to the new fork:
 
 - It stops the node (the service)
+- Installs all the necessary dependencies
 - Creates a backup of existing _config.toml_ or _app.toml_ files (as _.toml.bak_)
 - Introduces new config files
 - Fetches latest seeds and peers
@@ -31,7 +32,7 @@ sh setup/upgrade.sh
 > [!CAUTION]
 > Running this will **wipe the entire database** (the _/data_-folder **excluding** the priv_validator_state.json file).
 > 
-> Make a backup if needed: [utils/create-backup.sh](/utils/create-backup.sh).
+> Make a backup if needed: [utils/backup/create.sh](/utils/backup/create.sh).
 
 This script takes care of the needed steps to join the network via State Sync:
 
@@ -51,14 +52,14 @@ This script takes care of the needed steps to join the network via State Sync:
 ```
 sh setup/state-sync.sh <moniker>
 ```
-> If you wish to change the default _[height_interval]_ of `2000`, run [utils/recalibrate-state-sync.sh](/utils/recalibrate-state-sync.sh) _[height_interval]_ yourself _after_ having run _setup/state-sync.sh_; see [utils/README.md](/utils) for more information.
+> If you wish to change the default _[height_interval]_ of `2000`, run [utils/tools/restate-sync.sh](/utils/tools/restate-sync.sh) _[height_interval]_ yourself _after_ having run _setup/state-sync.sh_; see [utils/README.md](/utils) for more information.
 
 ## create-validator.sh
 
 > [!IMPORTANT]
 > _create-validator.sh_ requires a key.
 >
-> If you haven't already created or imported one, use: [utils/create-key.sh](/utils/create-key.sh) _or_ [utils/import-key.sh](/utils/import-key.sh).
+> If you haven't already created or imported one, use: [utils/key/create.sh](/utils/key/create.sh) _or_ [utils/key/import.sh](/utils/key/import.sh).
 
 This script should only be run once you're **fully synced**. It's a wizard; prompting the user only the required fields for creating a validator.
 

@@ -66,7 +66,7 @@ This script takes care of the needed steps to join the network via _state sync_.
 > [!WARNING]
 > Running this will **wipe the entire database** (the _/data_-folder **excluding** the priv_validator_state.json file). Therefore if you already have a node set up and you prefer not to have your GenesisL1 database lost, create a backup.
 >
-> You could use [utils/create-backup.sh](/utils/create-backup.sh) for this.
+> You could use [utils/backup/create.sh](/utils/backup/create.sh) for this.
 
 ```
 sh setup/state-sync.sh <moniker>
@@ -88,13 +88,13 @@ sh setup/upgrade.sh
 A key is necessary to interact with the network/node. If you haven't already created one, either import one or generate a new one, using:
 
 ```
-sh utils/create-key.sh <key_alias>
+sh utils/key/create.sh <key_alias>
 ```
 
 OR
 
 ```
-sh utils/import-key.sh <key_alias> <private_eth_key>
+sh utils/key/create.sh <key_alias> <private_eth_key>
 ```
 
 > _<private_eth_key>_ is the private key for a (wallet) address you already own.

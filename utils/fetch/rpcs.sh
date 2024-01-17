@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# Root of the current repository
-REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
-
-# Source the variables file
-. "$REPO_ROOT/utils/_variables.sh"
+# Source the _variables.sh file
+. "$(cd "$(dirname "$0")"/.. && pwd)/_variables.sh"
 
 # Fetch latest rpc_servers
-RPC_SERVERS=$(wget -qO - $NETWORK_PARAMETERS_URL/rpc_servers.txt | head -n 1)
+RPC_SERVERS=$(wget -qO - $RPC_SERVERS_URL | head -n 1)
 
 if [ -z "$RPC_SERVERS" ] || [ "$RPC_SERVERS" = '""' ]; then
     # Echo result

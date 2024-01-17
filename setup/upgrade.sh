@@ -42,6 +42,9 @@ systemctl stop $BINARY_NAME
 # cd to root of the repository
 cd $REPO_ROOT
 
+# System update and installation of dependencies
+sh ./setup/dependencies.sh
+
 # Create a backup of old config files and moniker
 cp $CONFIG_DIR/app.toml $CONFIG_DIR/app.toml.bak
 cp $CONFIG_DIR/config.toml $CONFIG_DIR/config.toml.bak
@@ -55,7 +58,7 @@ cp ./configs/default_config.toml $CONFIG_DIR/config.toml
 sed -i "s/moniker = .*/moniker = \"$MONIKER\"/" $CONFIG_DIR/config.toml
 
 # Fetch latest seeds and peers list from genesis-parameters repo
-sh ./utils/fetch-peers.sh
+sh ./utils/fetch/peers.sh
 
 # Install binaries
 go mod tidy
