@@ -14,6 +14,7 @@ This script installs all the dependencies (and system configurations) that are n
 This script takes care of the needed steps to upgrade the node to the new fork:
 
 - It stops the node (the service)
+- Installs all the necessary dependencies
 - Creates a backup of existing _config.toml_ or _app.toml_ files (as _.toml.bak_)
 - Introduces new config files
 - Fetches latest seeds and peers
