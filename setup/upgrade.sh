@@ -61,7 +61,7 @@ cp ./configs/default_config.toml $CONFIG_DIR/config.toml
 sed -i "s/moniker = .*/moniker = \"$MONIKER\"/" $CONFIG_DIR/config.toml
 
 # Fetch latest seeds and peers list from genesis-parameters repo
-sh ./utils/fetch-peers.sh
+sh ./utils/fetch/peers.sh
 
 # Install binaries
 go mod tidy
