@@ -33,7 +33,7 @@ echo "So take this into consideration when deciding to state sync or not."
 echo ""
 echo "WARNING: Any config files will get overwritten and the data folder shall be removed, but there"
 echo "will be a backup and restore of the priv_validator_state.json file. If needed, use"
-echo "utils/create-backup.sh to create a backup."
+echo "utils/backup/create.sh to create a backup."
 echo ""
 echo "WARNING: this script is intended for LOCAL testing and should NOT be used for public testnet purposes."
 echo "Use setup/state-sync.sh for this instead."
@@ -54,12 +54,12 @@ REPO_ROOT=$(cd "$(dirname "$0")"/.. && pwd)
 . "$REPO_ROOT/utils/_variables.sh"
 
 # Source local variables file
-. "$REPO_ROOT/utils/_local-variables.sh"
+. "$REPO_ROOT/setup-local/_local-variables.sh"
 
 # Warn about which local servers will be set as rpc_servers
 echo ""
 echo "\"$LOCAL_RPC_SERVERS\" will be set as the value for [statesync] rpc_servers in the config.toml file."
-echo "If this is incorrect, then change this in the utils/_local-variables.sh file before continuing!"
+echo "If this is incorrect, then change this in the setup-local/_local-variables.sh file before continuing!"
 echo ""
 read -p "Proceed? (y/N): " ANSWER
 
@@ -106,21 +106,21 @@ sed -i "s/moniker = .*/moniker = \"$MONIKER\"/" $CONFIG_DIR/config.toml
 
 # We don't fetch any state when we setup a local chain
 
-# Set rpc_servers to $LOCAL_RPC_SERVERS found in utils/_local-variables.sh
+# Set rpc_servers to $LOCAL_RPC_SERVERS found in setup-local/_local-variables.sh
 sed -i "s#rpc_servers = .*#rpc_servers = \"$LOCAL_RPC_SERVERS\"#" $CONFIG_DIR/config.toml
 
 # Install service
-sh ./utils/install-service.sh
+sh ./utils/service/install.sh
 
 # Recalibrate state-sync
-if sh ./utils/recalibrate-state-sync.sh $LOCAL_HEIGHT_INTERVAL; then
+if sh ./utils/tools/restate-sync.sh $LOCAL_HEIGHT_INTERVAL; then
     echo ""
     echo "A couple extra steps are necessary in order for the local testchain to work:"
     echo "- Make sure to add the correct genesis.json file used by the other node(s) running the local testchain."
     echo "- Make sure to add the other nodes in the persistent_peers field."
-    echo "- Make sure to create a key if you decide to do transactions or create a validator (utils/create-key.sh"
-    echo "  or utils/import-key.sh)."
-    echo "- You'll probably need to shift your ports (utils/shift-ports.sh)."
+    echo "- Make sure to create a key if you decide to do transactions or create a validator (utils/key/create.sh"
+    echo "  or utils/key/import.sh)."
+    echo "- You'll probably need to shift your ports (utils/tools/port-shifter.sh)."
     echo ""
     echo "Follow this with a '$BINARY_NAME tendermint unsafe-reset-all' and then start the node by running 'systemctl start $BINARY_NAME'!"
 fi
