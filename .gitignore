@@ -23,7 +23,7 @@ go.work.sum
 integration_tests/configs/*.yaml
 
 # Utils
-utils/_local-variables.sh
-utils/quick-shift.sh
-utils/shift-wizard.sh
-utils/restate-sync.sh
+setup-local/_local-variables.sh
+utils/tools/quick-shift.sh
+utils/tools/shift-wizard.sh
+utils/tools/_restate-sync.sh
