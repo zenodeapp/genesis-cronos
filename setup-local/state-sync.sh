@@ -80,7 +80,7 @@ systemctl stop $BINARY_NAME
 cd $REPO_ROOT
 
 # System update and installation of dependencies
-bash ./setup/dependencies.sh
+. ./setup/dependencies.sh
 
 # Building binaries
 go mod tidy
@@ -121,6 +121,7 @@ if sh ./utils/tools/restate-sync.sh $LOCAL_HEIGHT_INTERVAL; then
     echo "- Make sure to create a key if you decide to do transactions or create a validator (utils/key/create.sh"
     echo "  or utils/key/import.sh)."
     echo "- You'll probably need to shift your ports (utils/tools/port-shifter.sh)."
+    echo "- If you're unable to access the $BINARY_NAME command run '. ~/.bashrc' or 'source ~/.bashrc'."
     echo ""
     echo "Follow this with a '$BINARY_NAME tendermint unsafe-reset-all' and then start the node by running 'systemctl start $BINARY_NAME'!"
 fi

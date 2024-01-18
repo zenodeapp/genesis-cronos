@@ -63,7 +63,7 @@ systemctl stop $BINARY_NAME
 cd $REPO_ROOT
 
 # System update and installation of dependencies
-bash ./setup/dependencies.sh
+. ./setup/dependencies.sh
 
 # Building binaries
 go mod tidy
@@ -95,3 +95,6 @@ sh ./utils/service/install.sh
 
 # Recalibrate state sync
 sh ./utils/tools/restate-sync.sh
+
+echo "- If you're unable to access the $BINARY_NAME command run '. ~/.bashrc' or 'source ~/.bashrc'."
+
