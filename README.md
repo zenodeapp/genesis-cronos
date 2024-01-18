@@ -83,7 +83,16 @@ This script assumes that you are currently operating on the Evmos fork of Genesi
 sh setup/upgrade.sh
 ```
 
-### 4. Create or import a key (optional)
+### 4. Daemon check
+
+If you can't access the `tgenesisd` command at this point, then you may need to execute:
+
+```
+. ~/.bashrc
+```
+> Or the equivalent: `source ~/.bashrc`
+
+### 5. Create or import a key (optional)
 
 A key is necessary to interact with the network/node. If you haven't already created one, either import one or generate a new one, using:
 
@@ -99,7 +108,7 @@ sh utils/key/import.sh <key_alias> <private_eth_key>
 
 > _<private_eth_key>_ is the private key for a (wallet) address you already own.
 
-### 5. Node syncing
+### 6. Node syncing
 
 If everything went well, you should now be able to run your node using:
 
@@ -113,7 +122,7 @@ and see its status with:
 journalctl -fu tgenesisd -ocat
 ```
 
-### 6. Become a validator (optional)
+### 7. Become a validator (optional)
 
 Once your node is _up-and-running_, _fully synced_ and you have a _key_ created or imported, you could become a validator using:
 
@@ -122,7 +131,7 @@ sh setup/create-validator.sh <moniker> <key_alias>
 ```
 > This is a wizard and shall prompt the user only the required fields to create an on-chain validator.
 
-### 7. Explore utilities (optional)
+### 8. Explore utilities (optional)
 
 > [!TIP]
 > The [/utils](/utils)-folder contains useful utilities one could use to manage their node (e.g. for fetching latest seeds and peers, fetching the genesis state, quickly shifting your config's ports, recalibrating your state sync etc.). To learn more about these, see the [README](utils/README.md) in the folder.
