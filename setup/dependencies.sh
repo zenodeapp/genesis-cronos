@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This should be run with 'bash', as the sourcing of the .bashrc file may lead to implications
+# if it's run with 'sh'.
+
 # Helper-function: adds a line to a file if it doesn't already exist (to prevent duplicates)
 add_line_to_file() {
     local line="$1"
