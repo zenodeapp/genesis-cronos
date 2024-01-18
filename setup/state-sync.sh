@@ -94,7 +94,7 @@ sh ./utils/fetch/rpcs.sh
 sh ./utils/service/install.sh
 
 # Recalibrate state sync
-sh ./utils/tools/restate-sync.sh
-
-echo "- If you're unable to access the $BINARY_NAME command run '. ~/.bashrc' or 'source ~/.bashrc'."
-
+if sh ./utils/tools/restate-sync.sh; then
+    echo ""
+    echo "PS: if you're unable to access the $BINARY_NAME command, run '. ~/.bashrc' or 'source ~/.bashrc'."
+fi

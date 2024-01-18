@@ -123,6 +123,6 @@ if sh ./utils/tools/restate-sync.sh $LOCAL_HEIGHT_INTERVAL; then
     echo "- You'll probably need to shift your ports (utils/tools/port-shifter.sh)."
     echo "- If you're unable to access the $BINARY_NAME command run '. ~/.bashrc' or 'source ~/.bashrc'."
     echo ""
-    echo "Follow this with a '$BINARY_NAME tendermint unsafe-reset-all' and then start the node by running 'systemctl start $BINARY_NAME'!"
+    echo "Follow all this by running '$BINARY_NAME tendermint unsafe-reset-all' and then start the node by running 'systemctl start $BINARY_NAME'!"
 fi
 
