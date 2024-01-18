@@ -55,3 +55,5 @@ This script takes care of the needed steps to join the network via State Sync:
 sh setup-local/state-sync.sh <moniker>
 ```
 > Make sure that there's a peer providing a **[statesync]** snapshot in the network and add this peer to your _persistent_peers_-field _after_ running this command.
+>
+> If you can't access the `tgenesisd` command afterwards, execute the `. ~/.bashrc` _or_ `source ~/.bashrc` command in your terminal.
