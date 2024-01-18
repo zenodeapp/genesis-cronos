@@ -9,9 +9,6 @@
 
 This script installs all the dependencies (and system configurations) that are necessary for the binary to run. Since this file already gets called from within the other scripts, it is not required to call this yourself.
 
-> [!WARNING]
-> Running this script has to be done with `bash`, as the sourcing of the _~/.bashrc_-file may lead to implications if it's run with `sh`.
-
 ## upgrade.sh
 
 > [!WARNING]
@@ -61,6 +58,8 @@ This script takes care of the needed steps to join the network via State Sync:
 sh setup/state-sync.sh <moniker>
 ```
 > If you wish to change the default _[height_interval]_ of `2000`, run [utils/tools/restate-sync.sh](/utils/tools/restate-sync.sh) _[height_interval]_ yourself _after_ having run _setup/state-sync.sh_; see [utils/README.md](/utils) for more information.
+>
+> If you can't access the `tgenesisd` command afterwards, execute the `. ~/.bashrc` _or_ `source ~/.bashrc` command in your terminal.
 
 ## create-validator.sh
 
