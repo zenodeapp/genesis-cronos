@@ -46,7 +46,7 @@ systemctl stop $BINARY_NAME
 cd $REPO_ROOT
 
 # System update and installation of dependencies
-sh ./setup/dependencies.sh
+bash ./setup/dependencies.sh
 
 # Create a backup of old config files
 cp $CONFIG_DIR/app.toml $CONFIG_DIR/app.toml.bak

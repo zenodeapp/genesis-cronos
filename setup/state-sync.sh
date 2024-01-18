@@ -63,7 +63,7 @@ systemctl stop $BINARY_NAME
 cd $REPO_ROOT
 
 # System update and installation of dependencies
-sh ./setup/dependencies.sh
+bash ./setup/dependencies.sh
 
 # Building binaries
 go mod tidy
