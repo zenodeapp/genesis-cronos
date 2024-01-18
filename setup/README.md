@@ -4,6 +4,9 @@
 
 This script installs all the dependencies (and system configurations) that are necessary for the binary to run. Since this file already gets called from within the other scripts, it is not required to call this yourself.
 
+> [!WARNING]
+> Running this script has to be done with `bash`, as the sourcing of the _~/.bashrc_-file may lead to implications if it's run with `sh`.
+
 ## upgrade.sh
 
 > [!WARNING]
