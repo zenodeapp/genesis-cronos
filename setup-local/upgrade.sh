@@ -45,17 +45,27 @@ systemctl stop $BINARY_NAME
 # cd to root of the repository
 cd $REPO_ROOT
 
-# Create a backup of old config files and moniker
+# Create a backup of old config files
 cp $CONFIG_DIR/app.toml $CONFIG_DIR/app.toml.bak
 cp $CONFIG_DIR/config.toml $CONFIG_DIR/config.toml.bak
-MONIKER=$(grep "moniker" $CONFIG_DIR/config.toml | cut -d'=' -f2 | tr -d '[:space:]"')
+
+# Backup moniker and pruning settings
+MONIKER=$(grep "^moniker =" "$CONFIG_DIR/config.toml")
+PRUNING=$(grep "^pruning =" "$CONFIG_DIR/app.toml")
+PRUNING_KEEP_RECENT=$(grep "^pruning-keep-recent =" "$CONFIG_DIR/app.toml")
+#pruning-keep-every got deprecated
+PRUNING_INTERVAL=$(grep "^pruning-interval =" "$CONFIG_DIR/app.toml")
 
 # Introduce new config files
 cp ./configs/default_app_local.toml $CONFIG_DIR/app.toml
 cp ./configs/default_config_local.toml $CONFIG_DIR/config.toml
 
-# Restore moniker
-sed -i "s/moniker = .*/moniker = \"$MONIKER\"/" $CONFIG_DIR/config.toml
+# Restore moniker and pruning settings
+sed -i "s|^.*moniker =.*$|$MONIKER|" $CONFIG_DIR/config.toml
+sed -i "s|^.*pruning =.*$|$PRUNING|" $CONFIG_DIR/app.toml
+sed -i "s|^.*pruning-keep-recent =.*$|$PRUNING_KEEP_RECENT|" $CONFIG_DIR/app.toml
+#pruning-keep-every got deprecated
+sed -i "s|^.*pruning-interval =.*$|$PRUNING_INTERVAL|" $CONFIG_DIR/app.toml
 
 # We don't fetch any peers when we setup a local chain
 
