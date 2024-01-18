@@ -25,8 +25,11 @@ sudo apt-get install jq git wget make gcc build-essential snapd -y
 snap install go --channel=1.20/stable --classic
 snap refresh go --channel=1.20/stable --classic
 
+# Add GOPATH
 export PATH=$PATH:$(go env GOPATH)/bin
-add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' $HOME/.bashrc false
+add_line_to_file 'export PATH=$PATH:$(go env GOPATH)/bin' ~/.bashrc false
+# Source the .bashrc file to let the changes take effect in the current shell session
+. ~/.bashrc
 
 # Global change of open file limits
 add_line_to_file "* - nofile 50000" /etc/security/limits.conf false
