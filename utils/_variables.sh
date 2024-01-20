@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables for all modules
-CHAIN_ID=tgenesis_54-1
+CHAIN_ID=tgenesis_290-1
 BINARY_NAME=tgenesisd
 NODE_DIR_NAME=.tgenesis
 NODE_DIR=$HOME/$NODE_DIR_NAME
@@ -9,7 +9,7 @@ CONFIG_DIR=$NODE_DIR/config
 DATA_DIR=$NODE_DIR/data
 
 # /fetch module variables.
-FETCH_URL=https://raw.githubusercontent.com/zenodeapp/genesis-parameters/main/$CHAIN_ID
+FETCH_URL=https://raw.githubusercontent.com/alpha-omega-labs/genesis-parameters/main/$CHAIN_ID
 SEEDS_URL=$FETCH_URL/seeds.txt
 PEERS_URL=$FETCH_URL/peers.txt
 STATE_URL=$FETCH_URL/genesis.json
