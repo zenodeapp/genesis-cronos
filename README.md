@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/zenodeapp/genesis-parameters/main/assets/l1-logo.png" alt="GenesisL1" width="150" height="150"/>
+  <img src="https://raw.githubusercontent.com/alpha-omega-labs/genesis-parameters/main/assets/l1-logo.png" alt="GenesisL1" width="150" height="150"/>
 </p>
 
 <p align="center">

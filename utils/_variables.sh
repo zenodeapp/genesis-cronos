@@ -9,7 +9,7 @@ CONFIG_DIR=$NODE_DIR/config
 DATA_DIR=$NODE_DIR/data
 
 # /fetch module variables.
-FETCH_URL=https://raw.githubusercontent.com/zenodeapp/genesis-parameters/main/$CHAIN_ID
+FETCH_URL=https://raw.githubusercontent.com/alpha-omega-labs/genesis-parameters/main/$CHAIN_ID
 SEEDS_URL=$FETCH_URL/seeds.txt
 PEERS_URL=$FETCH_URL/peers.txt
 STATE_URL=$FETCH_URL/genesis.json
