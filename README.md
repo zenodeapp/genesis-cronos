@@ -7,11 +7,11 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/zenodeapp/genesis-parameters/main/assets/l1-logo.png" alt="GenesisL1" width="150" height="150"/>
+  <img src="https://raw.githubusercontent.com/alpha-omega-labs/genesis-parameters/main/assets/l1-logo.png" alt="GenesisL1" width="150" height="150"/>
 </p>
 
 <p align="center">
-  Chain ID <b>genesis_29-2</b>
+  Chain ID <b>tgenesis_290-1</b>
 </p>
 
 <p align="center">
@@ -38,7 +38,7 @@
 
 ## Instructions
 
-The instructions provided here will only be suitable for those who would like to join the **public** testnet: `tgenesis_54-1` by **setting up a new node** _or_ **upgrading an existing (full) node**. If you instead want to _test_ **locally**, see the [README](/setup-local/README.md) in the [/setup-local](/setup-local)-folder.
+The instructions provided here will only be suitable for those who would like to join the **public** testnet: `tgenesis_290-1` by **setting up a new node** _or_ **upgrading an existing (full) node**. If you instead want to _test_ **locally**, see the [README](/setup-local/README.md) in the [/setup-local](/setup-local)-folder.
 
 > [!NOTE]
 > More details for every script mentioned in this README can be found in the folders where they are respectively stored: [/setup](/setup), [/setup-local](/setup-local) or [/utils](/utils).
