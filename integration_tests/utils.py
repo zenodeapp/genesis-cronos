@@ -524,4 +524,3 @@ def send_txs(w3, cli, to, keys, params):
     sended_hash_set = send_raw_transactions(w3, raw_transactions)
 
     return block_num_0, sended_hash_set
-    
