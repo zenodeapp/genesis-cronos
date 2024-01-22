@@ -1,8 +1,8 @@
 package cronos_test
 
 import (
-	"github.com/zenodeapp/genesis-crypto/x/cronos"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 )
 
 func (suite *CronosTestSuite) TestInitGenesis() {

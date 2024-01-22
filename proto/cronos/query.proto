@@ -7,7 +7,7 @@ import "google/protobuf/timestamp.proto";
 import "ethermint/evm/v1/tx.proto";
 // this line is used by starport scaffolding # 1
 
-option go_package = "github.com/zenodeapp/genesis-crypto/x/cronos/types";
+option go_package = "github.com/alpha-omega-labs/genesis-crypto/x/cronos/types";
 
 // Query defines the gRPC querier service.
 service Query {

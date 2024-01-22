@@ -3,7 +3,7 @@ package client
 import (
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 
-	"github.com/zenodeapp/genesis-crypto/x/cronos/client/cli"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/client/cli"
 )
 
 // ProposalHandler is the token mapping change proposal handler.

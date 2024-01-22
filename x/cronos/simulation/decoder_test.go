@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/cosmos-sdk/types/kv"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 	"github.com/ethereum/go-ethereum/common"
 )
 

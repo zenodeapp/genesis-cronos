@@ -12,8 +12,8 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/simulation"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/simulation"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 )
 
 // TestRandomizedGenState tests the normal scenario of applying RandomizedGenState.

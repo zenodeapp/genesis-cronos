@@ -6,8 +6,8 @@ package cmd
 import (
 	"sort"
 
-	"github.com/zenodeapp/genesis-crypto/app"
-	"github.com/zenodeapp/genesis-crypto/cmd/tgenesisd/opendb"
+	"github.com/alpha-omega-labs/genesis-crypto/app"
+	"github.com/alpha-omega-labs/genesis-crypto/cmd/tgenesisd/opendb"
 	versiondbclient "github.com/crypto-org-chain/cronos/versiondb/client"
 	"github.com/linxGnu/grocksdb"
 	"github.com/spf13/cobra"

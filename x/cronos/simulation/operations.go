@@ -14,8 +14,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/zenodeapp/genesis-crypto/x/cronos/keeper"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/keeper"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 )
 
 const (

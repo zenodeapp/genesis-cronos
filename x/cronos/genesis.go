@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/keeper"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/keeper"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 	"github.com/ethereum/go-ethereum/common"
 )
 

@@ -16,7 +16,7 @@ done
 cd ..
 
 # move proto files to the right places
-cp -r github.com/zenodeapp/genesis-crypto/* ./
+cp -r github.com/alpha-omega-labs/genesis-crypto/* ./
 rm -rf github.com
 
 go mod tidy -compat=1.17

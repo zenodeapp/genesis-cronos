@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"math/big"
 
-	handlers "github.com/zenodeapp/genesis-crypto/x/cronos/keeper/evmhandlers"
+	handlers "github.com/alpha-omega-labs/genesis-crypto/x/cronos/keeper/evmhandlers"
 
 	gravitytypes "github.com/peggyjv/gravity-bridge/module/v2/x/gravity/types"
 
-	"github.com/zenodeapp/genesis-crypto/app"
-	keepertest "github.com/zenodeapp/genesis-crypto/x/cronos/keeper/mock"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	"github.com/alpha-omega-labs/genesis-crypto/app"
+	keepertest "github.com/alpha-omega-labs/genesis-crypto/x/cronos/keeper/mock"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	cronosmodulekeeper "github.com/zenodeapp/genesis-crypto/x/cronos/keeper"
+	cronosmodulekeeper "github.com/alpha-omega-labs/genesis-crypto/x/cronos/keeper"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 )

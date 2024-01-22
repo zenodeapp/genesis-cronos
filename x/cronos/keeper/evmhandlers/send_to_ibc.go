@@ -8,8 +8,8 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 
-	cronoskeeper "github.com/zenodeapp/genesis-crypto/x/cronos/keeper"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	cronoskeeper "github.com/alpha-omega-labs/genesis-crypto/x/cronos/keeper"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 )
 
 var _ types.EvmLogHandler = SendToIbcHandler{}

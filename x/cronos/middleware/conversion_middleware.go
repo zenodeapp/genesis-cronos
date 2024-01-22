@@ -9,7 +9,7 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
 	porttypes "github.com/cosmos/ibc-go/v5/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v5/modules/core/exported"
-	cronoskeeper "github.com/zenodeapp/genesis-crypto/x/cronos/keeper"
+	cronoskeeper "github.com/alpha-omega-labs/genesis-crypto/x/cronos/keeper"
 )
 
 // IBCConversionModule implements the ICS26 interface.

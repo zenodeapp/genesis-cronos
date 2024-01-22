@@ -1,4 +1,4 @@
-module github.com/zenodeapp/genesis-crypto
+module github.com/alpha-omega-labs/genesis-crypto
 
 go 1.20
 

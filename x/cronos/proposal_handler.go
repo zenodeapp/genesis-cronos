@@ -6,8 +6,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 
-	"github.com/zenodeapp/genesis-crypto/x/cronos/keeper"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/keeper"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 )
 
 // NewTokenMappingChangeProposalHandler creates a new governance Handler for a TokenMappingChangeProposal

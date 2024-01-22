@@ -37,8 +37,8 @@ import (
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/zenodeapp/genesis-crypto/x/cronos"
-	cronostypes "github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos"
+	cronostypes "github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 )
 
 const (

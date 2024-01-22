@@ -3,7 +3,7 @@ package cronos;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/zenodeapp/genesis-crypto/x/cronos/types";
+option go_package = "github.com/alpha-omega-labs/genesis-crypto/x/cronos/types";
 
 // Params defines the parameters for the cronos module.
 message Params {

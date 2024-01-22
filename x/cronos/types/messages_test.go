@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/zenodeapp/genesis-crypto/app"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	"github.com/alpha-omega-labs/genesis-crypto/app"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 	"github.com/stretchr/testify/require"
 )
 

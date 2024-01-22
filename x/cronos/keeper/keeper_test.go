@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	cronosmodulekeeper "github.com/zenodeapp/genesis-crypto/x/cronos/keeper"
-	keepertest "github.com/zenodeapp/genesis-crypto/x/cronos/keeper/mock"
-	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
+	cronosmodulekeeper "github.com/alpha-omega-labs/genesis-crypto/x/cronos/keeper"
+	keepertest "github.com/alpha-omega-labs/genesis-crypto/x/cronos/keeper/mock"
+	"github.com/alpha-omega-labs/genesis-crypto/x/cronos/types"
 
 	evmtypes "github.com/evmos/ethermint/x/evm/types"
 
@@ -26,7 +26,7 @@ import (
 	tmversion "github.com/tendermint/tendermint/proto/tendermint/version"
 	"github.com/tendermint/tendermint/version"
 
-	"github.com/zenodeapp/genesis-crypto/app"
+	"github.com/alpha-omega-labs/genesis-crypto/app"
 )
 
 const (
