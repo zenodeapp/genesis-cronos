@@ -3,10 +3,10 @@ package keeper_test
 import (
 	"errors"
 
-	"github.com/crypto-org-chain/cronos/app"
-	cronosmodulekeeper "github.com/crypto-org-chain/cronos/x/cronos/keeper"
-	keepertest "github.com/crypto-org-chain/cronos/x/cronos/keeper/mock"
-	"github.com/crypto-org-chain/cronos/x/cronos/types"
+	"github.com/zenodeapp/genesis-crypto/app"
+	cronosmodulekeeper "github.com/zenodeapp/genesis-crypto/x/cronos/keeper"
+	keepertest "github.com/zenodeapp/genesis-crypto/x/cronos/keeper/mock"
+	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
 )
 
 func (suite *KeeperTestSuite) TestGetSourceChannelID() {

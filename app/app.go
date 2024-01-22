@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/crypto-org-chain/cronos/x/cronos/middleware"
+	"github.com/zenodeapp/genesis-crypto/x/cronos/middleware"
 	"golang.org/x/exp/slices"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -126,23 +126,23 @@ import (
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
-	"github.com/crypto-org-chain/cronos/x/cronos"
-	cronosclient "github.com/crypto-org-chain/cronos/x/cronos/client"
-	cronoskeeper "github.com/crypto-org-chain/cronos/x/cronos/keeper"
-	evmhandlers "github.com/crypto-org-chain/cronos/x/cronos/keeper/evmhandlers"
-	cronostypes "github.com/crypto-org-chain/cronos/x/cronos/types"
+	"github.com/zenodeapp/genesis-crypto/x/cronos"
+	cronosclient "github.com/zenodeapp/genesis-crypto/x/cronos/client"
+	cronoskeeper "github.com/zenodeapp/genesis-crypto/x/cronos/keeper"
+	evmhandlers "github.com/zenodeapp/genesis-crypto/x/cronos/keeper/evmhandlers"
+	cronostypes "github.com/zenodeapp/genesis-crypto/x/cronos/types"
 
 	memiavlstore "github.com/crypto-org-chain/cronos/store"
 
 	// unnamed import of statik for swagger UI support
-	_ "github.com/crypto-org-chain/cronos/client/docs/statik"
+	_ "github.com/zenodeapp/genesis-crypto/client/docs/statik"
 
 	// Force-load the tracer engines to trigger registration
 	_ "github.com/ethereum/go-ethereum/eth/tracers/js"
 	_ "github.com/ethereum/go-ethereum/eth/tracers/native"
 
 	// force register the extension json-rpc.
-	_ "github.com/crypto-org-chain/cronos/x/cronos/rpc"
+	_ "github.com/zenodeapp/genesis-crypto/x/cronos/rpc"
 )
 
 const (

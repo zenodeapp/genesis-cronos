@@ -1,4 +1,4 @@
-module github.com/crypto-org-chain/cronos
+module github.com/zenodeapp/genesis-crypto
 
 go 1.20
 

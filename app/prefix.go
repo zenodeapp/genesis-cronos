@@ -2,7 +2,7 @@ package app
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	cmdcfg "github.com/crypto-org-chain/cronos/cmd/tgenesisd/config"
+	cmdcfg "github.com/zenodeapp/genesis-crypto/cmd/tgenesisd/config"
 	ethcfg "github.com/evmos/ethermint/cmd/config"
 )
 

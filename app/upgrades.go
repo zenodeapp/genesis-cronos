@@ -11,7 +11,7 @@ import (
   storetypes "github.com/cosmos/cosmos-sdk/store/types"
   upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
   ibcfeetypes "github.com/cosmos/ibc-go/v5/modules/apps/29-fee/types"
-  cronostypes "github.com/crypto-org-chain/cronos/x/cronos/types"
+  cronostypes "github.com/zenodeapp/genesis-crypto/x/cronos/types"
 )
 
 type UpgradeInfo struct {

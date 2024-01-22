@@ -1,7 +1,7 @@
 package experimental
 
 import (
-	"github.com/crypto-org-chain/cronos/app"
+	"github.com/zenodeapp/genesis-crypto/app"
 	gravitycmd "github.com/peggyjv/gravity-bridge/module/v2/cmd/gravity/cmd"
 	"github.com/spf13/cobra"
 )

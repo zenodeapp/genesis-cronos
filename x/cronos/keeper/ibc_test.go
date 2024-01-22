@@ -6,10 +6,10 @@ import (
 	"math/big"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/crypto-org-chain/cronos/app"
-	cronosmodulekeeper "github.com/crypto-org-chain/cronos/x/cronos/keeper"
-	keepertest "github.com/crypto-org-chain/cronos/x/cronos/keeper/mock"
-	"github.com/crypto-org-chain/cronos/x/cronos/types"
+	"github.com/zenodeapp/genesis-crypto/app"
+	cronosmodulekeeper "github.com/zenodeapp/genesis-crypto/x/cronos/keeper"
+	keepertest "github.com/zenodeapp/genesis-crypto/x/cronos/keeper/mock"
+	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/evmos/ethermint/crypto/ethsecp256k1"
 )

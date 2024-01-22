@@ -39,11 +39,11 @@ import (
 	servercfg "github.com/evmos/ethermint/server/config"
 	ethermint "github.com/evmos/ethermint/types"
 
-	"github.com/crypto-org-chain/cronos/app"
-	"github.com/crypto-org-chain/cronos/cmd/tgenesisd/experimental"
-	"github.com/crypto-org-chain/cronos/cmd/tgenesisd/opendb"
+	"github.com/zenodeapp/genesis-crypto/app"
+	"github.com/zenodeapp/genesis-crypto/cmd/tgenesisd/experimental"
+	"github.com/zenodeapp/genesis-crypto/cmd/tgenesisd/opendb"
 	memiavlcfg "github.com/crypto-org-chain/cronos/store/config"
-	"github.com/crypto-org-chain/cronos/x/cronos"
+	"github.com/zenodeapp/genesis-crypto/x/cronos"
 	// this line is used by starport scaffolding # stargate/root/import
 )
 

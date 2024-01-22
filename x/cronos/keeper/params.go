@@ -6,7 +6,7 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transferTypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
-	"github.com/crypto-org-chain/cronos/x/cronos/types"
+	"github.com/zenodeapp/genesis-crypto/x/cronos/types"
 	evmTypes "github.com/evmos/ethermint/x/evm/types"
 )
 

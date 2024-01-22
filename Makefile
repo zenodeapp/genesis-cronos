@@ -138,7 +138,7 @@ release-dry-run:
 ###                                Sim Test                                 ###
 ###############################################################################
 
-SIMAPP = github.com/crypto-org-chain/cronos/app
+SIMAPP = github.com/zenodeapp/genesis-crypto/app
 
 # Install the runsim binary with a temporary workaround of entering an outside
 # directory as the "go get" command ignores the -mod option and will polute the
@@ -259,7 +259,7 @@ endif
 ###                                Protobuf                                 ###
 ###############################################################################
 
-HTTPS_GIT := https://github.com/crypto-org-chain/cronos.git
+HTTPS_GIT := https://github.com/zenodeapp/genesis-crypto.git
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf
 
