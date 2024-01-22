@@ -243,5 +243,4 @@ replace (
 	github.com/tendermint/tendermint => github.com/cometbft/cometbft v0.34.30-0.20230622094628-60e431e4eef0
 	// https://github.com/crypto-org-chain/tm-db/tree/release/v0.6.x
 	github.com/tendermint/tm-db => github.com/crypto-org-chain/tm-db v0.6.8-0.20230424032152-87c7e7f4fb61
-	github.com/crypto-org-chain/cronos/cmd/cronosd => github.com/zenodeapp/genesis-crypto/cmd/tgenesisd tgenesis-v1.0.0
 )

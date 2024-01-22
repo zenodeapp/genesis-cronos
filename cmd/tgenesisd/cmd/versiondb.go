@@ -7,7 +7,7 @@ import (
 	"sort"
 
 	"github.com/crypto-org-chain/cronos/app"
-	"github.com/crypto-org-chain/cronos/cmd/cronosd/opendb"
+	"github.com/crypto-org-chain/cronos/cmd/tgenesisd/opendb"
 	versiondbclient "github.com/crypto-org-chain/cronos/versiondb/client"
 	"github.com/linxGnu/grocksdb"
 	"github.com/spf13/cobra"
