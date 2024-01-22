@@ -51,7 +51,7 @@ def post_init(path, base_port, config):
         data / SUPERVISOR_CONFIG_FILE,
         lambda i, _: {
             "command": f"cosmovisor start --home %(here)s/node{i}",
-            "environment": f"DAEMON_NAME=cronosd,DAEMON_HOME=%(here)s/node{i}",
+            "environment": f"DAEMON_NAME=genesisd,DAEMON_HOME=%(here)s/node{i}",
         },
     )
 
@@ -73,7 +73,7 @@ def custom_cronos(tmp_path_factory):
         26100,
         Path(__file__).parent / "configs/cosmovisor.jsonnet",
         post_init=post_init,
-        chain_binary=str(path / "upgrades/genesis/bin/cronosd"),
+        chain_binary=str(path / "upgrades/genesis/bin/genesisd"),
     )
 
 
@@ -146,7 +146,7 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
     # update cli chain binary
     custom_cronos.chain_binary = (
         Path(custom_cronos.chain_binary).parent.parent.parent
-        / f"{plan_name}/bin/cronosd"
+        / f"{plan_name}/bin/genesisd"
     )
     cli = custom_cronos.cosmos_cli()
 

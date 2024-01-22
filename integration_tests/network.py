@@ -14,7 +14,7 @@ from .utils import supervisorctl, wait_for_port
 
 
 class Cronos:
-    def __init__(self, base_dir, chain_binary="cronosd"):
+    def __init__(self, base_dir, chain_binary="genesisd"):
         self._w3 = None
         self.base_dir = base_dir
         self.config = json.loads((base_dir / "config.json").read_text())
@@ -177,7 +177,7 @@ def setup_custom_cronos(path, base_port, config, post_init=None, chain_binary=No
     try:
         wait_for_port(ports.evmrpc_port(base_port))
         wait_for_port(ports.evmrpc_ws_port(base_port))
-        yield Cronos(path / "cronos_777-1", chain_binary=chain_binary or "cronosd")
+        yield Cronos(path / "cronos_777-1", chain_binary=chain_binary or "genesisd")
     finally:
         os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
         # proc.terminate()
