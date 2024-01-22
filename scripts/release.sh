@@ -29,7 +29,7 @@ build() {
     fi
     echo "building $FLAKE"
     nix build --show-trace -L "$FLAKE"
-    cp result "cronos_${ref_name_clean:1}${network}_${name}.tar.gz"
+    cp result "tgenesis_${ref_name_clean:1}${network}_${name}.tar.gz"
 }
 
 if [[ "$build_platform" == "x86_64-linux" ]]; then
@@ -43,7 +43,7 @@ else
     exit 1
 fi
 
-for network in "" "-testnet"; do
+for network in "-testnet"; do
     for t in $hosts; do
         IFS=',' read name host <<< "${t}"
         build "$network" "$host" "$name"
