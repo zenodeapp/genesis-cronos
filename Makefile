@@ -95,7 +95,7 @@ build: check-network print-ledger go.sum
 	@go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/$(BINARY_NAME) ./cmd/$(BINARY_NAME)
 
 install: check-network print-ledger go.sum
-	@go build -mod=readonly $(BUILD_FLAGS) -o $(BINDIR)/$(BINARY_NAME) ./cmd/$(BINARY_NAME)
+	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/$(BINARY_NAME)
 
 test:
 	@go test -v -mod=readonly $(PACKAGES) -coverprofile=$(COVERAGE) -covermode=atomic
