@@ -3,7 +3,7 @@
 , cronos ? (import ../. { inherit pkgs; })
 }: rec {
   start-cronos = pkgs.writeShellScriptBin "start-cronos" ''
-    # rely on environment to provide cronosd
+    # rely on environment to provide tgenesisd
     export PATH=${pkgs.test-env}/bin:$PATH
     ${../scripts/start-cronos} ${config.cronos-config} ${config.dotenv} $@
   '';

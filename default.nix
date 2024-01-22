@@ -11,7 +11,7 @@
 }:
 let
   version = "v1.0.15";
-  pname = "cronosd";
+  pname = "tgenesisd";
   tags = [ "ledger" "netgo" network "rocksdb" "grocksdb_no_link" ]
     ++ lib.optionals nativeByteOrder [ "nativebyteorder" ];
   ldflags = lib.concatStringsSep "\n" ([
@@ -45,7 +45,7 @@ buildGoApplication rec {
     else "-lrocksdb -pthread -lstdc++ -ldl";
 
   postFixup = lib.optionalString stdenv.isDarwin ''
-    ${stdenv.cc.targetPrefix}install_name_tool -change "@rpath/librocksdb.8.dylib" "${rocksdb}/lib/librocksdb.dylib" $out/bin/cronosd
+    ${stdenv.cc.targetPrefix}install_name_tool -change "@rpath/librocksdb.8.dylib" "${rocksdb}/lib/librocksdb.dylib" $out/bin/tgenesisd
   '';
 
   doCheck = false;
@@ -53,7 +53,7 @@ buildGoApplication rec {
     description = "Official implementation of the Cronos blockchain protocol";
     homepage = "https://cronos.org/";
     license = licenses.asl20;
-    mainProgram = "cronosd" + stdenv.hostPlatform.extensions.executable;
+    mainProgram = "tgenesisd" + stdenv.hostPlatform.extensions.executable;
     platforms = platforms.all;
   };
 }
