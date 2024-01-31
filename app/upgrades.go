@@ -28,7 +28,7 @@ func UpgradeV1(
   evm *evmkeeper.Keeper,
 ) UpgradeInfo {
   return UpgradeInfo{
-    Name: "plan_cronos",
+    Name: "plan_crypto",
     Info: `'{"binaries":{"darwin/amd64":"","darwin/x86_64":"","linux/arm64":"","linux/amd64":"","windows/x86_64":""}}'`,
     Handler: func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
       m, err := mm.RunMigrations(ctx, configurator, fromVM)
@@ -38,10 +38,10 @@ func UpgradeV1(
   
       // Override feemarket parameters
       fmParams := fm.GetParams(ctx)
-      fmParams.BaseFeeChangeDenominator = 300
-      fmParams.ElasticityMultiplier = 4
-      fmParams.BaseFee = sdk.NewInt(10000000000000)
-      fmParams.MinGasPrice = sdk.NewDec(10000000000000)
+      fmParams.BaseFeeChangeDenominator = 8
+      fmParams.ElasticityMultiplier = 2
+      fmParams.BaseFee = sdk.NewInt(50000000000)
+      fmParams.MinGasPrice = sdk.NewDec(50000000000)
       fm.SetParams(ctx, fmParams)
   
       // clear extra_eips from evm parameters

@@ -77,7 +77,7 @@ sh setup/state-sync.sh <moniker>
 This script assumes that you are currently operating on the Evmos fork of GenesisL1 (repo: [`genesis-ethermint`](https://github.com/zenodeapp/genesis-ethermint)) and the node synced till height: `insert_height_here` which caused it to panic.
 
 > [!IMPORTANT]
-> This should only be used if you run a **full-node** and have to perform the **"plan_cronos"**-upgrade.
+> This should only be used if you run a **full-node** and have to perform the **"plan_crypto"**-upgrade.
 
 ```
 sh setup/upgrade.sh
