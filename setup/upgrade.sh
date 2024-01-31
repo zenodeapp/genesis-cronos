@@ -45,6 +45,13 @@ cd $REPO_ROOT
 # System update and installation of dependencies
 . ./setup/dependencies.sh
 
+# Rename .genesisd to .genesis if applicable (which we used in the past)
+GENESISD_DIR="$HOME/.genesisd"
+if [ ! -d "$NODE_DIR" ] && [ -d "$GENESISD_DIR" ]; then
+    mv "$GENESISD_DIR" "$NODE_DIR"
+    echo "Renamed .genesisd to .genesis."
+fi
+
 # Create a backup of old config files
 cp $CONFIG_DIR/app.toml $CONFIG_DIR/app.toml.bak
 cp $CONFIG_DIR/config.toml $CONFIG_DIR/config.toml.bak
