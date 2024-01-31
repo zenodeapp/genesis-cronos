@@ -35,7 +35,7 @@
           };
         in
         rec {
-          packages = pkgs.cronos-matrix // {
+          packages = pkgs.genesis-matrix // {
             inherit (pkgs) rocksdb;
           };
           apps = {
@@ -110,7 +110,7 @@
           );
         in
         {
-          cronos-matrix = binaries;
+          genesis-matrix = binaries;
         }
       );
     };
