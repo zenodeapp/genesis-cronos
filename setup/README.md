@@ -12,7 +12,7 @@ This script installs all the dependencies (and system configurations) that are n
 ## upgrade.sh
 
 > [!WARNING]
-> This script should only be used if you run a full-node and have to perform the **"plan_cronos"**-upgrade!
+> This script should only be used if you run a full-node and have to perform the **"plan_crypto"**-upgrade!
 >
 > This means that you are currently operating on the Evmos fork of GenesisL1 (repo: [`genesis-ethermint`](https://github.com/zenodeapp/genesis-ethermint)) and the node synced till height: `insert_height_here` which caused it to panic.
 
