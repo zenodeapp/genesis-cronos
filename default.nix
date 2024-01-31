@@ -10,12 +10,12 @@
 , nativeByteOrder ? true # nativeByteOrder mode will panic on big endian machines
 }:
 let
-  version = "v1.0.15";
+  version = "v1.0.0";
   pname = "genesisd";
   tags = [ "ledger" "netgo" network "rocksdb" "grocksdb_no_link" ]
     ++ lib.optionals nativeByteOrder [ "nativebyteorder" ];
   ldflags = lib.concatStringsSep "\n" ([
-    "-X github.com/cosmos/cosmos-sdk/version.Name=cronos"
+    "-X github.com/cosmos/cosmos-sdk/version.Name=genesis"
     "-X github.com/cosmos/cosmos-sdk/version.AppName=${pname}"
     "-X github.com/cosmos/cosmos-sdk/version.Version=${version}"
     "-X github.com/cosmos/cosmos-sdk/version.BuildTags=${lib.concatStringsSep "," tags}"
