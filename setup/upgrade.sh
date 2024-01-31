@@ -14,7 +14,7 @@ cat <<"EOF"
 EOF
 
 echo ""
-echo "This script should only be used if you run a full-node and have to perform the plan_cronos"
+echo "This script should only be used if you run a full-node and have to perform the plan_crypto"
 echo "upgrade! This means you are currently operating on the Evmos fork of GenesisL1 and the node"
 echo "synced till the height that caused it to panic."
 echo ""
