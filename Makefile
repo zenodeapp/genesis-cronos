@@ -4,8 +4,8 @@ COVERAGE ?= coverage.txt
 
 GOPATH ?= $(shell $(GO) env GOPATH)
 BINDIR ?= ~/go/bin
-BINARY_NAME = genesisd
-NETWORK ?= mainnet
+BINARY_NAME = tgenesisd
+NETWORK ?= testnet
 LEDGER_ENABLED ?= true
 PROJECT_NAME = $(shell git remote get-url origin | xargs basename -s .git)
 
@@ -78,7 +78,7 @@ comma := ,
 build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
-ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=cronos \
+ldflags += -X github.com/cosmos/cosmos-sdk/version.Name=tgenesis \
 	-X github.com/cosmos/cosmos-sdk/version.AppName=$(BINARY_NAME) \
 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
@@ -92,12 +92,10 @@ endif
 
 all: build
 build: check-network print-ledger go.sum
-	@go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/$(BINARY_NAME) ./cmd/cronosd
+	@go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/$(BINARY_NAME) ./cmd/$(BINARY_NAME)
 
 install: check-network print-ledger go.sum
-	@go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/$(BINARY_NAME) ./cmd/cronosd
-	@mkdir -p $(BINDIR)
-	@mv $(BUILDDIR)/$(BINARY_NAME) $(BINDIR)/$(BINARY_NAME)
+	@go install -mod=readonly $(BUILD_FLAGS) ./cmd/$(BINARY_NAME)
 
 test:
 	@go test -v -mod=readonly $(PACKAGES) -coverprofile=$(COVERAGE) -covermode=atomic
@@ -218,6 +216,12 @@ test-sim-profile:
 ###############################################################################
 ###                                Integration Test                         ###
 ###############################################################################
+
+# possible values:
+# - all: run all integration tests
+# - unmarked: run integration tests that are not marked
+# - marker1,marker2: markers separated by comma, run integration tests that are marked with any of the markers
+TESTS_TO_RUN ?= all
 
 run-integration-tests:
 	@nix-shell ./integration_tests/shell.nix --run ./scripts/run-integration-tests

@@ -1,0 +1,15 @@
+[Unit]
+Description=tgenesis
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root
+ExecStart=/root/go/bin/tgenesisd start --log_level info
+Restart=on-failure
+RestartSec=60 
+LimitNOFILE=50000 
+
+[Install]
+WantedBy=multi-user.target
