@@ -27,7 +27,7 @@
 > [!IMPORTANT]
 > **For full-node syncing**
 > 
-> We were an Evmos-fork before we made the decision to hard fork to Cronos. Therefore if you do not want to **state sync**, but wish to sync a **full node**, follow the instructions in the [`genesis-ethermint`](https://github.com/zenodeapp/genesis-ethermint) repository first before continuing.
+> We were an Evmos-fork before we made the decision to hard fork to Cronos. Therefore if you do not want to **state sync**, but wish to sync a **full node**, follow the instructions in the [`genesis-ethermint`](https://github.com/alpha-omega-labs/genesis-ethermint) repository first before continuing.
 
 ## Node requirements
 
@@ -46,13 +46,13 @@ The instructions provided here will only be suitable for those who would like to
 ### 1. Cloning the repository
 
 ```
-git clone https://github.com/zenodeapp/genesis-crypto.git
+git clone https://github.com/alpha-omega-labs/genesis-crypto.git
 ```
 
 ### 2. Checkout the right tag/branch
 
 ```
-git checkout tgenesis-v1.0.0
+git checkout v1.0.0-t
 ```
 
 ### 3. Node setup
@@ -74,7 +74,7 @@ sh setup/state-sync.sh <moniker>
 
 #### 3.2 Upgrade a node
 
-This script assumes that you are currently operating on the Evmos fork of GenesisL1 (repo: [`genesis-ethermint`](https://github.com/zenodeapp/genesis-ethermint)) and the node synced till height: `insert_height_here` which caused it to panic.
+This script assumes that you are currently operating on the Evmos fork of GenesisL1 (repo: [`genesis-ethermint`](https://github.com/alpha-omega-labs/genesis-ethermint)) and the node synced till height: `insert_height_here` which caused it to panic.
 
 > [!IMPORTANT]
 > This should only be used if you run a **full-node** and have to perform the **"plan_crypto"**-upgrade.
