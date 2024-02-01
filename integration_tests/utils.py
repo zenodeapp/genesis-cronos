@@ -13,7 +13,6 @@ from pathlib import Path
 
 import bech32
 import eth_utils
-import pytest
 import rlp
 import toml
 from dateutil.parser import isoparse
@@ -48,10 +47,6 @@ TEST_CONTRACTS = {
     "TestBlackListERC20": "TestBlackListERC20.sol",
     "CroBridge": "CroBridge.sol",
     "CronosGravityCancellation": "CronosGravityCancellation.sol",
-    "TestCRC20": "TestCRC20.sol",
-    "TestCRC20Proxy": "TestCRC20Proxy.sol",
-    "TestMaliciousSupply": "TestMaliciousSupply.sol",
-    "CosmosERC20": "CosmosToken.sol",
 }
 
 
@@ -69,8 +64,6 @@ CONTRACTS = {
     / "x/cronos/types/contracts/ModuleCRC20.json",
     "ModuleCRC21": Path(__file__).parent.parent
     / "x/cronos/types/contracts/ModuleCRC21.json",
-    "ModuleCRC20Proxy": Path(__file__).parent.parent
-    / "x/cronos/types/contracts/ModuleCRC20Proxy.json",
     **{
         name: contract_path(name, filename) for name, filename in TEST_CONTRACTS.items()
     },
@@ -120,27 +113,6 @@ def wait_for_block_time(cli, t):
         if now >= t:
             break
         time.sleep(0.5)
-
-
-def approve_proposal(n, rsp, event_query_tx=False):
-    cli = n.cosmos_cli()
-    if event_query_tx:
-        rsp = cli.event_query_tx_for(rsp["txhash"])
-    # get proposal_id
-    ev = parse_events(rsp["logs"])["submit_proposal"]
-    proposal_id = ev["proposal_id"]
-    for i in range(len(n.config["validators"])):
-        rsp = n.cosmos_cli(i).gov_vote("validator", proposal_id, "yes")
-        assert rsp["code"] == 0, rsp["raw_log"]
-    wait_for_new_blocks(cli, 1)
-    assert (
-        int(cli.query_tally(proposal_id)["yes_count"]) == cli.staking_pool()
-    ), "all validators should have voted yes"
-    print("wait for proposal to be activated")
-    proposal = cli.query_proposal(proposal_id)
-    wait_for_block_time(cli, isoparse(proposal["voting_end_time"]))
-    proposal = cli.query_proposal(proposal_id)
-    assert proposal["status"] == "PROPOSAL_STATUS_PASSED", proposal
 
 
 def wait_for_port(port, host="127.0.0.1", timeout=40.0):
@@ -322,12 +294,7 @@ def deploy_contract(w3, jsonfile, args=(), key=KEYS["validator"]):
     """
     acct = Account.from_key(key)
     info = json.loads(jsonfile.read_text())
-    bytecode = ""
-    if "bytecode" in info:
-        bytecode = info["bytecode"]
-    if "byte" in info:
-        bytecode = info["byte"]
-    contract = w3.eth.contract(abi=info["abi"], bytecode=bytecode)
+    contract = w3.eth.contract(abi=info["abi"], bytecode=info["bytecode"])
     tx = contract.constructor(*args).build_transaction({"from": acct.address})
     txreceipt = send_transaction(w3, tx, key)
     assert txreceipt.status == 1
@@ -364,13 +331,13 @@ def cronos_address_from_mnemonics(mnemonics, prefix=CRONOS_ADDRESS_PREFIX):
     return eth_to_bech32(acct.address, prefix)
 
 
-def send_to_cosmos(gravity_contract, token_contract, w3, recipient, amount, key=None):
+def send_to_cosmos(gravity_contract, token_contract, recipient, amount, key=None):
     """
     do approve and sendToCronos on ethereum side
     """
     acct = Account.from_key(key)
     txreceipt = send_transaction(
-        w3,
+        token_contract.web3,
         token_contract.functions.approve(
             gravity_contract.address, amount
         ).build_transaction({"from": acct.address}),
@@ -379,7 +346,7 @@ def send_to_cosmos(gravity_contract, token_contract, w3, recipient, amount, key=
     assert txreceipt.status == 1, "approve failed"
 
     return send_transaction(
-        w3,
+        gravity_contract.web3,
         gravity_contract.functions.sendToCronos(
             token_contract.address, HexBytes(recipient), amount
         ).build_transaction({"from": acct.address}),
@@ -387,11 +354,11 @@ def send_to_cosmos(gravity_contract, token_contract, w3, recipient, amount, key=
     )
 
 
-def deploy_erc20(gravity_contract, w3, denom, name, symbol, decimal, key=None):
+def deploy_erc20(gravity_contract, denom, name, symbol, decimal, key=None):
     acct = Account.from_key(key)
 
     return send_transaction(
-        w3,
+        gravity_contract.web3,
         gravity_contract.functions.deployERC20(
             denom, name, symbol, decimal
         ).build_transaction({"from": acct.address}),
@@ -477,7 +444,7 @@ def modify_command_in_supervisor_config(ini: Path, fn, **kwargs):
     "replace the first node with the instrumented binary"
     ini.write_text(
         re.sub(
-            r"^command = (cronosd .*$)",
+            r"^command = (genesisd .*$)",
             lambda m: f"command = {fn(m.group(1))}",
             ini.read_text(),
             flags=re.M,
@@ -557,93 +524,3 @@ def send_txs(w3, cli, to, keys, params):
     sended_hash_set = send_raw_transactions(w3, raw_transactions)
 
     return block_num_0, sended_hash_set
-
-
-def multiple_send_to_cosmos(gcontract, tcontract, w3, recipient, amount, keys):
-    # use different sender accounts to be able be send concurrently
-    raw_transactions = []
-    for key_from in keys:
-        acct = Account.from_key(key_from)
-        acct_address = HexBytes(acct.address)
-        # approve first
-        approve = tcontract.functions.approve(gcontract.address, amount)
-        txreceipt = send_transaction(
-            w3,
-            approve.build_transaction({"from": acct.address}),
-            key_from,
-        )
-        assert txreceipt.status == 1, "approve failed"
-
-        # generate the tx
-        tx = gcontract.functions.sendToCronos(
-            tcontract.address, HexBytes(recipient), amount
-        ).build_transaction({"from": acct_address})
-        signed = sign_transaction(w3, tx, key_from)
-        raw_transactions.append(signed.rawTransaction)
-
-    # wait for new block
-    w3_wait_for_new_blocks(w3, 1)
-    return send_raw_transactions(w3, raw_transactions)
-
-
-def setup_token_mapping(cronos, name, symbol):
-    # deploy contract
-    w3 = cronos.w3
-    contract = deploy_contract(w3, CONTRACTS[name])
-
-    # setup the contract mapping
-    cronos_cli = cronos.cosmos_cli()
-
-    print("contract", contract.address)
-    denom = f"cronos{contract.address}"
-    balance = contract.caller.balanceOf(ADDRS["validator"])
-    assert balance == 100000000000000000000000000
-
-    print("check the contract mapping not exists yet")
-    with pytest.raises(AssertionError):
-        cronos_cli.query_contract_by_denom(denom)
-
-    rsp = cronos_cli.update_token_mapping(
-        denom, contract.address, symbol, 6, from_="validator"
-    )
-    assert rsp["code"] == 0, rsp["raw_log"]
-    wait_for_new_blocks(cronos_cli, 1)
-
-    print("check the contract mapping exists now")
-    rsp = cronos_cli.query_denom_by_contract(contract.address)
-    assert rsp["denom"] == denom
-    return contract, denom
-
-
-def submit_any_proposal(cronos, tmp_path, event_query_tx=False):
-    # governance module account as granter
-    cli = cronos.cosmos_cli()
-    granter_addr = "crc10d07y265gmmuvt4z0w9aw880jnsr700jdufnyd"
-    grantee_addr = cli.address("signer1")
-
-    # this json can be obtained with `--generate-only` flag for respective cli calls
-    proposal_json = {
-        "messages": [
-            {
-                "@type": "/cosmos.feegrant.v1beta1.MsgGrantAllowance",
-                "granter": granter_addr,
-                "grantee": grantee_addr,
-                "allowance": {
-                    "@type": "/cosmos.feegrant.v1beta1.BasicAllowance",
-                    "spend_limit": [],
-                    "expiration": None,
-                },
-            }
-        ],
-        "deposit": "1basetcro",
-    }
-    proposal_file = tmp_path / "proposal.json"
-    proposal_file.write_text(json.dumps(proposal_json))
-    rsp = cli.submit_gov_proposal(proposal_file, from_="community")
-    assert rsp["code"] == 0, rsp["raw_log"]
-
-    approve_proposal(cronos, rsp, event_query_tx)
-
-    grant_detail = cli.query_grant(granter_addr, grantee_addr)
-    assert grant_detail["granter"] == granter_addr
-    assert grant_detail["grantee"] == grantee_addr

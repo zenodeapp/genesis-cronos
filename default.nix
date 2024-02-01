@@ -10,12 +10,12 @@
 , nativeByteOrder ? true # nativeByteOrder mode will panic on big endian machines
 }:
 let
-  version = "v1.0.12";
-  pname = "cronosd";
+  version = "v1.0.0";
+  pname = "genesisd";
   tags = [ "ledger" "netgo" network "rocksdb" "grocksdb_no_link" ]
     ++ lib.optionals nativeByteOrder [ "nativebyteorder" ];
   ldflags = lib.concatStringsSep "\n" ([
-    "-X github.com/cosmos/cosmos-sdk/version.Name=cronos"
+    "-X github.com/cosmos/cosmos-sdk/version.Name=genesis"
     "-X github.com/cosmos/cosmos-sdk/version.AppName=${pname}"
     "-X github.com/cosmos/cosmos-sdk/version.Version=${version}"
     "-X github.com/cosmos/cosmos-sdk/version.BuildTags=${lib.concatStringsSep "," tags}"
@@ -37,7 +37,7 @@ buildGoApplication rec {
   ] ./.);
   modules = ./gomod2nix.toml;
   pwd = src; # needed to support replace
-  subPackages = [ "cmd/cronosd" ];
+  subPackages = [ "cmd/genesisd" ];
   CGO_ENABLED = "1";
   CGO_LDFLAGS =
     if static then "-lrocksdb -pthread -lstdc++ -ldl -lzstd -lsnappy -llz4 -lbz2 -lz"
@@ -45,15 +45,15 @@ buildGoApplication rec {
     else "-lrocksdb -pthread -lstdc++ -ldl";
 
   postFixup = lib.optionalString stdenv.isDarwin ''
-    ${stdenv.cc.targetPrefix}install_name_tool -change "@rpath/librocksdb.7.dylib" "${rocksdb}/lib/librocksdb.dylib" $out/bin/cronosd
+    ${stdenv.cc.targetPrefix}install_name_tool -change "@rpath/librocksdb.8.dylib" "${rocksdb}/lib/librocksdb.dylib" $out/bin/genesisd
   '';
 
   doCheck = false;
   meta = with lib; {
-    description = "Official implementation of the Cronos blockchain protocol";
-    homepage = "https://cronos.org/";
+    description = "Official implementation of the GenesisL1 blockchain protocol (fork of Cronos)";
+    homepage = "https://genesisl1.com/";
     license = licenses.asl20;
-    mainProgram = "cronosd" + stdenv.hostPlatform.extensions.executable;
+    mainProgram = "genesisd" + stdenv.hostPlatform.extensions.executable;
     platforms = platforms.all;
   };
 }

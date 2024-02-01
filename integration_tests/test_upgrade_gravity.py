@@ -1,6 +1,4 @@
-import configparser
 import json
-import re
 import subprocess
 from pathlib import Path
 
@@ -10,7 +8,13 @@ from pystarport import ports
 from pystarport.cluster import SUPERVISOR_CONFIG_FILE
 
 from .network import Cronos, setup_custom_cronos
-from .utils import parse_events, wait_for_block, wait_for_block_time, wait_for_port
+from .utils import (
+    edit_ini_sections,
+    parse_events,
+    wait_for_block,
+    wait_for_block_time,
+    wait_for_port,
+)
 
 
 def init_cosmovisor(home):
@@ -28,29 +32,21 @@ def post_init(path, base_port, config):
     prepare cosmovisor for each node
     """
     chain_id = "cronos_777-1"
-    cfg = json.loads((path / chain_id / "config.json").read_text())
+    data = path / chain_id
+    cfg = json.loads((data / "config.json").read_text())
     for i, _ in enumerate(cfg["validators"]):
-        home = path / chain_id / f"node{i}"
+        home = data / f"node{i}"
         init_cosmovisor(home)
 
-    # patch supervisord ini config
-    ini_path = path / chain_id / SUPERVISOR_CONFIG_FILE
-    ini = configparser.RawConfigParser()
-    ini.read(ini_path)
-    reg = re.compile(rf"^program:{chain_id}-node(\d+)")
-    for section in ini.sections():
-        m = reg.match(section)
-        if m:
-            i = m.group(1)
-            ini[section].update(
-                {
-                    "command": f"cosmovisor start --home %(here)s/node{i}"
-                    f" --trace --unsafe-experimental",
-                    "environment": f"DAEMON_NAME=cronosd,DAEMON_HOME=%(here)s/node{i}",
-                }
-            )
-    with ini_path.open("w") as fp:
-        ini.write(fp)
+    edit_ini_sections(
+        chain_id,
+        data / SUPERVISOR_CONFIG_FILE,
+        lambda i, _: {
+            "command": f"cosmovisor start --home %(here)s/node{i}"
+            f" --trace --unsafe-experimental",
+            "environment": f"DAEMON_NAME=genesisd,DAEMON_HOME=%(here)s/node{i}",
+        },
+    )
 
 
 @pytest.fixture(scope="module")
@@ -70,7 +66,7 @@ def custom_cronos(tmp_path_factory):
         26100,
         Path(__file__).parent / "configs/cosmovisor_gravity.jsonnet",
         post_init=post_init,
-        chain_binary=str(path / "upgrades/genesis/bin/cronosd"),
+        chain_binary=str(path / "upgrades/genesis/bin/genesisd"),
     )
 
 
@@ -117,7 +113,7 @@ def test_cosmovisor_upgrade_gravity(custom_cronos: Cronos):
     # update cli chain binary
     custom_cronos.chain_binary = (
         Path(custom_cronos.chain_binary).parent.parent.parent
-        / f"{plan_name}/bin/cronosd"
+        / f"{plan_name}/bin/genesisd"
     )
     cli = custom_cronos.cosmos_cli()
 

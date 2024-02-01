@@ -11,25 +11,25 @@ build() {
     network=$1
     host="$2"
     name="$3"
-    pkg="cronosd${network}-${build_type}"
+    pkg="genesisd${network}-${build_type}"
     if [[ "$host" == "native" ]]; then
         if [[ "${build_platform: -6}" == "-linux" ]]; then
             # static link for linux targets
-            FLAKE="${baseurl}#legacyPackages.${build_platform}.pkgsStatic.cronos-matrix.${pkg}"
+            FLAKE="${baseurl}#legacyPackages.${build_platform}.pkgsStatic.genesis-matrix.${pkg}"
         else
             FLAKE="${baseurl}#${pkg}"
         fi
     else
         if [[ "$host" == "aarch64-multiplatform" || "$host" == "gnu64" ]]; then
             # static link for linux targets
-            FLAKE="${baseurl}#legacyPackages.${build_platform}.pkgsCross.${host}.pkgsStatic.cronos-matrix.${pkg}"
+            FLAKE="${baseurl}#legacyPackages.${build_platform}.pkgsCross.${host}.pkgsStatic.genesis-matrix.${pkg}"
         else
-            FLAKE="${baseurl}#legacyPackages.${build_platform}.pkgsCross.${host}.cronos-matrix.${pkg}"
+            FLAKE="${baseurl}#legacyPackages.${build_platform}.pkgsCross.${host}.genesis-matrix.${pkg}"
         fi
     fi
     echo "building $FLAKE"
     nix build --show-trace -L "$FLAKE"
-    cp result "cronos_${ref_name_clean:1}${network}_${name}.tar.gz"
+    cp result "genesis_${ref_name_clean:1}${network}_${name}.tar.gz"
 }
 
 if [[ "$build_platform" == "x86_64-linux" ]]; then
@@ -43,7 +43,7 @@ else
     exit 1
 fi
 
-for network in "" "-testnet"; do
+for network in ""; do
     for t in $hosts; do
         IFS=',' read name host <<< "${t}"
         build "$network" "$host" "$name"

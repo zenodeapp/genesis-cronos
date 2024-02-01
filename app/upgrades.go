@@ -1,73 +1,101 @@
 package app
 
 import (
-	"fmt"
+  "fmt"
 
-	sdkmath "cosmossdk.io/math"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/module"
-	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	icacontrollertypes "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts/controller/types"
-	ibcfeetypes "github.com/cosmos/ibc-go/v5/modules/apps/29-fee/types"
+  sdkmath "cosmossdk.io/math"
+  sdk "github.com/cosmos/cosmos-sdk/types"
+  "github.com/cosmos/cosmos-sdk/types/module"
+  feemarketkeeper "github.com/evmos/ethermint/x/feemarket/keeper"
+  evmkeeper "github.com/evmos/ethermint/x/evm/keeper"
+  storetypes "github.com/cosmos/cosmos-sdk/store/types"
+  upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+  ibcfeetypes "github.com/cosmos/ibc-go/v5/modules/apps/29-fee/types"
+  cronostypes "github.com/crypto-org-chain/cronos/x/cronos/types"
 )
 
+type UpgradeInfo struct {
+  Name    string
+  Info    string
+  Handler func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error)
+}
+
+// This is the fork upgrade to Cronos binaries
+func UpgradeV1(
+  mm *module.Manager,
+  configurator module.Configurator,
+  fm feemarketkeeper.Keeper,
+  evm *evmkeeper.Keeper,
+) UpgradeInfo {
+  return UpgradeInfo{
+    Name: "plan_crypto",
+    Info: `'{"binaries":{"darwin/amd64":"","darwin/x86_64":"","linux/arm64":"","linux/amd64":"","windows/x86_64":""}}'`,
+    Handler: func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+      m, err := mm.RunMigrations(ctx, configurator, fromVM)
+      if err != nil {
+        return m, err
+      }
+  
+      // Override feemarket parameters
+      fmParams := fm.GetParams(ctx)
+      fmParams.BaseFeeChangeDenominator = 8
+      fmParams.ElasticityMultiplier = 2
+      fmParams.BaseFee = sdk.NewInt(50000000000)
+      fmParams.MinGasPrice = sdk.NewDec(50000000000)
+      fm.SetParams(ctx, fmParams)
+  
+      // clear extra_eips from evm parameters
+      // Ref: https://github.com/crypto-org-chain/cronos/issues/755
+      evmParams := evm.GetParams(ctx)
+      evmParams.ExtraEIPs = []int64{}
+      zero := sdkmath.ZeroInt()
+      // fix the incorrect value on testnet parameters
+      evmParams.ChainConfig.LondonBlock = &zero
+      evm.SetParams(ctx, evmParams)
+
+      return m, nil
+    },
+  }
+}
+
 func (app *App) RegisterUpgradeHandlers(experimental bool) {
-	upgradeHandlerV1 := func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		m, err := app.mm.RunMigrations(ctx, app.configurator, fromVM)
-		if err != nil {
-			return m, err
-		}
-		// clear extra_eips from evm parameters
-		// Ref: https://github.com/crypto-org-chain/cronos/issues/755
-		params := app.EvmKeeper.GetParams(ctx)
-		params.ExtraEIPs = []int64{}
+  upgradeV1 := UpgradeV1(
+    app.mm,
+    app.configurator,
+    app.FeeMarketKeeper,
+    app.EvmKeeper,
+  )
 
-		// fix the incorrect value on testnet parameters
-		zero := sdkmath.ZeroInt()
-		params.ChainConfig.LondonBlock = &zero
+  app.UpgradeKeeper.SetUpgradeHandler(
+    upgradeV1.Name,
+    upgradeV1.Handler,
+  )
 
-		app.EvmKeeper.SetParams(ctx, params)
-		return m, nil
-	}
-	// `v1.0.0` upgrade plan will clear the `extra_eips` parameters, and upgrade ibc-go to v5.2.0.
-	planName := "v1.0.0"
-	app.UpgradeKeeper.SetUpgradeHandler(planName, upgradeHandlerV1)
-	// "v1.0.0-testnet3-2" is another coordinated upgrade on testnet3 to upgrade ibc-go to "v5.2.0".
-	planNameTestnet3 := "v1.0.0-testnet3-2"
-	app.UpgradeKeeper.SetUpgradeHandler(planNameTestnet3, func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		return app.mm.RunMigrations(ctx, app.configurator, fromVM)
-	})
+  // When a planned update height is reached, the old binary will panic
+  // writing on disk the height and name of the update that triggered it
+  // This will read that value, and execute the preparations for the upgrade.
+  upgradeInfo, err := app.UpgradeKeeper.ReadUpgradeInfoFromDisk()
+  if err != nil {
+    panic(fmt.Errorf("failed to read upgrade info from disk: %w", err))
+  }
 
-	gravityPlanName := "v0.8.0-gravity-alpha3"
-	if experimental {
-		app.UpgradeKeeper.SetUpgradeHandler(gravityPlanName, func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-			return app.mm.RunMigrations(ctx, app.configurator, fromVM)
-		})
-	}
+  if app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
+    return
+  }
 
-	upgradeInfo, err := app.UpgradeKeeper.ReadUpgradeInfoFromDisk()
-	if err != nil {
-		panic(fmt.Sprintf("failed to read upgrade info from disk %s", err))
-	}
+  var storeUpgrades *storetypes.StoreUpgrades
 
-	if !app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
-		if upgradeInfo.Name == planName {
-			storeUpgrades := storetypes.StoreUpgrades{
-				Added: []string{ibcfeetypes.StoreKey},
-			}
+  switch upgradeInfo.Name {
+  case upgradeV1.Name:
+    storeUpgrades = &storetypes.StoreUpgrades{
+      Added: []string{ibcfeetypes.StoreKey, cronostypes.StoreKey},
+    }
+  default:
+    // no-op
+  }
 
-			// configure store loader that checks if version == upgradeHeight and applies store upgrades
-			app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &storeUpgrades))
-		}
-		if experimental && upgradeInfo.Name == gravityPlanName {
-			storeUpgrades := storetypes.StoreUpgrades{
-				Added:   []string{ibcfeetypes.StoreKey},
-				Deleted: []string{icacontrollertypes.StoreKey},
-			}
-
-			// configure store loader that checks if version == upgradeHeight and applies store upgrades
-			app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &storeUpgrades))
-		}
-	}
+  if storeUpgrades != nil {
+    // configure store loader that checks if version == upgradeHeight and applies store upgrades
+    app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, storeUpgrades))
+  }
 }

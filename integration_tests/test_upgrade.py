@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
+from dateutil.parser import isoparse
 from pystarport import ports
 from pystarport.cluster import SUPERVISOR_CONFIG_FILE
 
@@ -11,14 +12,17 @@ from .network import Cronos, setup_custom_cronos
 from .utils import (
     ADDRS,
     CONTRACTS,
-    approve_proposal,
     deploy_contract,
     edit_ini_sections,
+    parse_events,
     send_transaction,
     wait_for_block,
+    wait_for_block_time,
     wait_for_new_blocks,
     wait_for_port,
 )
+
+pytestmark = pytest.mark.upgrade
 
 
 def init_cosmovisor(home):
@@ -47,7 +51,7 @@ def post_init(path, base_port, config):
         data / SUPERVISOR_CONFIG_FILE,
         lambda i, _: {
             "command": f"cosmovisor start --home %(here)s/node{i}",
-            "environment": f"DAEMON_NAME=cronosd,DAEMON_HOME=%(here)s/node{i}",
+            "environment": f"DAEMON_NAME=genesisd,DAEMON_HOME=%(here)s/node{i}",
         },
     )
 
@@ -69,7 +73,7 @@ def custom_cronos(tmp_path_factory):
         26100,
         Path(__file__).parent / "configs/cosmovisor.jsonnet",
         post_init=post_init,
-        chain_binary=str(path / "upgrades/genesis/bin/cronosd"),
+        chain_binary=str(path / "upgrades/genesis/bin/genesisd"),
     )
 
 
@@ -91,7 +95,6 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
     custom_cronos.supervisorctl("start", "cronos_777-1-node0", "cronos_777-1-node1")
     wait_for_port(ports.evmrpc_port(custom_cronos.base_port(0)))
     wait_for_new_blocks(cli, 1)
-
     height = cli.block_height()
     target_height = height + 15
     print("upgrade height", target_height)
@@ -106,8 +109,13 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
     )
     print("old values", old_height, old_balance, old_base_fee)
 
-    plan_name = "v2.0.0-testnet3"
-    rsp = cli.gov_propose_legacy(
+    # estimateGas for an erc20 transfer tx
+    old_gas = contract.functions.transfer(ADDRS["community"], 100).build_transaction(
+        {"from": ADDRS["validator"]}
+    )["gas"]
+
+    plan_name = "v1.0.0"
+    rsp = cli.gov_propose_v0_7(
         "community",
         "software-upgrade",
         {
@@ -119,12 +127,26 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
         },
     )
     assert rsp["code"] == 0, rsp["raw_log"]
-    approve_proposal(custom_cronos, rsp)
+
+    # get proposal_id
+    ev = parse_events(rsp["logs"])["submit_proposal"]
+    assert ev["proposal_type"] == "SoftwareUpgrade", rsp
+    proposal_id = ev["proposal_id"]
+
+    rsp = cli.gov_vote("validator", proposal_id, "yes")
+    assert rsp["code"] == 0, rsp["raw_log"]
+    rsp = custom_cronos.cosmos_cli(1).gov_vote("validator", proposal_id, "yes")
+    assert rsp["code"] == 0, rsp["raw_log"]
+
+    proposal = cli.query_proposal(proposal_id)
+    wait_for_block_time(cli, isoparse(proposal["voting_end_time"]))
+    proposal = cli.query_proposal(proposal_id)
+    assert proposal["status"] == "PROPOSAL_STATUS_PASSED", proposal
 
     # update cli chain binary
     custom_cronos.chain_binary = (
         Path(custom_cronos.chain_binary).parent.parent.parent
-        / f"{plan_name}/bin/cronosd"
+        / f"{plan_name}/bin/genesisd"
     )
     cli = custom_cronos.cosmos_cli()
 
@@ -159,30 +181,15 @@ def test_cosmovisor_upgrade(custom_cronos: Cronos, tmp_path_factory):
         ADDRS["validator"]
     )
 
-    # check gravity params
-    assert cli.query_gravity_params() == {
-        "params": {
-            "gravity_id": "cronos_gravity_testnet",
-            "contract_source_hash": "",
-            "bridge_ethereum_address": "0x0000000000000000000000000000000000000000",
-            "bridge_chain_id": "0",
-            "signed_signer_set_txs_window": "10000",
-            "signed_batches_window": "10000",
-            "ethereum_signatures_window": "10000",
-            "target_eth_tx_timeout": "43200000",
-            "average_block_time": "5000",
-            "average_ethereum_block_time": "15000",
-            "slash_fraction_signer_set_tx": "0.001000000000000000",
-            "slash_fraction_batch": "0.001000000000000000",
-            "slash_fraction_ethereum_signature": "0.001000000000000000",
-            "slash_fraction_conflicting_ethereum_signature": "0.001000000000000000",
-            "unbond_slashing_signer_set_txs_window": "10000",
-            "bridge_active": False,
-            "batch_creation_period": "10",
-            "batch_max_element": "100",
-            "observe_ethereum_height_period": "50",
-        }
-    }
+    assert not cli.evm_params()["params"]["extra_eips"]
+
+    # check the gas cost is lower after upgrade
+    assert (
+        old_gas - 3700
+        == contract.functions.transfer(ADDRS["community"], 100).build_transaction(
+            {"from": ADDRS["validator"]}
+        )["gas"]
+    )
 
     # migrate to sdk v0.46
     custom_cronos.supervisorctl("stop", "all")

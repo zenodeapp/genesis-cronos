@@ -211,7 +211,7 @@ func init() {
 		panic(err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name+"d")
+	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
 	sdk.DefaultPowerReduction = sdk.NewIntFromUint64(1000000000000000000)
 }
 

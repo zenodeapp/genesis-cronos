@@ -1,5 +1,28 @@
 # Changelog
 
+*Jan 05, 2024*
+
+## v1.0.15
+
+- [#1265](https://github.com/crypto-org-chain/cronos/pull/1265) Fix nil pointer panic when filter timeout
+- [#1270](https://github.com/crypto-org-chain/cronos/pull/1270) Avoid out of bound panic from error message
+
+*Dec 15, 2023*
+
+## v1.0.14
+
+- [#1259](https://github.com/crypto-org-chain/cronos/pull/1259) Use a hard-fork style upgrade to adjust feemarket parameters.
+
+*Nov 20, 2023*
+
+## v1.0.13
+
+- [#1197](https://github.com/crypto-org-chain/cronos/pull/1197) tune rocksdb options to control memory consumption.
+- [#1207](https://github.com/crypto-org-chain/cronos/pull/1207) Update rocksdb to `v8.6.7`.
+- [#1240](https://github.com/crypto-org-chain/cronos/pull/1240) Revert rocksdb upgrade.
+- [#1239](https://github.com/crypto-org-chain/cronos/pull/1239) Refactor websocket/subscription system to improve performance and stability.
+- [#1246](https://github.com/crypto-org-chain/cronos/pull/1246) Update memiavl deps to include bug fixes and state sync restore performance improvement.
+
 *Aug 11, 2023*
 
 ## v1.0.12
