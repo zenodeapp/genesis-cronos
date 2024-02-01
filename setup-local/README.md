@@ -1,7 +1,7 @@
 # Setup (Local)
 
 > [!IMPORTANT]
-> The scripts in this folder are specifically written for **local** testnet purposes and require you to have already setup a testnet in your local network using a `tgenesis` branch in the [`genesis-ethermint`](https://github.com/zenodeapp/genesis-ethermint) repository.
+> The scripts in this folder are specifically written for **local** testnet purposes and require you to have already setup a testnet in your local network using a `tgenesis` branch in the [`genesis-ethermint`](https://github.com/alpha-omega-labs/genesis-ethermint) repository.
 
 ## \_local-variables.sh
 
@@ -12,7 +12,7 @@ This script holds repository-specific variables for **local** testnet purposes.
 > [!WARNING]
 > This script should only be used if you run a full-node and have to perform the **"plan_crypto"**-upgrade!
 >
-> This means that you are currently operating on the Evmos fork of GenesisL1 (repo: [`genesis-ethermint`](https://github.com/zenodeapp/genesis-ethermint)) and the node synced till height: `insert_height_here` which caused it to panic.
+> This means that you are currently operating on the Evmos fork of GenesisL1 (repo: [`genesis-ethermint`](https://github.com/alpha-omega-labs/genesis-ethermint)) and the node synced till height: `insert_height_here` which caused it to panic.
 
 This script takes care of the needed steps to upgrade the node to the new fork:
 
