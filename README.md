@@ -74,7 +74,7 @@ sh setup/state-sync.sh <moniker>
 
 #### 3.2 Upgrade a node
 
-This script assumes that you are currently operating on the Evmos fork of GenesisL1 (repo: [`genesis-ethermint`](https://github.com/alpha-omega-labs/genesis-ethermint)) and the node synced till height: `7350000` which caused it to panic.
+This script assumes that you are currently operating on the Evmos fork of GenesisL1 (repo: [`genesis-ethermint`](https://github.com/alpha-omega-labs/genesis-ethermint)) and the node synced till height: `7400000` which caused it to panic.
 
 > [!IMPORTANT]
 > This should only be used if you run a **full-node** and have to perform the **"plan_crypto"**-upgrade.
